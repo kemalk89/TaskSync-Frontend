@@ -1,0 +1,74 @@
+import { useMutation, useQuery } from "react-query";
+import { useParams } from "react-router-dom";
+import { api } from "../../api/api";
+import { formatDateTime } from "../../utils/date";
+import { UserName } from "../../components/user-name/user-name";
+import { EditableField } from "../../components/editable-field/editable-field";
+import { Dropdown } from "../../components/dropdown/dropdown";
+import { AutoCompleteAsync } from "../../components/autocomplete-async/autocomplete-async";
+
+export const TicketViewPage = () => {
+  let { ticketId } = useParams();
+
+  const fetchTicket = useQuery({
+    queryKey: ["ticket"],
+    queryFn: () => api.fetchTicket(ticketId),
+  });
+
+
+  const updateTicketStatus = useMutation({
+    mutationFn: ({ ticketId, newStatus }) => api.updateTicketStatus(ticketId, newStatus)
+  });
+
+  const fetchAllTicketStatus = useQuery({});
+
+  if (fetchTicket.isLoading) {
+    return <div>...</div>;
+  }
+
+  return (
+    <div>
+      <h1>{fetchTicket.data.title}</h1>
+      <p>
+        <small>
+          created at {formatDateTime(fetchTicket.data.createdDate)} by{" "}
+          {fetchTicket.data.createdBy?.username}
+        </small>
+      </p>
+      <div className="row">
+        <div className="col">Assignee</div>
+        <div className="col">
+          <EditableField
+            type="autocomplete-async"
+            autoCompleteAsyncFn={api.searchUsers}
+            autoCompleteId="assignee"
+            autoCompleteLabelKey="username"
+            value={fetchTicket.data.assignee ? (
+                <UserName user={fetchTicket.data.assignee} />
+              ) : "Unassigned"
+            }
+            onSave={(item) => console.log(item)}
+          />
+        </div>
+      </div>
+      <div className="row">
+        <div className="col">Status</div>
+        <div className="col">
+          <EditableField
+            type="select"
+            value={{ id: 1, label: "Todo" }}
+            options={[
+              { id: 1, label: "Todo", onClick: () => null },
+              { id: 2, label: "In Progress", onClick: () => null },
+              { id: 3, label: "Done", onClick: () => null },
+            ]}
+            onSave={(newStatus) => updateTicketStatus.mutate({ ticketId, newStatus: newStatus.id })}
+          />
+        </div>
+      </div>
+
+      <h2>Description</h2>
+      <p>{fetchTicket.data.description}</p>
+    </div>
+  );
+};

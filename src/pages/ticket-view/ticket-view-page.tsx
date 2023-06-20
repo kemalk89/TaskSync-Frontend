@@ -4,23 +4,24 @@ import { api } from "../../api/api";
 import { formatDateTime } from "../../utils/date";
 import { UserName } from "../../components/user-name/user-name";
 import { EditableField } from "../../components/editable-field/editable-field";
-import { Dropdown } from "../../components/dropdown/dropdown";
-import { AutoCompleteAsync } from "../../components/autocomplete-async/autocomplete-async";
+
+interface UpdateTicketMutationFnParams {
+  ticketId: number;
+  newStatus: number;
+}
 
 export const TicketViewPage = () => {
-  let { ticketId } = useParams();
+  const { ticketId } = useParams();
 
   const fetchTicket = useQuery({
     queryKey: ["ticket"],
-    queryFn: () => api.fetchTicket(ticketId),
+    queryFn: () => api.fetchTicket(ticketId!),
   });
-
 
   const updateTicketStatus = useMutation({
-    mutationFn: ({ ticketId, newStatus }) => api.updateTicketStatus(ticketId, newStatus)
+    mutationFn: ({ ticketId, newStatus }: UpdateTicketMutationFnParams) =>
+      api.updateTicketStatus(ticketId, newStatus),
   });
-
-  const fetchAllTicketStatus = useQuery({});
 
   if (fetchTicket.isLoading) {
     return <div>...</div>;
@@ -43,9 +44,12 @@ export const TicketViewPage = () => {
             autoCompleteAsyncFn={api.searchUsers}
             autoCompleteId="assignee"
             autoCompleteLabelKey="username"
-            value={fetchTicket.data.assignee ? (
+            value={
+              fetchTicket.data.assignee ? (
                 <UserName user={fetchTicket.data.assignee} />
-              ) : "Unassigned"
+              ) : (
+                "Unassigned"
+              )
             }
             onSave={(item) => console.log(item)}
           />
@@ -62,13 +66,20 @@ export const TicketViewPage = () => {
               { id: 2, label: "In Progress", onClick: () => null },
               { id: 3, label: "Done", onClick: () => null },
             ]}
-            onSave={(newStatus) => updateTicketStatus.mutate({ ticketId, newStatus: newStatus.id })}
+            onSave={(newStatus) =>
+              updateTicketStatus.mutate({
+                ticketId: parseInt(ticketId!),
+                newStatus: newStatus.id,
+              })
+            }
           />
         </div>
       </div>
 
       <h2>Description</h2>
       <p>{fetchTicket.data.description}</p>
+
+      <h2>Comments</h2>
     </div>
   );
 };

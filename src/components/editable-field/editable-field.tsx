@@ -1,7 +1,17 @@
 import { useState } from "react";
 import { Button, ButtonGroup } from "reactstrap";
-import { Dropdown } from "../dropdown/dropdown";
+import { Dropdown, DropdownOption } from "../dropdown/dropdown";
 import { AutoCompleteAsync } from "../autocomplete-async/autocomplete-async";
+
+interface EditableFieldProps {
+  type: string;
+  value: unknown;
+  options?: DropdownOption[];
+  autoCompleteAsyncFn?: (searchText: string) => void;
+  autoCompleteId?: string;
+  autoCompleteLabelKey?: string;
+  onSave: (newStatus: DropdownOption) => void;
+}
 
 export const EditableField = ({ 
   type, 
@@ -9,7 +19,7 @@ export const EditableField = ({
   options, 
   autoCompleteAsyncFn, autoCompleteId, autoCompleteLabelKey,
   onSave
-}) => {
+}: EditableFieldProps) => {
   const [showEditBtn, setShowEditBtn] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [currentValue, setCurrentValue] = useState(value);
@@ -19,17 +29,17 @@ export const EditableField = ({
       return (
         <Dropdown 
           size="sm" 
-          options={options} 
-          selectedOption={currentValue} 
+          options={options!} 
+          selectedOption={currentValue as DropdownOption} 
           onOptionSelected={setCurrentValue} />
       );
     }
     if (type === 'autocomplete-async') {
       return (
         <AutoCompleteAsync
-          labelKey={autoCompleteLabelKey}
-          id={autoCompleteId}
-          apiFn={autoCompleteAsyncFn}
+          labelKey={autoCompleteLabelKey!}
+          id={autoCompleteId!}
+          apiFn={autoCompleteAsyncFn!}
           onChange={setCurrentValue}
         />
       );
@@ -38,11 +48,11 @@ export const EditableField = ({
 
   const renderValue = () => {
     if (type === 'select') {
-      return value.label;
+      return (value as DropdownOption).label;
     }
 
     if (type === 'autocomplete-async') {
-      return value.label;
+      return (value as DropdownOption).label;
     }
   }
 
@@ -60,7 +70,7 @@ export const EditableField = ({
           {editMode && (
             <ButtonGroup size="sm">
               <Button onClick={() => setEditMode(false)}>Cancel</Button>
-              <Button color="primary" onClick={() => onSave(currentValue)}>
+              <Button color="primary" onClick={() => onSave(currentValue as DropdownOption)}>
                 Save
               </Button>
             </ButtonGroup>

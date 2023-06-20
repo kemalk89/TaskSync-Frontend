@@ -11,7 +11,7 @@ export const TicketsPage = () => {
       { title: "ID", fieldName: "id" },
       {
         title: "Project",
-        fieldName: (item) => {
+        fieldName: (item: any) => {
           return (
             <Link to={`/project/${item.project.id}`}>{item.project.title}</Link>
           );
@@ -20,7 +20,7 @@ export const TicketsPage = () => {
       { title: "Title", fieldName: "title" },
       {
         title: "Assignee",
-        fieldName: (ticket) => {
+        fieldName: (ticket: any) => {
           if (!ticket.assignee) {
             return null;
           }
@@ -30,7 +30,7 @@ export const TicketsPage = () => {
       },
       {
         title: "Status",
-        fieldName: (ticket) => {
+        fieldName: (ticket: any) => {
           if (!ticket.status) {
             return null;
           }
@@ -48,7 +48,7 @@ export const TicketsPage = () => {
       getItemsApi={api.fetchTickets}
       saveItemApi={api.saveTicket}
       deleteItemApi={api.deleteTicket}
-      onViewItem={(item) => navigate(`/ticket/${item.id}`)}
+      onViewItem={(item: any) => navigate(`/ticket/${item.id}`)}
       itemForm={TicketForm}
       tableData={tableData}
     ></TablePage>

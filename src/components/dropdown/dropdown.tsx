@@ -4,9 +4,22 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
+  DropdownProps as BsDropdownProps
 } from "reactstrap";
 
-export const Dropdown = ({ selectedOption, options, onOptionSelected, ...dropdownProps }) => {
+export interface DropdownOption {
+  id: number;
+  label: string;
+  onClick?: () => void;
+}
+
+interface DropdownProps extends BsDropdownProps {
+  selectedOption: { label: string },
+  options: DropdownOption[],
+  onOptionSelected: (option: DropdownOption) => void
+}
+
+export const Dropdown = ({ selectedOption, options, onOptionSelected, ...dropdownProps }: DropdownProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   
   const toggle = () => setDropdownOpen((prevState) => !prevState);

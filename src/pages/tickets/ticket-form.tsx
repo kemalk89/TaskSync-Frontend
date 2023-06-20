@@ -3,9 +3,21 @@ import { Form, FormFeedback, FormGroup, Input, Label } from "reactstrap";
 import { AutoCompleteAsync } from "../../components/autocomplete-async/autocomplete-async";
 import { api } from "../../api/api";
 
-export const TicketForm = ({ formId, saveHandler }) => {
+interface TicketFormProps {
+  formId: string;
+  saveHandler: (formValues: TicketFormValues) => void;
+}
+
+interface TicketFormValues {
+  title: string;
+  description: string;
+  projectId: string;
+  assignee: string | null;
+}
+
+export const TicketForm = ({ formId, saveHandler }: TicketFormProps) => {
   return (
-    <Formik
+    <Formik<TicketFormValues>
       initialValues={{
         title: "",
         description: "",
@@ -13,7 +25,7 @@ export const TicketForm = ({ formId, saveHandler }) => {
         assignee: null,
       }}
       validate={(values) => {
-        const errors = {};
+        const errors: Partial<TicketFormValues> = {};
         if (!values.title) {
           errors.title = "Required";
         }
@@ -44,7 +56,7 @@ export const TicketForm = ({ formId, saveHandler }) => {
               value={values.projectId}
               onChange={handleChange}
               onBlur={handleBlur}
-              invalid={errors.projectId && touched.projectId}
+              invalid={!!errors.projectId && touched.projectId}
             />
             <FormFeedback>{errors.projectId}</FormFeedback>
           </FormGroup>
@@ -56,7 +68,7 @@ export const TicketForm = ({ formId, saveHandler }) => {
               value={values.title}
               onChange={handleChange}
               onBlur={handleBlur}
-              invalid={errors.title && touched.title}
+              invalid={!!errors.title && touched.title}
             />
             <FormFeedback>{errors.title}</FormFeedback>
           </FormGroup>

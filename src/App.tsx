@@ -16,14 +16,13 @@ import { PageNotExists } from './pages/page-not-exists/page-not-exists';
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
     // this is the global error handler for API calls
-    onError: (err, query) => {
-      if (query.observers.length > 0) {
-        toast.error(() => (
-          <p>{err.message}</p>
-        ));
+    onError: (err) => {
+      if (typeof err === "object" && err !== null) {
+        const errObj = err as { message: string };
+        toast.error(() => <p>{errObj.message}</p>);
       }
-    }
-  })
+    },
+  }),
 });
 
 function App() {

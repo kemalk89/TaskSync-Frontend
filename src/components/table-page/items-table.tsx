@@ -1,7 +1,11 @@
 import { Button, ButtonGroup, Table } from "reactstrap";
 
-export const ItemsTable = ({ columns, rows, actions, isLoading }) => {
-  const getFieldValue = (column, item) => {
+interface ItemsTableProps {
+  columns: any; rows: any; actions: any; isLoading: boolean; 
+}
+
+export const ItemsTable = ({ columns, rows, actions, isLoading }: ItemsTableProps) => {
+  const getFieldValue = (column: any, item: any) => {
     if (typeof column.fieldName === "function") {
       return column.fieldName(item);
     } else {
@@ -11,14 +15,14 @@ export const ItemsTable = ({ columns, rows, actions, isLoading }) => {
 
   const renderRows = () => {
     if (rows?.length > 0) {
-      return rows.map((item) => (
+      return rows.map((item: any) => (
         <tr key={`t-${item.id}`}>
-          {columns.map((c, i) => (
+          {columns.map((c: any, i: number) => (
             <td key={i}>{getFieldValue(c, item)}</td>
           ))}
           <td>
             <ButtonGroup size="sm">
-              {actions.map((a, i) => (
+              {actions.map((a: any, i: number) => (
                 <Button key={i} onClick={() => a.onClick(item)}>
                   {a.label}
                 </Button>
@@ -52,7 +56,7 @@ export const ItemsTable = ({ columns, rows, actions, isLoading }) => {
       <Table>
         <thead>
           <tr>
-            {columns.map((c, i) => (
+            {columns.map((c: any, i: number) => (
               <td key={i}>{c.title}</td>
             ))}
             <td></td>

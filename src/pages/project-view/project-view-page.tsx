@@ -1,14 +1,14 @@
 import { useQuery } from "react-query";
-import { useParams } from "react-router-dom";
 import { api } from "../../api/api";
 import { formatDateTime } from "../../utils/date";
+import { useParamsNumber } from "../../utils/hooks";
 
 export const ProjectViewPage = () => {
-  let { projectId } = useParams();
+  const projectId = useParamsNumber("projectId");
 
   const fetchProject = useQuery({
     queryKey: ["project"],
-    queryFn: () => api.fetchProject(projectId),
+    queryFn: () => api.fetchProject(projectId!),
   });
 
   if (fetchProject.isLoading) {

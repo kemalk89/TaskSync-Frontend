@@ -6,6 +6,17 @@ import { uuid } from "../../utils/uuid";
 import { Pagination } from "../pagination/pagination";
 import { ItemsTable } from "./items-table";
 
+interface TablePageProps {
+  pageTitle: string;
+  itemForm: any;
+  tableData: any;
+  cacheKey: string;
+  deleteItemApi: any;
+  getItemsApi: any;
+  saveItemApi: any;
+  onViewItem: any;
+}
+
 export const TablePage = ({
   pageTitle,
   itemForm,
@@ -15,16 +26,16 @@ export const TablePage = ({
   getItemsApi,
   saveItemApi,
   onViewItem,
-}) => {
+}: TablePageProps) => {
   const ItemForm = itemForm;
-  const [itemToDelete, setItemToDelete] = useState();
+  const [itemToDelete, setItemToDelete] = useState<any>();
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
   const [formModal, setFormModal] = useState(false);
   const [page, setPage] = useState({ pageNumber: 1, pageSize: 50 });
   const queryClient = useQueryClient();
   const formId = uuid();
 
-  const { isLoading, error, data, refetch } = useQuery(
+  const { isLoading, /* error, */ data, refetch } = useQuery(
     [cacheKey, page.pageNumber],
     () => getItemsApi(page),
     { keepPreviousData: true }
@@ -32,7 +43,7 @@ export const TablePage = ({
 
   const { mutate, isLoading: isSubmitting } = useMutation(saveItemApi, {
     onSuccess: (newItem) => {
-      queryClient.setQueriesData(cacheKey, (oldItems) => {
+      queryClient.setQueriesData(cacheKey, (oldItems: any) => {
         setFormModal(false);
 
         return addItemToPagedResult(oldItems, newItem);
@@ -49,7 +60,7 @@ export const TablePage = ({
     setFormModal(!formModal);
   };
 
-  const onPageSelected = (pageNumber) => {
+  const onPageSelected = (pageNumber: number) => {
     const clone = {
       ...page,
       pageNumber,
@@ -58,7 +69,7 @@ export const TablePage = ({
     setPage(clone);
   };
 
-  const confirmDelete = (item) => {
+  const confirmDelete = (item: any) => {
     setItemToDelete(item);
     setConfirmDeleteModal(true);
   };
@@ -68,9 +79,9 @@ export const TablePage = ({
   };
 
   const actions = [
-    { label: "Edit", onClick: (item) => null },
-    { label: "View", onClick: (item) => onViewItem(item) },
-    { label: "Delete", onClick: (item) => confirmDelete(item) },
+    { label: "Edit", onClick: (/* item: any */) => null },
+    { label: "View", onClick: (item: any) => onViewItem(item) },
+    { label: "Delete", onClick: (item: any) => confirmDelete(item) },
   ];
 
   return (
@@ -83,7 +94,7 @@ export const TablePage = ({
       <Modal isOpen={formModal} toggle={toggleFormModal}>
         <ModalHeader toggle={toggleFormModal}>New</ModalHeader>
         <ModalBody>
-          <ItemForm formId={formId} saveHandler={(data) => mutate(data)} />
+          <ItemForm formId={formId} saveHandler={(data: any) => mutate(data)} />
         </ModalBody>
         <ModalFooter>
           <Button

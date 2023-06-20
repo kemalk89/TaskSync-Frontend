@@ -104,7 +104,6 @@ export const api = {
         return remove('/api/ticket/' + ticketId);
     },
     updateTicketStatus: async (ticketId: number, newStatus: any) => {
-        console.log(ticketId, newStatus);
         return patch('/api/ticket/' + ticketId, {
             status: newStatus
         });

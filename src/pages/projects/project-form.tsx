@@ -1,15 +1,25 @@
 import { Formik } from "formik";
 import { Form, FormFeedback, FormGroup, Input, Label } from "reactstrap";
 
-export const ProjectForm = ({ formId, saveHandler }) => {
+interface ProjectFormValues {
+  title: string;
+  description: string;
+}
+
+interface ProjectFormProps {
+  formId: string;
+  saveHandler: (project: ProjectFormValues) => void;
+}
+
+export const ProjectForm = ({ formId, saveHandler }: ProjectFormProps) => {
   return (
-    <Formik
+    <Formik<ProjectFormValues>
       initialValues={{
         title: "",
         description: "",
       }}
       validate={(values) => {
-        const errors = {};
+        const errors: Partial<ProjectFormValues> = {};
         if (!values.title) {
           errors.title = "Required";
         }
@@ -36,7 +46,7 @@ export const ProjectForm = ({ formId, saveHandler }) => {
               value={values.title}
               onChange={handleChange}
               onBlur={handleBlur}
-              invalid={errors.title && touched.title}
+              invalid={!!errors.title && touched.title}
             />
             <FormFeedback>{errors.title}</FormFeedback>
           </FormGroup>

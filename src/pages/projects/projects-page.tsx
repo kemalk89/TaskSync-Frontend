@@ -22,7 +22,7 @@ export const ProjectsPage = () => {
       deleteItemApi={api.deleteProject}
       itemForm={ProjectForm}
       tableData={tableData}
-      onViewItem={(item) => navigate(`/project/${item.id}`)}
+      onViewItem={(item: any) => navigate(`/project/${item.id}`)}
     ></TablePage>
   );
 };

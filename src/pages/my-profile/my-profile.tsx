@@ -11,6 +11,10 @@ export const MyProfilePage = () => {
     return <div>Please login</div>;
   }
 
+  if (!user) {
+    return <div>User is undefined</div>;
+  }
+
   return (
     <div>
       <img src={user.picture} alt={user.name} />

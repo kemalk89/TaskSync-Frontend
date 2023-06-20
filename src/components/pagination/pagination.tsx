@@ -4,7 +4,12 @@ import {
   PaginationLink,
 } from "reactstrap";
 
-export const Pagination = ({ paged, onPageSelected }) => {
+interface PaginationProps {
+  paged: any;
+  onPageSelected: any;
+}
+
+export const Pagination = ({ paged, onPageSelected }: PaginationProps) => {
   const totalPages = Math.ceil(paged.total / paged.pageSize);
 
   const renderPages = () => {

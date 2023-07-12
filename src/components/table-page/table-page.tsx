@@ -1,23 +1,26 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { addItemToPagedResult } from "../../utils/pagination";
 import { uuid } from "../../utils/uuid";
 import { Pagination } from "../pagination/pagination";
-import { ItemsTable } from "./items-table";
+import { ItemsTable, ItemsTableColumn } from "./items-table";
 
-interface TablePageProps {
+interface TablePageProps<T> {
   pageTitle: string;
-  itemForm: any;
-  tableData: any;
+  itemForm?: any;
+  tableData: {
+    columns: ItemsTableColumn<T>[];
+  };
   cacheKey: string;
-  deleteItemApi: any;
+  deleteItemApi?: (item: T) => Promise<unknown>;
   getItemsApi: any;
-  saveItemApi: any;
-  onViewItem: any;
+  saveItemApi?: any;
+  onViewItem: (item: T) => void;
+  renderDeleteConfirmationModalBody?: (item: T) => ReactNode;
 }
 
-export const TablePage = ({
+export function TablePage<T>({
   pageTitle,
   itemForm,
   tableData,
@@ -26,9 +29,10 @@ export const TablePage = ({
   getItemsApi,
   saveItemApi,
   onViewItem,
-}: TablePageProps) => {
+  renderDeleteConfirmationModalBody,
+}: TablePageProps<T>) {
   const ItemForm = itemForm;
-  const [itemToDelete, setItemToDelete] = useState<any>();
+  const [itemToDelete, setItemToDelete] = useState<T>();
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
   const [formModal, setFormModal] = useState(false);
   const [page, setPage] = useState({ pageNumber: 1, pageSize: 50 });
@@ -52,7 +56,7 @@ export const TablePage = ({
   });
 
   const deleteItem = useMutation({
-    mutationFn: (itemId) => deleteItemApi(itemId),
+    mutationFn: (item: T) => deleteItemApi!(item),
     onSuccess: () => refetch(),
   });
 
@@ -76,6 +80,32 @@ export const TablePage = ({
 
   const toggleConfirmDeleteModal = () => {
     setConfirmDeleteModal(!confirmDeleteModal);
+  };
+
+  const renderDeleteItemModal = () => {
+    if (!renderDeleteConfirmationModalBody || !itemToDelete) {
+      return null;
+    }
+
+    return (
+      <Modal isOpen={confirmDeleteModal} toggle={toggleConfirmDeleteModal}>
+        <ModalHeader toggle={toggleConfirmDeleteModal}>
+          Confirm delete
+        </ModalHeader>
+        <ModalBody>{renderDeleteConfirmationModalBody(itemToDelete)}</ModalBody>
+        <ModalFooter>
+          <Button
+            onClick={() => deleteItem.mutate(itemToDelete)}
+            disabled={deleteItem.isLoading}
+          >
+            Yes
+          </Button>{" "}
+          <Button color="primary" onClick={toggleConfirmDeleteModal}>
+            Cancel
+          </Button>
+        </ModalFooter>
+      </Modal>
+    );
   };
 
   const actions = [
@@ -111,27 +141,7 @@ export const TablePage = ({
         </ModalFooter>
       </Modal>
 
-      <Modal isOpen={confirmDeleteModal} toggle={toggleConfirmDeleteModal}>
-        <ModalHeader toggle={toggleConfirmDeleteModal}>
-          Confirm delete
-        </ModalHeader>
-        <ModalBody>
-          <p>
-            Are you sure you want to delete project "{itemToDelete?.title}"?
-          </p>
-        </ModalBody>
-        <ModalFooter>
-          <Button
-            onClick={() => deleteItem.mutate(itemToDelete?.id)}
-            disabled={deleteItem.isLoading}
-          >
-            Yes
-          </Button>{" "}
-          <Button color="primary" onClick={toggleConfirmDeleteModal}>
-            Cancel
-          </Button>
-        </ModalFooter>
-      </Modal>
+      {renderDeleteItemModal()}
 
       <ItemsTable
         isLoading={isLoading}
@@ -143,4 +153,4 @@ export const TablePage = ({
       {data && <Pagination paged={data} onPageSelected={onPageSelected} />}
     </div>
   );
-};
+}

@@ -5,35 +5,40 @@ import { ProjectViewPage } from "./pages/project-view/project-view-page";
 import { ProjectsPage } from "./pages/projects/projects-page";
 import { TicketViewPage } from "./pages/ticket-view/ticket-view-page";
 import { TicketsPage } from "./pages/tickets/tickets-page";
+import { UserManagementPage } from "./pages/user-management/user-management-page";
 
 const AppRoutes = [
   {
     index: true,
-    element: <ProjectsPage />
+    element: <ProjectsPage />,
   },
   {
-    path: '/projects',
-    element: <ProjectsPage />
+    path: "/projects",
+    element: <ProjectsPage />,
   },
   {
-    path: '/project/:projectId',
-    element: <ProjectViewPage />
+    path: "/project/:projectId",
+    element: <ProjectViewPage />,
   },
   {
-    path: '/tickets',
-    element: <TicketsPage />
+    path: "/tickets",
+    element: <TicketsPage />,
   },
   {
-    path: '/ticket/:ticketId',
-    element: <TicketViewPage />
+    path: "/ticket/:ticketId",
+    element: <TicketViewPage />,
   },
   {
-    path: '/profile',
-    element: <MyProfilePage />
+    path: "/profile",
+    element: <MyProfilePage />,
   },
   {
-    path: '/login',
-    element: <LoginPage />
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/user-management",
+    element: <UserManagementPage />,
   },
 ];
 

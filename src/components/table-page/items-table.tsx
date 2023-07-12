@@ -1,10 +1,19 @@
+import { ReactNode } from "react";
 import { Button, ButtonGroup, Table } from "reactstrap";
 
-interface ItemsTableProps {
-  columns: any; rows: any; actions: any; isLoading: boolean; 
+export interface ItemsTableColumn<T> {
+  fieldName: keyof T | ((item: T) => ReactNode);
+  title: string;
 }
 
-export const ItemsTable = ({ columns, rows, actions, isLoading }: ItemsTableProps) => {
+interface ItemsTableProps<T> {
+  columns: ItemsTableColumn<T>[];
+  rows: any;
+  actions: any;
+  isLoading: boolean;
+}
+
+export function ItemsTable<T>({ columns, rows, actions, isLoading }: ItemsTableProps<T>) {
   const getFieldValue = (column: any, item: any) => {
     if (typeof column.fieldName === "function") {
       return column.fieldName(item);

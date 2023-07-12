@@ -16,21 +16,54 @@ export const NavMenu = () => {
 
   return (
     <header>
-      <Navbar className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3" container light>
-        <NavbarBrand tag={Link} to="/">Times</NavbarBrand>
+      <Navbar
+        className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3"
+        container
+        light
+      >
+        <NavbarBrand tag={Link} to="/">
+          Times
+        </NavbarBrand>
         <NavbarToggler onClick={toggleNavbar} className="mr-2" />
-        <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!collapsed} navbar>
+        <Collapse
+          className="d-sm-inline-flex flex-sm-row-reverse"
+          isOpen={!collapsed}
+          navbar
+        >
           <ul className="navbar-nav flex-grow">
             {isAuthenticated && (
               <>
                 <NavItem>
-                  <NavLink active={location.pathname === "/"} tag={Link} to="/">Home</NavLink>
+                  <NavLink active={location.pathname === "/"} tag={Link} to="/">
+                    Home
+                  </NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink active={location.pathname.startsWith("/project")} tag={Link} to="/projects">Projects</NavLink>
+                  <NavLink
+                    active={location.pathname.startsWith("/project")}
+                    tag={Link}
+                    to="/projects"
+                  >
+                    Projects
+                  </NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink active={location.pathname.startsWith("/ticket")} tag={Link} to="/tickets">Tickets</NavLink>
+                  <NavLink
+                    active={location.pathname.startsWith("/ticket")}
+                    tag={Link}
+                    to="/tickets"
+                  >
+                    Tickets
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink
+                    active={location.pathname.startsWith("/user-management")}
+                    tag={Link}
+                    to="/user-management"
+                  >
+                    Users
+                  </NavLink>
                 </NavItem>
               </>
             )}

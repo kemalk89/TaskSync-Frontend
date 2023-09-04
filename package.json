@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "dev": "npm run -w @times/app dev",
+    "test:e2e": "npm run -w @times/tests test",
     "clean": "tsc --build --clean",
     "build": "tsc --build && npm run build -ws"
   }

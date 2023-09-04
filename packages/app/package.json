@@ -6,8 +6,7 @@
     "dev": "vite --debug",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "test:e2e": "cypress open"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.1.0",

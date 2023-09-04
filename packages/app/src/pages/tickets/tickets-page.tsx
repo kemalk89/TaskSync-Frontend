@@ -1,10 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { api } from "../../api/api";
+import { TicketResponse, api } from "@times/api";
 import { TablePage } from "../../components/table-page/table-page";
 import { TicketForm } from "./ticket-form";
 import { UserName } from "../../components/user-name/user-name";
 import { ItemsTableColumn } from "../../components/table-page/items-table";
-import { TicketResponse } from "../../api/responses";
 
 export const TicketsPage = () => {
   const navigate = useNavigate();

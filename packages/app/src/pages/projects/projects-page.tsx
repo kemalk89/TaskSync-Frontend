@@ -1,9 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { api } from "../../api/api";
 import { TablePage } from "../../components/table-page/table-page";
 import { ProjectForm } from "./project-form";
-import { ProjectResponse } from "../../api/responses";
 import { ItemsTableColumn } from "../../components/table-page/items-table";
+import { ProjectResponse, api } from "@times/api";
 
 export const ProjectsPage = () => {
   const navigate = useNavigate();

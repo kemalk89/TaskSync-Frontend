@@ -1,7 +1,6 @@
+import { api } from "@times/api";
+import { formatDateTime, useParamsNumber } from "@times/utils";
 import { useQuery } from "react-query";
-import { api } from "../../api/api";
-import { formatDateTime } from "../../utils/date";
-import { useParamsNumber } from "../../utils/hooks";
 
 export const ProjectViewPage = () => {
   const projectId = useParamsNumber("projectId");

@@ -1,0 +1,8 @@
+{
+  "name": "@times/tests",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "echo No build script for cypress tests project!"
+  }
+}

@@ -1,17 +1,13 @@
-import { useEffect } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
-import { Layout } from './components/Layout';
+import { useEffect } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { Layout } from "./components/Layout";
 import { useAuth0 } from "@auth0/auth0-react";
-import { api } from './api/api';
-import config from './config.json';
-import AppRoutes from './AppRoutes';
-import toast, { Toaster } from 'react-hot-toast';
-import {
-  QueryCache,
-  QueryClient,
-  QueryClientProvider,
-} from 'react-query';
-import { PageNotExists } from './pages/page-not-exists/page-not-exists';
+import config from "./config.json";
+import AppRoutes from "./AppRoutes";
+import toast, { Toaster } from "react-hot-toast";
+import { QueryCache, QueryClient, QueryClientProvider } from "react-query";
+import { PageNotExists } from "./pages/page-not-exists/page-not-exists";
+import { api } from "@times/api";
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -47,7 +43,7 @@ function App() {
             const { element, ...rest } = route;
             return <Route key={index} {...rest} element={element} />;
           })}
-          
+
           <Route path="*" element={<PageNotExists />} />
         </Routes>
       </Layout>
@@ -55,4 +51,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

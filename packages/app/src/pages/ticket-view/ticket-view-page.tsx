@@ -1,9 +1,9 @@
 import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
-import { api } from "../../api/api";
-import { formatDateTime } from "../../utils/date";
 import { UserName } from "../../components/user-name/user-name";
 import { EditableField } from "../../components/editable-field/editable-field";
+import { api } from "@times/api";
+import { formatDateTime } from "@times/utils";
 
 interface UpdateTicketMutationFnParams {
   ticketId: number;

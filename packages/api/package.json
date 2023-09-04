@@ -1,0 +1,9 @@
+{
+  "name": "@times/api",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./build/index.js",
+  "scripts": {
+    "build": "tsc --build"
+  }
+}

@@ -5,7 +5,7 @@ import { addItemToPagedResult, uuid } from "@times/utils";
 import { Pagination } from "../pagination/pagination";
 import { ItemsTable, ItemsTableColumn } from "./items-table";
 
-interface TablePageProps<T> {
+interface TableViewProps<T> {
   pageTitle: string;
   itemForm?: any;
   tableData: {
@@ -17,9 +17,10 @@ interface TablePageProps<T> {
   saveItemApi?: any;
   onViewItem: (item: T) => void;
   renderDeleteConfirmationModalBody?: (item: T) => ReactNode;
+  initialPage?: { pageNumber: number; pageSize: number };
 }
 
-export function TablePage<T>({
+export function TableView<T>({
   pageTitle,
   itemForm,
   tableData,
@@ -29,12 +30,13 @@ export function TablePage<T>({
   saveItemApi,
   onViewItem,
   renderDeleteConfirmationModalBody,
-}: TablePageProps<T>) {
+  initialPage = { pageNumber: 1, pageSize: 50 },
+}: TableViewProps<T>) {
   const ItemForm = itemForm;
   const [itemToDelete, setItemToDelete] = useState<T>();
   const [confirmDeleteModal, setConfirmDeleteModal] = useState(false);
   const [formModal, setFormModal] = useState(false);
-  const [page, setPage] = useState({ pageNumber: 1, pageSize: 50 });
+  const [page, setPage] = useState(initialPage);
   const queryClient = useQueryClient();
   const formId = uuid();
 

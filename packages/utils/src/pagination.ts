@@ -7,3 +7,8 @@ export const addItemToPagedResult = (pagedResult: any, item: any) => {
 
     return clone;
 };
+
+export type Page = {
+  pageNumber: number;
+  pageSize: number;
+};

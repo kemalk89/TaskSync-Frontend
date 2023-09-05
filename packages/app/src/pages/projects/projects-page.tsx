@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { TablePage } from "../../components/table-page/table-page";
+import { TableView } from "../../components/table-page/table-view";
 import { ProjectForm } from "./project-form";
 import { ItemsTableColumn } from "../../components/table-page/items-table";
 import { ProjectResponse, api } from "@times/api";
@@ -13,7 +13,7 @@ export const ProjectsPage = () => {
   ];
 
   return (
-    <TablePage<ProjectResponse>
+    <TableView<ProjectResponse>
       pageTitle="Projects"
       cacheKey="projects"
       getItemsApi={api.fetchProjects}
@@ -25,6 +25,6 @@ export const ProjectsPage = () => {
       renderDeleteConfirmationModalBody={(project: any) => (
         <p>Are you sure you want to delete project "{project.title}"?</p>
       )}
-    ></TablePage>
+    ></TableView>
   );
 };

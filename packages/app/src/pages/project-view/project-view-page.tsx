@@ -1,8 +1,14 @@
 import { api } from "@times/api";
-import { formatDateTime, useParamsNumber } from "@times/utils";
+import { Page, formatDateTime, useParamsNumber } from "@times/utils";
 import { useQuery } from "react-query";
+import { ticketTableColumns } from "../tickets/ticket-table-columns";
+import { TableView } from "../../components/table-page/table-view";
+import { TicketForm } from "../tickets/ticket-form";
+import { useNavigate } from "react-router-dom";
 
 export const ProjectViewPage = () => {
+  const navigate = useNavigate();
+
   const projectId = useParamsNumber("projectId");
 
   const fetchProject = useQuery({
@@ -13,6 +19,25 @@ export const ProjectViewPage = () => {
   if (fetchProject.isLoading) {
     return <div>...</div>;
   }
+
+  const renderProjectTickets = () => {
+    return (
+      <TableView
+        pageTitle=""
+        cacheKey="tickets"
+        getItemsApi={(page: Page) => api.fetchProjectTickets(projectId!, page)}
+        initialPage={{ pageSize: 15, pageNumber: 1 }}
+        saveItemApi={api.saveTicket}
+        deleteItemApi={api.deleteTicket}
+        onViewItem={(item: any) => navigate(`/ticket/${item.id}`)}
+        itemForm={TicketForm}
+        tableData={{ columns: ticketTableColumns }}
+        renderDeleteConfirmationModalBody={(ticket) => (
+          <p>Are you sure you want to delete ticket "{ticket.title}"?</p>
+        )}
+      ></TableView>
+    );
+  };
 
   return (
     <div>
@@ -25,6 +50,8 @@ export const ProjectViewPage = () => {
       </p>
       <h2>Description</h2>
       <p>{fetchProject.data.description}</p>
+      <h2>Tickets</h2>
+      {renderProjectTickets()}
     </div>
   );
 };

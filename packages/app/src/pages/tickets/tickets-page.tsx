@@ -1,40 +1,14 @@
 import { useNavigate } from "react-router-dom";
-import { TicketResponse, api } from "@times/api";
-import { TablePage } from "../../components/table-page/table-page";
+import { api } from "@times/api";
+import { TableView } from "../../components/table-page/table-view";
 import { TicketForm } from "./ticket-form";
-import { UserName } from "../../components/user-name/user-name";
-import { ItemsTableColumn } from "../../components/table-page/items-table";
+import { ticketTableColumns } from "./ticket-table-columns";
 
 export const TicketsPage = () => {
   const navigate = useNavigate();
 
-  const columns: ItemsTableColumn<TicketResponse>[] = [
-    { title: "ID", fieldName: "id" },
-    { title: "Title", fieldName: "title" },
-    {
-      title: "Assignee",
-      fieldName: (ticket) => {
-        if (!ticket.assignee) {
-          return null;
-        }
-
-        return <UserName user={ticket.assignee} />;
-      },
-    },
-    {
-      title: "Status",
-      fieldName: (ticket) => {
-        if (!ticket.status) {
-          return null;
-        }
-
-        return <span>{ticket.status.name}</span>;
-      },
-    },
-  ];
-
   return (
-    <TablePage
+    <TableView
       pageTitle="Tickets"
       cacheKey="tickets"
       getItemsApi={api.fetchTickets}
@@ -42,10 +16,10 @@ export const TicketsPage = () => {
       deleteItemApi={api.deleteTicket}
       onViewItem={(item: any) => navigate(`/ticket/${item.id}`)}
       itemForm={TicketForm}
-      tableData={{ columns }}
+      tableData={{ columns: ticketTableColumns }}
       renderDeleteConfirmationModalBody={(ticket) => (
         <p>Are you sure you want to delete ticket "{ticket.title}"?</p>
       )}
-    ></TablePage>
+    ></TableView>
   );
 };

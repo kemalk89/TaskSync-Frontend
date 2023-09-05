@@ -1,6 +1,6 @@
 import { UserResponse, api } from "@times/api";
 import { ItemsTableColumn } from "../../components/table-page/items-table";
-import { TablePage } from "../../components/table-page/table-page";
+import { TableView } from "../../components/table-page/table-view";
 import { useNavigate } from "react-router-dom";
 
 export const UserManagementPage = () => {
@@ -12,7 +12,7 @@ export const UserManagementPage = () => {
   ];
 
   return (
-    <TablePage<UserResponse>
+    <TableView<UserResponse>
       tableData={{ columns }}
       pageTitle="User Management"
       cacheKey="users"

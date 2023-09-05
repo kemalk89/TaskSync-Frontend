@@ -113,6 +113,14 @@ export const api = {
   fetchProject: async (projectId: number) => {
     return get(`/api/project/${projectId}`);
   },
+  fetchProjectTickets: async (
+    projectId: number,
+    { pageNumber, pageSize }: Page
+  ) => {
+    return get(
+      `/api/Project/${projectId}/tickets?pageNumber=${pageNumber}&pageSize=${pageSize}`
+    );
+  },
   fetchProjects: async ({ pageNumber, pageSize }: Page) => {
     return get(`/api/Project?pageNumber=${pageNumber}&pageSize=${pageSize}`);
   },

@@ -2,8 +2,9 @@
   "name": "@times/utils",
   "version": "0.0.0",
   "type": "module",
-  "main": "./build/index.js",
+  "main": "./dist/index.js",
   "scripts": {
+    "dev": "tsc --watch",
     "build": "tsc --build"
   },
   "dependencies": {

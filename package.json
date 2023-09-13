@@ -7,9 +7,13 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "npm run -w @times/app dev",
+    "dev": "lerna run dev --parallel",
     "test:e2e": "npm run -w @times/tests test",
     "clean": "tsc --build --clean",
-    "build": "tsc --build && npm run build -ws"
+    "build": "lerna run build --stream"
+  },
+  "devDependencies": {
+    "lerna": "^7.2.0",
+    "typescript": "^5.0.2"
   }
 }

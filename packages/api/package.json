@@ -2,8 +2,9 @@
   "name": "@times/api",
   "version": "0.0.0",
   "type": "module",
-  "main": "./build/index.js",
+  "main": "./dist/index.js",
   "scripts": {
+    "dev": "tsc --build --watch",
     "build": "tsc --build"
   }
 }

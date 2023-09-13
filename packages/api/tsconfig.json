@@ -9,7 +9,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "rootDir": "./src",
-    "outDir": "./build",
+    "outDir": "./dist",
     "composite": true,
 
     /* Linting */

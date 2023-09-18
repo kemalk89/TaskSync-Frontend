@@ -1,4 +1,8 @@
-import { ProjectResponse, TicketResponse } from "./responses";
+import {
+  ProjectResponse,
+  TicketCommentResponse,
+  TicketResponse,
+} from "./responses";
 
 let accessToken: string | null = null;
 let authConfig: any = null;
@@ -96,11 +100,25 @@ export const api = {
   fetchTicket: async (ticketId: string) => {
     return get(`/api/ticket/${ticketId}`);
   },
+  fetchTicketComments: async (
+    ticketId: string,
+    { pageNumber, pageSize }: Page
+  ) => {
+    return get(
+      `/api/ticket/${ticketId}/comment?pageNumber=${pageNumber}&pageSize=${pageSize}`
+    );
+  },
   fetchTickets: async ({ pageNumber, pageSize }: Page) => {
     return get(`/api/ticket?pageNumber=${pageNumber}&pageSize=${pageSize}`);
   },
   saveTicket: async (ticket: any) => {
     return post("/api/ticket", ticket);
+  },
+  saveTicketComment: async (
+    ticketId: string,
+    comment: any
+  ): Promise<TicketCommentResponse> => {
+    return post(`/api/ticket/${ticketId}/comment`, comment);
   },
   deleteTicket: async (ticket: TicketResponse) => {
     return remove("/api/ticket/" + ticket.id);

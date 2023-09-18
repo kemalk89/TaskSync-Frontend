@@ -1,6 +1,3 @@
-//import { $getRoot, $getSelection } from "lexical";
-import { useState } from "react";
-
 import {
   InitialConfigType,
   InitialEditorStateType,
@@ -27,6 +24,7 @@ const theme = {
 };
 
 interface TextEditorProps {
+  readOnlyMode?: boolean;
   placeholder?: string;
   initialEditorState?: InitialEditorStateType;
   onChange: (newEditorState: EditorState) => void;
@@ -36,10 +34,12 @@ export function TextEditor({
   placeholder,
   initialEditorState,
   onChange,
+  readOnlyMode,
 }: TextEditorProps) {
   const initialConfig: InitialConfigType = {
     namespace: "MyEditor",
     theme,
+    editable: !readOnlyMode,
     editorState: initialEditorState,
     onError: (err: Error) => {
       throw err;
@@ -53,7 +53,8 @@ export function TextEditor({
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
-      <ToolbarPlugin />
+      {readOnlyMode ? "" : <ToolbarPlugin />}
+
       <div className="uic-texteditor-wrapper">
         <RichTextPlugin
           contentEditable={

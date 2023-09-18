@@ -6,23 +6,41 @@ import { api } from "@times/api";
 import { TextEditor } from "@times/ui-components";
 import { formatDateTime } from "@times/utils";
 import { Button } from "reactstrap";
+import { useState } from "react";
 
 interface UpdateTicketMutationFnParams {
   ticketId: number;
   newStatus: number;
 }
 
+interface AddTicketCommentMutationFnParams {
+  ticketId: number;
+  comment: any;
+}
+
 export const TicketViewPage = () => {
   const { ticketId } = useParams();
+  const [comment, setComment] = useState<string>("");
 
   const fetchTicket = useQuery({
     queryKey: ["ticket"],
     queryFn: () => api.fetchTicket(ticketId!),
   });
 
+  const fetchTicketComments = useQuery({
+    queryKey: ["ticketComments"],
+    queryFn: () =>
+      api.fetchTicketComments(ticketId!, { pageNumber: 1, pageSize: 50 }),
+  });
+
   const updateTicketStatus = useMutation({
     mutationFn: ({ ticketId, newStatus }: UpdateTicketMutationFnParams) =>
       api.updateTicketStatus(ticketId, newStatus),
+  });
+
+  const addTicketComment = useMutation({
+    mutationFn: ({ ticketId, comment }: AddTicketCommentMutationFnParams) =>
+      api.saveTicketComment(ticketId, comment),
   });
 
   if (fetchTicket.isLoading) {
@@ -80,16 +98,43 @@ export const TicketViewPage = () => {
       <h2>Description</h2>
       <p>{fetchTicket.data.description}</p>
       <h2>Comments</h2>
+
       <TextEditor
         placeholder="Add comment..."
-        onChange={(value) => console.log(value)}
+        onChange={(value) => setComment(JSON.stringify(value))}
       />
       <div>
-        <Button color="primary" onClick={() => console.log("Add Comment")}>
+        <Button
+          color="primary"
+          onClick={() =>
+            addTicketComment.mutate({
+              ticketId: parseInt(ticketId!),
+              comment: { comment },
+            })
+          }
+        >
           Save
         </Button>
         <Button>Cancel</Button>
       </div>
+
+      {fetchTicketComments.isSuccess &&
+        fetchTicketComments.data.items.length > 0 && (
+          <div className="mt-4"></div>
+        )}
+
+      {fetchTicketComments.isSuccess &&
+        fetchTicketComments.data.items.map((comment: any, index: number) => {
+          return (
+            <div key={index} className="mb-2">
+              <TextEditor
+                readOnlyMode
+                initialEditorState={comment.comment}
+                onChange={() => null}
+              />
+            </div>
+          );
+        })}
     </div>
   );
 };

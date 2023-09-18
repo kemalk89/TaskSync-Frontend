@@ -4,7 +4,8 @@
   "type": "module",
   "main": "./dist/index.js",
   "scripts": {
-    "dev": "tsc --build --watch",
-    "build": "tsc --build"
+    "dev": "tsc --build",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean"
   }
 }

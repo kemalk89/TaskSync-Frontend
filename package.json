@@ -7,10 +7,10 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "lerna run dev --parallel",
+    "dev": "npm run clean && lerna run dev --stream",
+    "build": "npm run clean && lerna run build --stream",
     "test:e2e": "npm run -w @times/tests test",
-    "clean": "tsc --build --clean",
-    "build": "lerna run build --stream"
+    "clean": "lerna run clean --stream"
   },
   "devDependencies": {
     "lerna": "^7.2.0",

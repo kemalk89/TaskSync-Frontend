@@ -50,7 +50,7 @@ export const ProjectViewPage = () => {
       </p>
       <h2>Description</h2>
       <p>{fetchProject.data.description}</p>
-      <h2>Tickets</h2>
+      <h2>Related tickets</h2>
       {renderProjectTickets()}
     </div>
   );

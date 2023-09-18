@@ -3,7 +3,9 @@ import { useParams } from "react-router-dom";
 import { UserName } from "../../components/user-name/user-name";
 import { EditableField } from "../../components/editable-field/editable-field";
 import { api } from "@times/api";
+import { TextEditor } from "@times/ui-components";
 import { formatDateTime } from "@times/utils";
+import { Button } from "reactstrap";
 
 interface UpdateTicketMutationFnParams {
   ticketId: number;
@@ -75,11 +77,19 @@ export const TicketViewPage = () => {
           />
         </div>
       </div>
-
       <h2>Description</h2>
       <p>{fetchTicket.data.description}</p>
-
       <h2>Comments</h2>
+      <TextEditor
+        placeholder="Add comment..."
+        onChange={(value) => console.log(value)}
+      />
+      <div>
+        <Button color="primary" onClick={() => console.log("Add Comment")}>
+          Save
+        </Button>
+        <Button>Cancel</Button>
+      </div>
     </div>
   );
 };

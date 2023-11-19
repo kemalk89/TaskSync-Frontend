@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { TableView } from "../../components/table-page/table-view";
 import { ProjectForm } from "./project-form";
 import { ItemsTableColumn } from "../../components/table-page/items-table";
-import { ProjectResponse, api } from "@times/api";
+import { ProjectResponse, api } from "@app/api";
 
 export const ProjectsPage = () => {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 {
-  "name": "@times/tests",
+  "name": "@app/tests",
   "version": "0.0.0",
   "scripts": {
     "test": "tsc --build && npm run test:headless",

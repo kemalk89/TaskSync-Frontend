@@ -14,6 +14,6 @@ Terminate the application.
 
 # HowTo's
 ### How to install a dependency for a specific package?
-``npm install reactstrap -w @times/ui-components``
+``npm install reactstrap -w @app/ui-components``
 ### How to build only a specific package?
-``npm run build -w @times/ui-components``
+``npm run build -w @app/ui-components``

@@ -1,5 +1,5 @@
-import { api } from "@times/api";
-import { Page, formatDateTime, useParamsNumber } from "@times/utils";
+import { api } from "@app/api";
+import { Page, formatDateTime, useParamsNumber } from "@app/utils";
 import { useQuery } from "react-query";
 import { ticketTableColumns } from "../tickets/ticket-table-columns";
 import { TableView } from "../../components/table-page/table-view";

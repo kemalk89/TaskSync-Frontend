@@ -1,4 +1,4 @@
-import { UserResponse, api } from "@times/api";
+import { UserResponse, api } from "@app/api";
 import { ItemsTableColumn } from "../../components/table-page/items-table";
 import { TableView } from "../../components/table-page/table-view";
 import { useNavigate } from "react-router-dom";

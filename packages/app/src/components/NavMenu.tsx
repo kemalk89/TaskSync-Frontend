@@ -22,7 +22,7 @@ export const NavMenu = () => {
         light
       >
         <NavbarBrand tag={Link} to="/">
-          Times
+          TaskSync
         </NavbarBrand>
         <NavbarToggler onClick={toggleNavbar} className="mr-2" />
         <Collapse

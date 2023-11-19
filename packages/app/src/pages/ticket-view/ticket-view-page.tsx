@@ -2,9 +2,9 @@ import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import { UserName } from "../../components/user-name/user-name";
 import { EditableField } from "../../components/editable-field/editable-field";
-import { api } from "@times/api";
-import { TextEditor } from "@times/ui-components";
-import { formatDateTime } from "@times/utils";
+import { api } from "@app/api";
+import { TextEditor } from "@app/ui-components";
+import { formatDateTime } from "@app/utils";
 import { Button } from "reactstrap";
 import { useState } from "react";
 
@@ -40,7 +40,7 @@ export const TicketViewPage = () => {
 
   const addTicketComment = useMutation({
     mutationFn: ({ ticketId, comment }: AddTicketCommentMutationFnParams) =>
-      api.saveTicketComment(ticketId, comment),
+      api.saveTicketComment(ticketId as unknown as string, comment),
   });
 
   if (fetchTicket.isLoading) {

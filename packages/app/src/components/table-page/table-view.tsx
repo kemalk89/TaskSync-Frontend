@@ -1,7 +1,7 @@
 import { ReactNode, useState } from "react";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { addItemToPagedResult, uuid } from "@times/utils";
+import { addItemToPagedResult, uuid } from "@app/utils";
 import { Pagination } from "../pagination/pagination";
 import { ItemsTable, ItemsTableColumn } from "./items-table";
 

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { api } from "@times/api";
+import { api } from "@app/api";
 import { TableView } from "../../components/table-page/table-view";
 import { TicketForm } from "./ticket-form";
 import { ticketTableColumns } from "./ticket-table-columns";

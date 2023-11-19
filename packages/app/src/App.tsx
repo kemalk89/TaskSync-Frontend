@@ -7,7 +7,7 @@ import AppRoutes from "./AppRoutes";
 import toast, { Toaster } from "react-hot-toast";
 import { QueryCache, QueryClient, QueryClientProvider } from "react-query";
 import { PageNotExists } from "./pages/page-not-exists/page-not-exists";
-import { api } from "@times/api";
+import { api } from "@app/api";
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({

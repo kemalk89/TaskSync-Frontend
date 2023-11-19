@@ -1,7 +1,7 @@
 import { Formik } from "formik";
 import { Form, FormFeedback, FormGroup, Input, Label } from "reactstrap";
 import { AutoCompleteAsync } from "../../components/autocomplete-async/autocomplete-async";
-import { api } from "@times/api";
+import { api } from "@app/api";
 
 interface TicketFormProps {
   formId: string;

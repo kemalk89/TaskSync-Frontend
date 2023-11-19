@@ -1,4 +1,4 @@
-import { TicketResponse } from "@times/api";
+import { TicketResponse } from "@app/api";
 import { UserName } from "../../components/user-name/user-name";
 import { ItemsTableColumn } from "../../components/table-page/items-table";
 

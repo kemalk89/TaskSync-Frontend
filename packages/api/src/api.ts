@@ -5,13 +5,13 @@ import {
 } from "./responses";
 
 let accessToken: string | null = null;
-let authConfig: any = null;
+let authConfig: AuthConfig | null = null;
 let accessTokenLoaderFn: any = undefined;
 
 const initAccesToken = async () => {
   if (!accessToken) {
     accessToken = await accessTokenLoaderFn({
-      audience: authConfig.audience,
+      audience: authConfig?.audience,
     });
   }
 };
@@ -92,8 +92,12 @@ interface Page {
   pageSize: number;
 }
 
+interface AuthConfig {
+  audience: string;
+}
+
 export const api = {
-  setAccessTokenLoader: (fn: () => void, config: any) => {
+  setAccessTokenLoader: (fn: () => void, config: AuthConfig) => {
     authConfig = config;
     accessTokenLoaderFn = fn;
   },

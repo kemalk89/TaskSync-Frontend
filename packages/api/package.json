@@ -2,10 +2,16 @@
   "name": "@app/api",
   "version": "0.0.0",
   "type": "module",
-  "main": "./dist/index.js",
-  "scripts": {
-    "dev": "tsc --build",
-    "build": "tsc --build",
-    "clean": "tsc --build --clean"
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@app/eslint-config": "*",
+    "@app/typescript-config": "*",
+    "typescript": "5.5.4"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.62.15"
   }
 }

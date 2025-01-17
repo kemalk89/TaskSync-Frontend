@@ -1,23 +1,25 @@
 {
   "name": "task-sync-ui",
-  "version": "0.0.0",
   "description": "A monorepo",
   "private": true,
+  "packageManager": "npm@10.9.0",
   "workspaces": [
+    "apps/*",
     "packages/*"
   ],
   "scripts": {
-    "dev": "npm run clean && lerna run dev --stream",
-    "build": "npm run clean && lerna run build --stream",
-    "test:e2e": "npm run -w @app/tests test",
-    "clean": "lerna run clean --stream"
+    "build": "turbo build",
+    "dev": "NODE_OPTIONS='--inspect' turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "test:e2e": "npm run -w @app/tests test"
   },
   "devDependencies": {
-    "lerna": "^7.2.0",
-    "typescript": "^5.0.2"
+    "prettier": "^3.2.5",
+    "turbo": "^2.3.3",
+    "typescript": "5.5.4"
   },
   "engines": {
-    "node": ">=20.13.1",
-    "npm": ">=10.5.2"
+    "node": ">=18"
   }
 }

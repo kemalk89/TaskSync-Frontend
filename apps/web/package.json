@@ -1,0 +1,36 @@
+{
+  "name": "@app/app",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint --max-warnings 0",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@app/api": "*",
+    "@app/ui-components": "*",
+    "@app/utils": "*",
+    "@auth0/auth0-react": "^2.1.0",
+    "bootstrap": "^5.3.3",
+    "formik": "^2.2.9",
+    "next": "^15.1.0",
+    "next-auth": "^5.0.0-beta.25",
+    "react": "^19.0.0",
+    "react-bootstrap": "^2.10.7",
+    "react-bootstrap-typeahead": "^6.1.2",
+    "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.4.1"
+  },
+  "devDependencies": {
+    "@app/eslint-config": "*",
+    "@app/typescript-config": "*",
+    "@types/node": "^20",
+    "@types/react": "18.3.1",
+    "@types/react-dom": "18.3.0",
+    "@types/uuid": "^9.0.1",
+    "typescript": "5.5.4"
+  }
+}

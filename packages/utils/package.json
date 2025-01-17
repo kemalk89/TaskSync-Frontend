@@ -2,13 +2,16 @@
   "name": "@app/utils",
   "version": "0.0.0",
   "type": "module",
-  "main": "./dist/index.js",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "scripts": {
-    "dev": "tsc --build",
-    "build": "tsc --build",
-    "clean": "tsc --build --clean"
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.62.15",
     "date-fns": "^2.30.0",
     "uuid": "^9.0.0"
   }

@@ -1,5 +1,10 @@
 import { UsersPage } from "@app/ui-components";
+import { Suspense } from "react";
 
 export default function Page() {
-  return <UsersPage />;
+  return (
+    <Suspense>
+      <UsersPage />
+    </Suspense>
+  );
 }

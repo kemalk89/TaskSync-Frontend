@@ -11,8 +11,13 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.62.15",
-    "date-fns": "^2.30.0",
-    "uuid": "^9.0.0"
+    "@tanstack/react-query": "^5.64.2",
+    "date-fns": "^4.1.0",
+    "uuid": "^11.0.5"
+  },
+  "devDependencies": {
+    "@app/eslint-config": "*",
+    "@app/typescript-config": "*",
+    "typescript": "5.7.3"
   }
 }

@@ -1,5 +1,5 @@
 import Auth0 from "next-auth/providers/auth0";
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthResult } from "next-auth";
 
 declare module "next-auth" {
   interface Session {
@@ -7,8 +7,8 @@ declare module "next-auth" {
   }
 }
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
-  debug: true,
+const nextAuthResult = NextAuth({
+  debug: false,
   providers: [
     Auth0({
       authorization: {
@@ -32,3 +32,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
 });
+
+export const auth: NextAuthResult["auth"] = nextAuthResult.auth;
+export const { handlers, signIn, signOut } = nextAuthResult;

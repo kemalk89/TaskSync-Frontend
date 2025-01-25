@@ -28,7 +28,7 @@ export default async function Page({
       .fetchProject(projectId);
 
     return <div>Project View Page: {data.title}</div>;
-  } catch (e) {
+  } catch {
     return <div>Error calling backend service</div>;
   }
 }

@@ -2,15 +2,9 @@ import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext
 import {
   $getSelection,
   $isRangeSelection,
-  $createParagraphNode,
   SELECTION_CHANGE_COMMAND,
 } from "lexical";
-import { $setBlocksType, $wrapNodes } from "@lexical/selection";
-import {
-  $createHeadingNode,
-  $isHeadingNode,
-  HeadingTagType,
-} from "@lexical/rich-text";
+import { $isHeadingNode, HeadingTagType } from "@lexical/rich-text";
 import {
   IconH1,
   IconH2,
@@ -18,80 +12,17 @@ import {
   IconH4,
   IconH5,
   IconH6,
-  SelectOption,
-  Select,
-} from "../..";
+} from "../../icons/icons.js";
 import { useCallback, useEffect, useState } from "react";
 import { mergeRegister } from "@lexical/utils";
-import { LowPriority } from "./constants";
+import { LowPriority } from "./constants.js";
+import { Select, SelectOption } from "../../select/select.js";
 
 const SELECT_OPTION_P = { value: "paragraph", label: "Normal Text" };
 
 export const HeadingToolbarPlugin = () => {
   const [editor] = useLexicalComposerContext();
   const [blockType, setBlockType] = useState<SelectOption>(SELECT_OPTION_P);
-
-  const updateToolbar = useCallback(() => {
-    const selection = $getSelection();
-    if ($isRangeSelection(selection)) {
-      const anchorNode = selection.anchor.getNode();
-      const element =
-        anchorNode.getKey() === "root"
-          ? anchorNode
-          : anchorNode.getTopLevelElementOrThrow();
-      const elementKey = element.getKey();
-      const elementDOM = editor.getElementByKey(elementKey);
-      if (elementDOM !== null) {
-        const type = $isHeadingNode(element)
-          ? element.getTag()
-          : element.getType();
-
-        const selectedOption = SELECT_OPTIONS.find((i) => i.value === type);
-        setBlockType(selectedOption ?? SELECT_OPTION_P);
-      }
-    }
-  }, [editor]);
-
-  useEffect(() => {
-    return mergeRegister(
-      editor.registerUpdateListener(({ editorState }) => {
-        editorState.read(() => {
-          updateToolbar();
-        });
-      }),
-      editor.registerCommand(
-        SELECTION_CHANGE_COMMAND,
-        (/* _payload, newEditor */) => {
-          updateToolbar();
-          return false;
-        },
-        LowPriority
-      )
-    );
-  }, [editor, updateToolbar]);
-
-  const handleChangeBlockType = (selectedBlockType: SelectOption) => {
-    editor.update(() => {
-      const selection = $getSelection();
-      if ($isRangeSelection(selection)) {
-        if (selectedBlockType.value.startsWith("h")) {
-          $setBlocksType(selection, () =>
-            $createHeadingNode(selectedBlockType.value as HeadingTagType)
-          );
-        } else if (selectedBlockType.value === SELECT_OPTION_P.value) {
-          if (blockType.value !== "paragraph") {
-            editor.update(() => {
-              const selection = $getSelection();
-
-              if ($isRangeSelection(selection)) {
-                $wrapNodes(selection, () => $createParagraphNode());
-              }
-            });
-          }
-        }
-      }
-    });
-  };
 
   const SELECT_OPTIONS: SelectOption[] = [
     SELECT_OPTION_P,
@@ -126,6 +57,70 @@ export const HeadingToolbarPlugin = () => {
       icon: (option) => renderIcon(option.value as HeadingTagType),
     },
   ];
+
+  const updateToolbar = useCallback(() => {
+    const selection = $getSelection();
+    if ($isRangeSelection(selection)) {
+      const anchorNode = selection.anchor.getNode();
+      const element =
+        anchorNode.getKey() === "root"
+          ? anchorNode
+          : anchorNode.getTopLevelElementOrThrow();
+      const elementKey = element.getKey();
+      const elementDOM = editor.getElementByKey(elementKey);
+      if (elementDOM !== null) {
+        const type = $isHeadingNode(element)
+          ? element.getTag()
+          : element.getType();
+
+        const selectedOption = SELECT_OPTIONS.find((i) => i.value === type);
+        setBlockType(selectedOption ?? SELECT_OPTION_P);
+      }
+    }
+  }, [editor, SELECT_OPTIONS]);
+
+  useEffect(() => {
+    return mergeRegister(
+      editor.registerUpdateListener(({ editorState }) => {
+        editorState.read(() => {
+          updateToolbar();
+        });
+      }),
+      editor.registerCommand(
+        SELECTION_CHANGE_COMMAND,
+        (/* _payload, newEditor */) => {
+          updateToolbar();
+          return false;
+        },
+        LowPriority
+      )
+    );
+  }, [editor, updateToolbar]);
+
+  const handleChangeBlockType = (selectedBlockType: SelectOption) => {
+    editor.update(() => {
+      const selection = $getSelection();
+      if ($isRangeSelection(selection)) {
+        if (selectedBlockType.value.startsWith("h")) {
+          /*
+          $setBlocksType(selection, () =>
+            $createHeadingNode(selectedBlockType.value as HeadingTagType)
+          );
+          */
+        } else if (selectedBlockType.value === SELECT_OPTION_P.value) {
+          if (blockType.value !== "paragraph") {
+            editor.update(() => {
+              const selection = $getSelection();
+
+              if ($isRangeSelection(selection)) {
+                //$wrapNodes(selection, () => $createParagraphNode());
+              }
+            });
+          }
+        }
+      }
+    });
+  };
 
   const renderIcon = (tag: HeadingTagType) => {
     switch (tag) {

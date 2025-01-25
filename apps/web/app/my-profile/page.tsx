@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { auth } from "../auth";
 
 export default async function Page() {
@@ -7,7 +8,12 @@ export default async function Page() {
 
   return (
     <div>
-      <img src={session.user.image ?? ""} alt="User Avatar" />
+      <Image
+        src={session.user.image ?? ""}
+        alt="User Avatar"
+        width={70}
+        height={70}
+      />
       <h2>{session.user.name}</h2>
       <p>{session.user.email}</p>
       <div>

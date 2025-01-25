@@ -8,15 +8,15 @@ import {
 } from "lexical";
 import { mergeRegister } from "@lexical/utils";
 import { useCallback, useEffect, useState } from "react";
-import { Button } from "reactstrap";
+import { Button } from "react-bootstrap";
 import {
   IconBold,
   IconCode,
   IconItalic,
   IconStrikethrough,
   IconUnderline,
-} from "../..";
-import { LowPriority } from "./constants";
+} from "../../icons/icons.js";
+import { LowPriority } from "./constants.js";
 
 export const TextFormatPlugin = () => {
   const [editor] = useLexicalComposerContext();
@@ -37,7 +37,7 @@ export const TextFormatPlugin = () => {
       setIsStrikethrough(selection.hasFormat("strikethrough"));
       setIsCode(selection.hasFormat("code"));
     }
-  }, [editor]);
+  }, []);
 
   useEffect(() => {
     return mergeRegister(
@@ -64,35 +64,30 @@ export const TextFormatPlugin = () => {
   return (
     <>
       <Button
-        outline
         className={isBold ? "active" : ""}
         onClick={() => onClickFormat("bold")}
       >
         <IconBold />
       </Button>
       <Button
-        outline
         className={isItalic ? "active" : ""}
         onClick={() => onClickFormat("italic")}
       >
         <IconItalic />
       </Button>
       <Button
-        outline
         className={isUnderline ? "active" : ""}
         onClick={() => onClickFormat("underline")}
       >
         <IconUnderline />
       </Button>
       <Button
-        outline
         className={isStrikethrough ? "active" : ""}
         onClick={() => onClickFormat("strikethrough")}
       >
         <IconStrikethrough />
       </Button>
       <Button
-        outline
         className={isCode ? "active" : ""}
         onClick={() => onClickFormat("code")}
       >

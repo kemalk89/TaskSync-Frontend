@@ -7,7 +7,6 @@
     ".": "./src/index.ts"
   },
   "devDependencies": {
-    "@app/eslint-config": "*",
     "@app/typescript-config": "*",
     "typescript": "5.5.4"
   },

@@ -13,23 +13,21 @@
   "dependencies": {
     "@app/api": "*",
     "@app/utils": "*",
-    "@lexical/react": "^0.12.2",
-    "@tanstack/react-query": "^5.62.15",
+    "@lexical/react": "^0.23.1",
+    "@tanstack/react-query": "^5.64.2",
     "bootstrap": "^5.3.3",
-    "bootstrap-icons": "^1.11.0",
-    "lexical": "^0.12.2",
+    "bootstrap-icons": "^1.11.3",
     "react": "^19.0.0",
-    "react-bootstrap": "^2.10.7",
-    "react-dom": "^19.0.0",
-    "react-select": "^5.7.4"
+    "react-bootstrap": "^2.10.8",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@app/eslint-config": "*",
     "@app/typescript-config": "*",
-    "@turbo/gen": "^1.12.4",
-    "@types/node": "^20.11.24",
-    "@types/react": "18.3.0",
-    "@types/react-dom": "18.3.1",
-    "typescript": "5.5.4"
+    "@turbo/gen": "^1.13.4",
+    "@types/node": "^22.10.10",
+    "@types/react": "19.0.8",
+    "@types/react-dom": "19.0.3",
+    "typescript": "5.7.3"
   }
 }

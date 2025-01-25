@@ -1,11 +1,14 @@
-export const addItemToPagedResult = (pagedResult: any, item: any) => {
-    const clone = {
-        ...pagedResult,
-        total: pagedResult.total + 1,
-        items: [...pagedResult.items, item]
-    };
+export const addItemToPagedResult = (
+  pagedResult: { total: number; items: unknown[] },
+  item: unknown
+) => {
+  const clone = {
+    ...pagedResult,
+    total: pagedResult.total + 1,
+    items: [...pagedResult.items, item],
+  };
 
-    return clone;
+  return clone;
 };
 
 export type Page = {

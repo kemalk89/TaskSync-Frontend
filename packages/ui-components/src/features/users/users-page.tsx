@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getAPI, PagedResult, TicketResponse, UserResponse } from "@app/api";
+import { getAPI, PagedResult, UserResponse } from "@app/api";
 import { Button, Table } from "react-bootstrap";
 import { Pagination } from "../pagination/pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";

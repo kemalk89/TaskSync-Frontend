@@ -1,6 +1,10 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { ProjectsPage } from "@app/ui-components";
 
 export default function Page() {
-  return <ProjectsPage />;
+  return (
+    <Suspense>
+      <ProjectsPage />
+    </Suspense>
+  );
 }

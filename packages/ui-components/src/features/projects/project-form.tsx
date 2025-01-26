@@ -1,19 +1,31 @@
-import { Formik } from "formik";
-import { Form, FormFeedback, FormGroup, Input, Label } from "reactstrap";
+import { ApiResponse, ProjectResponse } from "@app/api";
+import { Formik, FormikProps } from "formik";
+import { Ref } from "react";
+import { Form, FormControl, FormGroup, FormLabel } from "react-bootstrap";
 
-interface ProjectFormValues {
+export interface ProjectFormValues {
   title: string;
   description: string;
 }
 
 interface ProjectFormProps {
-  formId: string;
-  saveHandler: (project: ProjectFormValues) => void;
+  formRef: Ref<FormikProps<ProjectFormValues>>;
+  saveHandler: (
+    project: ProjectFormValues
+  ) => Promise<ApiResponse<ProjectResponse>>;
+  onSubmitStart: () => void;
+  onSubmitFinished: (result: ApiResponse<ProjectResponse>) => void;
 }
 
-export const ProjectForm = ({ formId, saveHandler }: ProjectFormProps) => {
+export const ProjectForm = ({
+  formRef,
+  saveHandler,
+  onSubmitStart,
+  onSubmitFinished,
+}: ProjectFormProps) => {
   return (
     <Formik<ProjectFormValues>
+      innerRef={formRef}
       initialValues={{
         title: "",
         description: "",
@@ -25,8 +37,10 @@ export const ProjectForm = ({ formId, saveHandler }: ProjectFormProps) => {
         }
         return errors;
       }}
-      onSubmit={(values) => {
-        saveHandler(values);
+      onSubmit={async (values) => {
+        onSubmitStart();
+        const result = await saveHandler(values);
+        onSubmitFinished(result);
       }}
     >
       {({
@@ -36,23 +50,27 @@ export const ProjectForm = ({ formId, saveHandler }: ProjectFormProps) => {
         handleSubmit,
         handleChange,
         handleBlur,
+        isSubmitting,
       }) => (
-        <Form onSubmit={handleSubmit} id={formId}>
+        <Form onSubmit={handleSubmit}>
+          <div>
+            <h3>Debug</h3>
+            <div>Is Submitting: {isSubmitting ? "Yes" : "No"}</div>
+          </div>
           <FormGroup>
-            <Label for="title">Title</Label>
-            <Input
+            <FormLabel htmlFor="title">Title</FormLabel>
+            <FormControl
               id="title"
               name="title"
               value={values.title}
               onChange={handleChange}
               onBlur={handleBlur}
-              invalid={!!errors.title && touched.title}
             />
-            <FormFeedback>{errors.title}</FormFeedback>
+            <FormControl.Feedback>{errors.title}</FormControl.Feedback>
           </FormGroup>
           <FormGroup>
-            <Label for="description">Description</Label>
-            <Input
+            <FormLabel htmlFor="description">Description</FormLabel>
+            <FormControl
               id="description"
               name="description"
               type="textarea"
@@ -60,6 +78,9 @@ export const ProjectForm = ({ formId, saveHandler }: ProjectFormProps) => {
               onChange={handleChange}
             />
           </FormGroup>
+          <div>Project Lead</div>
+          <div>Team members (What is role of this member?)</div>
+          <div>Project Visibility: Everybody, Members</div>
         </Form>
       )}
     </Formik>

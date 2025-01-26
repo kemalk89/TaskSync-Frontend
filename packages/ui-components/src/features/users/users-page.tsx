@@ -26,7 +26,7 @@ export const UsersPage = () => {
     };
     getAPI()
       .fetchUsers(page)
-      .then((data) => setData(data));
+      .then((response) => setData(response.data));
   }, [searchParams]);
 
   return (

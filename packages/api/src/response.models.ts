@@ -8,6 +8,14 @@ export interface UserResponse {
 export interface ProjectResponse {
   id: string;
   title: string;
+  description?: string;
+  createdBy?: {
+    id: string;
+    email: string;
+    username: string;
+    picture: string;
+  };
+  createdDate: string;
 }
 
 export interface TicketResponse {

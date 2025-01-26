@@ -1,6 +1,53 @@
 import { type NextRequest } from "next/server";
 import { auth } from "../../../auth";
 
+function buildEndpoint(searchParams: string, slug: string) {
+  const baseUrl = `${process.env.SERVICE_TASKSYNC as string}/api/`;
+  return searchParams
+    ? `${baseUrl}${slug}?${searchParams}`
+    : `${baseUrl}${slug}`;
+}
+
+async function handleResponse(res: Response) {
+  const isSuccess = res.status >= 200 && res.status < 400;
+  if (isSuccess) {
+    const data = await res.json();
+    return Response.json(data);
+  }
+
+  return new Response(res.statusText, {
+    status: res.status,
+  });
+}
+
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  const session = await auth();
+  if (!session?.accessToken) {
+    return new Response("Unauthorized", {
+      status: 401,
+    });
+  }
+
+  const slug = (await params).slug;
+  const searchParams = request.nextUrl.searchParams.toString();
+  const endpoint = buildEndpoint(searchParams, slug);
+
+  const res = await fetch(endpoint, {
+    method: "POST",
+    body: request.body,
+    duplex: "half",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${session?.accessToken}`,
+    },
+  } as RequestInit);
+
+  return handleResponse(res);
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
@@ -12,16 +59,9 @@ export async function GET(
     });
   }
 
-  // Read Dynamic Route Segment
   const slug = (await params).slug;
-
   const searchParams = request.nextUrl.searchParams.toString();
-
-  // TODO Use env instead
-  const baseUrl = "https://localhost:7190/api/";
-  const endpoint = searchParams
-    ? `${baseUrl}${slug}?${searchParams}`
-    : `${baseUrl}${slug}`;
+  const endpoint = buildEndpoint(searchParams, slug);
 
   const res = await fetch(endpoint, {
     headers: {
@@ -30,13 +70,5 @@ export async function GET(
     },
   });
 
-  const isSuccess = res.status >= 200 && res.status < 400;
-  if (isSuccess) {
-    const data = await res.json();
-    return Response.json(data);
-  }
-
-  return new Response(res.statusText, {
-    status: res.status,
-  });
+  return handleResponse(res);
 }

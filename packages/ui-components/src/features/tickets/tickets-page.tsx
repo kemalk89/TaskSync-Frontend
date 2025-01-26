@@ -24,7 +24,9 @@ export const TicketsPage = () => {
       pageSize: (searchParams.get("pageSize") || 10) as number,
       pageNumber: (searchParams.get("pageNumber") || 1) as number,
     };
-    getAPI().fetchTickets(page).then((data) => setData(data));
+    getAPI()
+      .fetchTickets(page)
+      .then((result) => setData(result.data));
   }, [searchParams]);
 
   return (

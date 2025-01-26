@@ -5,6 +5,8 @@ import { getAPI, PagedResult, ProjectResponse } from "@app/api";
 import { Button, Table } from "react-bootstrap";
 import { Pagination } from "../pagination/pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { ProjectForm, ProjectFormValues } from "./project-form";
+import { NewFormModal } from "../../NewFormModal";
 
 export const ProjectsPage = () => {
   const router = useRouter();
@@ -24,12 +26,27 @@ export const ProjectsPage = () => {
       pageSize: (searchParams.get("pageSize") || 10) as number,
       pageNumber: (searchParams.get("pageNumber") || 1) as number,
     };
-    getAPI().fetchProjects(page).then((data) => setData(data));
+    getAPI()
+      .fetchProjects(page)
+      .then((response) => setData(response.data));
   }, [searchParams]);
 
   return (
     <>
-      <Button>New Project</Button>
+      <NewFormModal<ProjectFormValues>
+        title="New Project"
+        buttonLabel="New Project"
+      >
+        {({ formRef, setIsSubmitting }) => (
+          <ProjectForm
+            formRef={formRef}
+            onSubmitStart={() => setIsSubmitting(true)}
+            onSubmitFinished={() => setIsSubmitting(false)}
+            saveHandler={(values) => getAPI().saveProject(values)}
+          />
+        )}
+      </NewFormModal>
+
       <Table>
         <thead>
           <tr>

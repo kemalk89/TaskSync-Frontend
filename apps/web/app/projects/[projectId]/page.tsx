@@ -1,6 +1,7 @@
 import { getAPI } from "@app/api";
 import React from "react";
 import { auth } from "../../auth";
+import { ProjectViewPage } from "../../../../../packages/ui-components/src/features/project-view/project-view-page";
 
 export default async function Page({
   params,
@@ -18,17 +19,18 @@ export default async function Page({
   }
 
   const projectId = (await params).projectId;
-  try {
-    const data = await getAPI()
-      .enableServerMode()
-      .setBaseUrl(process.env.SERVICE_TASKSYNC as string)
-      .setHeaders({
-        Authorization: `Bearer ${accessToken}`,
-      })
-      .fetchProject(projectId);
+  const response = await getAPI()
+    .enableServerMode()
+    .setBaseUrl(process.env.SERVICE_TASKSYNC as string)
+    .setHeaders({
+      Authorization: `Bearer ${accessToken}`,
+    })
+    .fetchProject(projectId);
 
-    return <div>Project View Page: {data.title}</div>;
-  } catch {
+  const data = response.data;
+  if (response.status === "success") {
+    return <ProjectViewPage project={data} />;
+  } else {
     return <div>Error calling backend service</div>;
   }
 }

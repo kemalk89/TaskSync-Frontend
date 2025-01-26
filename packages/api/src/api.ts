@@ -1,9 +1,11 @@
+import { CreateProjectRequest } from "./request.models";
 import {
   PagedResult,
   ProjectResponse,
   TicketCommentResponse,
   TicketResponse,
-} from "./responses";
+  UserResponse,
+} from "./response.models";
 
 const patch = async (
   url: string,
@@ -26,11 +28,11 @@ const patch = async (
   return res.json();
 };
 
-const post = async (
+const post = async <T>(
   url: string,
   body: any,
   headers: Record<string, string> = {}
-) => {
+): Promise<ApiResponse<T>> => {
   const res = await fetch(url, {
     body: JSON.stringify(body),
     method: "POST",
@@ -41,23 +43,40 @@ const post = async (
   });
 
   if (!res.ok) {
-    throw new Error(`Network error on URL ${url}: ${res.status}.`);
+    return {
+      status: "error",
+      message: `Network error on URL ${url}: ${res.status}.`,
+    };
   }
 
-  return res.json();
+  const data = await res.json();
+  return {
+    status: "success",
+    data,
+  };
 };
 
-const get = async (url: string, headers: Record<string, string> = {}) => {
+const get = async <T>(
+  url: string,
+  headers: Record<string, string> = {}
+): Promise<ApiResponse<T>> => {
   const res = await fetch(url, {
     method: "GET",
     headers,
   });
 
   if (!res.ok) {
-    throw new Error(`Network error on URL ${url}: ${res.status}.`);
+    return {
+      status: "error",
+      message: `Network error on URL ${url}: ${res.status}.`,
+    };
   }
 
-  return res.json();
+  const data = await res.json();
+  return {
+    status: "success",
+    data,
+  };
 };
 
 const remove = async (url: string, headers: Record<string, string> = {}) => {
@@ -76,6 +95,12 @@ const remove = async (url: string, headers: Record<string, string> = {}) => {
 interface Page {
   pageNumber: number;
   pageSize: number;
+}
+
+export interface ApiResponse<T> {
+  status: "success" | "error";
+  message?: string;
+  data?: T;
 }
 
 /**
@@ -128,7 +153,10 @@ export const getAPI = () => {
         `${getBaseUrl()}${getContext()}/ticket/${ticketId}/comment?pageNumber=${pageNumber}&pageSize=${pageSize}`
       );
     },
-    fetchTickets: async ({ pageNumber, pageSize }: Page) => {
+    fetchTickets: async ({
+      pageNumber,
+      pageSize,
+    }: Page): Promise<ApiResponse<PagedResult<TicketResponse>>> => {
       return get(
         `${getBaseUrl()}${getContext()}/ticket?pageNumber=${pageNumber}&pageSize=${pageSize}`
       );
@@ -139,7 +167,7 @@ export const getAPI = () => {
     saveTicketComment: async (
       ticketId: string,
       comment: any
-    ): Promise<TicketCommentResponse> => {
+    ): Promise<ApiResponse<TicketCommentResponse>> => {
       return post(
         `${getBaseUrl()}${getContext()}/ticket/${ticketId}/comment`,
         comment
@@ -153,7 +181,9 @@ export const getAPI = () => {
         status: newStatus,
       });
     },
-    fetchProject: async (projectId: string): Promise<ProjectResponse> => {
+    fetchProject: async (
+      projectId: string
+    ): Promise<ApiResponse<ProjectResponse>> => {
       return get(
         `${getBaseUrl()}${getContext()}/project/${projectId}`,
         headers
@@ -170,13 +200,16 @@ export const getAPI = () => {
     fetchProjects: async ({
       pageNumber,
       pageSize,
-    }: Page): Promise<PagedResult<ProjectResponse>> => {
+    }: Page): Promise<ApiResponse<PagedResult<ProjectResponse>>> => {
       return get(
         `${getBaseUrl()}${getContext()}/Project?pageNumber=${pageNumber}&pageSize=${pageSize}`
       );
     },
-    saveProject: async (project: any) => {
-      return post(`${getBaseUrl()}${getContext()}/project`, project);
+    saveProject: async (project: CreateProjectRequest) => {
+      return post<ProjectResponse>(
+        `${getBaseUrl()}${getContext()}/project`,
+        project
+      );
     },
     deleteProject: async (project: ProjectResponse) => {
       return remove(`${getBaseUrl()}${getContext()}/project/${project.id}`);
@@ -186,7 +219,10 @@ export const getAPI = () => {
         searchText,
       });
     },
-    fetchUsers: async ({ pageNumber, pageSize }: Page) => {
+    fetchUsers: async ({
+      pageNumber,
+      pageSize,
+    }: Page): Promise<ApiResponse<PagedResult<UserResponse>>> => {
       return get(
         `${getBaseUrl()}${getContext()}/user?pageNumber=${pageNumber}&pageSize=${pageSize}`
       );

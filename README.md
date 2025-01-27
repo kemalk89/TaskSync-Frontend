@@ -1,3 +1,5 @@
+![build project](https://github.com/kemalk89/TaskSync-Frontend/actions/workflows/node.js.yml/badge.svg)
+
 # Development
 1. Start the application ```npm run dev```
 2. Open the application: http://localhost:5173/

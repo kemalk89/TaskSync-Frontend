@@ -1,8 +1,9 @@
 import { type NextRequest } from "next/server";
 import { auth } from "../../../auth";
+import { envServiceTaskSync } from "../../../environment-variables";
 
 function buildEndpoint(searchParams: string, slug: string) {
-  const baseUrl = `${process.env.SERVICE_TASKSYNC as string}/api/`;
+  const baseUrl = `${envServiceTaskSync as string}/api/`;
   return searchParams
     ? `${baseUrl}${slug}?${searchParams}`
     : `${baseUrl}${slug}`;

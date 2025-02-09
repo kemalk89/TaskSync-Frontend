@@ -1,7 +1,13 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
-  "globalEnv": ["SERVICE_TASKSYNC"],
+  "globalEnv": [
+    "SERVICE_TASKSYNC",
+    "AUTH_AUDIENCE",
+    "AUTH_AUTH0_TOKEN_ENDPOINT",
+    "AUTH_AUTH0_ID",
+    "AUTH_AUTH0_SECRET"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

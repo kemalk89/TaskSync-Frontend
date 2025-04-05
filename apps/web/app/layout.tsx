@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import { NavMenu } from "./components/nav-menu";
 import { Container } from "react-bootstrap";
 
-import "./globals.css";
+import "./globals.scss";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,7 +28,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <NavMenu />
-        <Container>{children}</Container>
+        <Container style={{ paddingTop: 8 }}>{children}</Container>
       </body>
     </html>
   );

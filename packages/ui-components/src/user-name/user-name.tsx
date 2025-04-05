@@ -1,8 +1,8 @@
-import { User } from "@auth0/auth0-react";
+import { UserResponse } from "@app/api";
 
 type UserNameProps = {
-  user?: User
-}
+  user?: UserResponse;
+};
 
 export const UserName = ({ user }: UserNameProps) => {
   if (!user) {
@@ -10,9 +10,15 @@ export const UserName = ({ user }: UserNameProps) => {
   }
 
   return (
-    <>
-      <img alt="user" className="user-image rounded" src={user.picture} />{" "}
-      <span>{user.username}</span>
-    </>
+    <div className="d-flex align-items-center">
+      <img
+        alt="user image"
+        className="user-image rounded"
+        width="32"
+        height="32"
+        src={user.picture}
+      />
+      <span className="ms-1">{user.username}</span>
+    </div>
   );
 };

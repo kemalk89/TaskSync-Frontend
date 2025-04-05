@@ -2,7 +2,7 @@
 
 # Development
 1. Start the application ```npm run dev```
-2. Open the application: http://localhost:5173/
+2. Open the application: http://localhost:3000/
 
 # Build
 Always run a build before pushing code.

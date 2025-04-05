@@ -7,6 +7,7 @@ import { Pagination } from "../pagination/pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ProjectForm, ProjectFormValues } from "./project-form";
 import { NewFormModal } from "../../NewFormModal";
+import { UserName } from "../../user-name/user-name";
 
 export const ProjectsPage = () => {
   const router = useRouter();
@@ -51,6 +52,7 @@ export const ProjectsPage = () => {
         <thead>
           <tr>
             <th>Name</th>
+            <th>Projektleiter</th>
             <th></th>
           </tr>
         </thead>
@@ -58,6 +60,9 @@ export const ProjectsPage = () => {
           {data?.items.map((project: ProjectResponse) => (
             <tr key={project.id}>
               <td>{project.title}</td>
+              <td>
+                <UserName user={project.projectManager} />
+              </td>
               <td>
                 <Button
                   size="sm"

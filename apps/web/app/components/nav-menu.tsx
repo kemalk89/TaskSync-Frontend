@@ -18,7 +18,7 @@ export async function NavMenu() {
   const session = await auth();
 
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar expand="lg">
       <Container>
         <Link href="/" passHref legacyBehavior>
           <NavbarBrand>TaskSync</NavbarBrand>

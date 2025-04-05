@@ -15,6 +15,7 @@ export interface ProjectResponse {
     username: string;
     picture: string;
   };
+  projectManager?: UserResponse;
   createdDate: string;
 }
 

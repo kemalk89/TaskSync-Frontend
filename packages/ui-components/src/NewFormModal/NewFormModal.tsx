@@ -38,7 +38,9 @@ export const NewFormModal = <T,>({
 
   return (
     <>
-      <Button onClick={handleOpenDialog}>{buttonLabel}</Button>
+      <div className="d-flex justify-content-end">
+        <Button onClick={handleOpenDialog}>{buttonLabel}</Button>
+      </div>
       <Modal show={dialogOpen} onHide={handleCloseDialog}>
         <ModalHeader closeButton>
           <ModalTitle>{title}</ModalTitle>

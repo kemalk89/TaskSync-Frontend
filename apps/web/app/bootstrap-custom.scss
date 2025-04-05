@@ -3,7 +3,7 @@
 // The variables can be found https://github.com/twbs/bootstrap/blob/main/scss/_variables.scss
 $primary: rgb(95, 95, 138);
 
-@import "bootstrap/scss/bootstrap";
+@import "~bootstrap/scss/bootstrap";
 
 // Then add additional custom code here
 .navbar {

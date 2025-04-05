@@ -35,8 +35,8 @@ export const ProjectsPage = () => {
   return (
     <>
       <NewFormModal<ProjectFormValues>
-        title="New Project"
-        buttonLabel="New Project"
+        title="Neues Projekt anlegen"
+        buttonLabel="Neues Projekt anlegen"
       >
         {({ formRef, setIsSubmitting }) => (
           <ProjectForm

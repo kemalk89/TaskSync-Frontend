@@ -30,7 +30,7 @@ const patch = async (
 
 const post = async <T>(
   url: string,
-  body: any,
+  body: any = {},
   headers: Record<string, string> = {}
 ): Promise<ApiResponse<T>> => {
   const res = await fetch(url, {
@@ -49,7 +49,9 @@ const post = async <T>(
     };
   }
 
-  const data = await res.json();
+  // Check if response contains data before parsing
+  const responseText = await res.text();
+  const data = responseText ? JSON.parse(responseText) : null;
   return {
     status: "success",
     data,
@@ -190,9 +192,9 @@ export const getAPI = () => {
       );
     },
     fetchProjectTickets: async (
-      projectId: number,
+      projectId: string,
       { pageNumber, pageSize }: Page
-    ) => {
+    ): Promise<ApiResponse<PagedResult<TicketResponse>>> => {
       return get(
         `${getBaseUrl()}${getContext()}/Project/${projectId}/tickets?pageNumber=${pageNumber}&pageSize=${pageSize}`
       );
@@ -225,6 +227,20 @@ export const getAPI = () => {
     }: Page): Promise<ApiResponse<PagedResult<UserResponse>>> => {
       return get(
         `${getBaseUrl()}${getContext()}/user?pageNumber=${pageNumber}&pageSize=${pageSize}`
+      );
+    },
+    /**
+     * Should be called from server-side only after first login with external IDP
+     */
+    syncExternalUser: async (
+      externalUserId: string
+    ): Promise<ApiResponse<void>> => {
+      return post(
+        `${getBaseUrl()}/api/user/external`,
+        {
+          externalUserId,
+        },
+        headers
       );
     },
   };

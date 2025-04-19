@@ -3,9 +3,15 @@ import { Formik, FormikProps } from "formik";
 import { Ref } from "react";
 import { Form, FormControl, FormGroup, FormLabel } from "react-bootstrap";
 
+enum ProjectVisibility {
+  Everybody,
+  TeamOnly,
+}
+
 export interface ProjectFormValues {
   title: string;
   description: string;
+  visibility?: ProjectVisibility;
 }
 
 interface ProjectFormProps {
@@ -29,6 +35,7 @@ export const ProjectForm = ({
       initialValues={{
         title: "",
         description: "",
+        visibility: ProjectVisibility.TeamOnly,
       }}
       validate={(values) => {
         const errors: Partial<ProjectFormValues> = {};
@@ -58,6 +65,25 @@ export const ProjectForm = ({
             <div>Is Submitting: {isSubmitting ? "Yes" : "No"}</div>
           </div>
           <FormGroup>
+            <FormLabel htmlFor="visibility">Visiblity</FormLabel>
+            <FormControl
+              id="title"
+              as="select"
+              name="visibility"
+              value={values.visibility}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            >
+              {Object.keys(ProjectVisibility)
+                .filter((key) => isNaN(Number(key)))
+                .map((key) => (
+                  <option key={key} value={key}>
+                    {key}
+                  </option>
+                ))}
+            </FormControl>
+          </FormGroup>
+          <FormGroup>
             <FormLabel htmlFor="title">Title</FormLabel>
             <FormControl
               id="title"
@@ -80,7 +106,6 @@ export const ProjectForm = ({
           </FormGroup>
           <div>Project Lead</div>
           <div>Team members (What is role of this member?)</div>
-          <div>Project Visibility: Everybody, Members</div>
         </Form>
       )}
     </Formik>

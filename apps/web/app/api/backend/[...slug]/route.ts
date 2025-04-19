@@ -60,7 +60,8 @@ export async function GET(
     });
   }
 
-  const slug = (await params).slug;
+  const parts = (await params).slug as unknown as string[];
+  const slug = parts.join("/");
   const searchParams = request.nextUrl.searchParams.toString();
   const endpoint = buildEndpoint(searchParams, slug);
 

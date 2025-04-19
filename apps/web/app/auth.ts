@@ -7,6 +7,7 @@ import {
   envClientSecret,
   envTokenendpoint,
 } from "./environment-variables";
+import { getAPI } from "@app/api";
 
 /**
  * Implements Refresh Token Rotation following this guide https://authjs.dev/guides/refresh-token-rotation?framework=next-js
@@ -24,7 +25,7 @@ const nextAuthResult = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, account }) {
+    async jwt({ token, account, profile }) {
       if (account?.provider === "auth0") {
         // First-time login
         if (!account.refresh_token) {
@@ -32,6 +33,20 @@ const nextAuthResult = NextAuth({
             "Expected to retrieve a refresh_token from provider 'auth0', but it is missing. Enable Allow Offline Access in the API settings."
           );
         }
+
+        if (profile?.sub) {
+          console.debug("Sync external user");
+          await getAPI()
+            .enableServerMode()
+            .setBaseUrl(process.env.SERVICE_TASKSYNC as string)
+            .setHeaders({
+              Authorization: `Bearer ${account.access_token}`,
+            })
+            .syncExternalUser(profile.sub);
+        } else {
+          throw "Login with external Identity Provider successful, but no profile given!";
+        }
+
         return {
           ...token,
           accessToken: account.access_token,

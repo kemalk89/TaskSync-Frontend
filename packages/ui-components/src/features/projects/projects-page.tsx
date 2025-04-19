@@ -1,5 +1,6 @@
 "use client";
 
+import Link from 'next/link'
 import { useEffect, useState } from "react";
 import { getAPI, PagedResult, ProjectResponse } from "@app/api";
 import { Button, Table } from "react-bootstrap";
@@ -59,7 +60,11 @@ export const ProjectsPage = () => {
         <tbody>
           {data?.items.map((project: ProjectResponse) => (
             <tr key={project.id}>
-              <td>{project.title}</td>
+              <td>
+                <Link href={`/projects/${project.id}`}>
+                  {project.title}                
+                </Link>
+              </td>
               <td>
                 <UserName user={project.projectManager} />
               </td>

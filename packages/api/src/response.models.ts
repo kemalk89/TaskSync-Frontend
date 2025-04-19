@@ -16,7 +16,14 @@ export interface ProjectResponse {
     picture: string;
   };
   projectManager?: UserResponse;
+  projectMembers: ProjectMemberResponse[];
   createdDate: string;
+}
+
+interface ProjectMemberResponse {
+  userId: number;
+  role: string;
+  user: UserResponse;
 }
 
 export interface TicketResponse {

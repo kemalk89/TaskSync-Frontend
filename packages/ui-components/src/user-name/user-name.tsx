@@ -1,4 +1,5 @@
 import { UserResponse } from "@app/api";
+import { UserImage } from "./user-img";
 
 type UserNameProps = {
   user?: UserResponse;
@@ -11,13 +12,7 @@ export const UserName = ({ user }: UserNameProps) => {
 
   return (
     <div className="d-flex align-items-center">
-      <img
-        alt="user image"
-        className="user-image rounded"
-        width="32"
-        height="32"
-        src={user.picture}
-      />
+      <UserImage user={user} />
       <span className="ms-1">{user.username}</span>
     </div>
   );

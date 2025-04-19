@@ -1,48 +1,52 @@
-import { ReactNode } from "react";
-import ReactSelect, { ActionMeta, SingleValue, MultiValue } from "react-select";
-import { SingleValue as SingleValueComponent } from "./custom-components/single-value";
-import { CustomOption } from "./custom-components/custom-option";
+"use client";
 
-export type SelectOption = {
+import { ReactNode } from "react";
+import { Dropdown } from "react-bootstrap";
+import styles from "./styles.module.css";
+
+type SelectOption = {
   value: string;
-  label: string;
-  icon?: (option: SelectOption) => ReactNode;
+  label: ReactNode;
 };
 
-interface SelectProps {
+type Props = {
+  placeholder: string;
+  value: string;
   options: SelectOption[];
-  value?: SelectOption;
-  defaultValue?: SelectOption;
-  onChange: (
-    newValue: SelectOption,
-    actionMeta: ActionMeta<SelectOption>
-  ) => void;
-}
+  onChange: (value: string) => void;
+};
 
-export function Select({
-  options,
-  defaultValue,
-  value,
-  onChange,
-}: SelectProps) {
-  const handleChange = (
-    newValue: SingleValue<SelectOption> | MultiValue<SelectOption>,
-    actionMeta: ActionMeta<SelectOption>
-  ) => {
-    onChange(newValue as SelectOption, actionMeta);
+export const Select = ({ placeholder, value, options, onChange }: Props) => {
+  const getSelectBtnLabel = () => {
+    const selectedOption = options.find((o) => o.value === value);
+    if (selectedOption) {
+      return selectedOption.label;
+    }
+
+    return placeholder;
   };
-
   return (
-    <ReactSelect
-      isSearchable={false}
-      value={value}
-      defaultValue={defaultValue}
-      onChange={handleChange}
-      components={{
-        SingleValue: SingleValueComponent,
-        Option: CustomOption,
-      }}
-      options={options}
-    />
+    <Dropdown className={styles.dropdown}>
+      <Dropdown.Toggle className={styles.dropdownToggleBtn}>
+        <div className="d-inline-block" style={{ width: "calc(100% - 16px)" }}>
+          {getSelectBtnLabel()}
+        </div>
+      </Dropdown.Toggle>
+      <Dropdown.Menu>
+        {options.map((o) => (
+          <Dropdown.Item
+            key={o.value}
+            active={o.value === value}
+            onClick={() => onChange(o.value)}
+            className={[
+              styles.dropdownItem,
+              o.value === value ? styles.dropdownItemActive : "",
+            ].join(" ")}
+          >
+            {o.label}
+          </Dropdown.Item>
+        ))}
+      </Dropdown.Menu>
+    </Dropdown>
   );
-}
+};

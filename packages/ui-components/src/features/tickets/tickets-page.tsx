@@ -5,6 +5,8 @@ import { getAPI, PagedResult, TicketResponse } from "@app/api";
 import { Button, Table } from "react-bootstrap";
 import { Pagination } from "../pagination/pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { NewFormModal } from "../../NewFormModal";
+import { FormValues, TicketForm } from "./ticket-form";
 
 export const TicketsPage = () => {
   const router = useRouter();
@@ -31,11 +33,25 @@ export const TicketsPage = () => {
 
   return (
     <>
-      <Button>New Ticket</Button>
+      <NewFormModal<FormValues>
+        title="Neues Ticket anlegen"
+        buttonLabel="Neues Ticket anlegen"
+      >
+        {({ formRef, setIsSubmitting }) => (
+          <TicketForm
+            formRef={formRef}
+            onSubmitStart={() => setIsSubmitting(true)}
+            onSubmitFinished={() => setIsSubmitting(false)}
+            saveHandler={(values) => getAPI().saveTicket(values)}
+          />
+        )}
+      </NewFormModal>
+
       <Table>
         <thead>
           <tr>
-            <th>Name</th>
+            <th>Titel</th>
+            <th>Bearbeiter</th>
             <th></th>
           </tr>
         </thead>
@@ -43,6 +59,7 @@ export const TicketsPage = () => {
           {data?.items.map((ticket: TicketResponse) => (
             <tr key={ticket.id}>
               <td>{ticket.title}</td>
+              <td></td>
               <td>
                 <Button
                   size="sm"

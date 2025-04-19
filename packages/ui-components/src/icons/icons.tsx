@@ -1,3 +1,9 @@
+type Props = {
+  width?: number;
+  height?: number;
+  className?: string;
+};
+
 // https://icons.getbootstrap.com/icons/card-list/
 export const IconCardList = () => {
   return (
@@ -226,6 +232,55 @@ export const IconH6 = () => {
       viewBox="0 0 16 16"
     >
       <path d="M15.596 5.178H14.3c-.106-.444-.62-1.072-1.706-1.072-1.332 0-2.325 1.269-2.325 3.947h.07c.268-.67 1.043-1.445 2.445-1.445 1.494 0 3.017 1.064 3.017 3.073C15.8 11.795 14.37 13 12.48 13c-1.036 0-2.093-.36-2.77-1.452C9.276 10.836 9 9.808 9 8.37 9 4.656 10.494 3 12.636 3c1.812 0 2.883 1.113 2.96 2.178Zm-5.151 4.566c0 1.367.944 2.15 2.043 2.15 1.128 0 2.037-.684 2.037-2.136 0-1.41-1-2.065-2.03-2.065-1.19 0-2.05.853-2.05 2.051ZM7.495 13V3.201H6.174v4.15H1.32V3.2H0V13h1.32V8.513h4.854V13h1.32Z" />
+    </svg>
+  );
+};
+
+//icons.getbootstrap.com/icons/bug-fill/
+export const IconBug = ({ className, width, height }: Props) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={width ?? 16}
+      height={height ?? 16}
+      fill="currentColor"
+      className={"bi bi-bug-fill " + className}
+      viewBox="0 0 16 16"
+    >
+      <path d="M4.978.855a.5.5 0 1 0-.956.29l.41 1.352A5 5 0 0 0 3 6h10a5 5 0 0 0-1.432-3.503l.41-1.352a.5.5 0 1 0-.956-.29l-.291.956A5 5 0 0 0 8 1a5 5 0 0 0-2.731.811l-.29-.956z" />
+      <path d="M13 6v1H8.5v8.975A5 5 0 0 0 13 11h.5a.5.5 0 0 1 .5.5v.5a.5.5 0 1 0 1 0v-.5a1.5 1.5 0 0 0-1.5-1.5H13V9h1.5a.5.5 0 0 0 0-1H13V7h.5A1.5 1.5 0 0 0 15 5.5V5a.5.5 0 0 0-1 0v.5a.5.5 0 0 1-.5.5zm-5.5 9.975V7H3V6h-.5a.5.5 0 0 1-.5-.5V5a.5.5 0 0 0-1 0v.5A1.5 1.5 0 0 0 2.5 7H3v1H1.5a.5.5 0 0 0 0 1H3v1h-.5A1.5 1.5 0 0 0 1 11.5v.5a.5.5 0 1 0 1 0v-.5a.5.5 0 0 1 .5-.5H3a5 5 0 0 0 4.5 4.975" />
+    </svg>
+  );
+};
+
+export const IconWrenchAdjustable = ({ className, width, height }: Props) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={width ?? 16}
+      height={height ?? 16}
+      fill="currentColor"
+      className={"bi bi-wrench-adjustable " + className}
+      viewBox="0 0 16 16"
+    >
+      <path d="M16 4.5a4.5 4.5 0 0 1-1.703 3.526L13 5l2.959-1.11q.04.3.041.61" />
+      <path d="M11.5 9c.653 0 1.273-.139 1.833-.39L12 5.5 11 3l3.826-1.53A4.5 4.5 0 0 0 7.29 6.092l-6.116 5.096a2.583 2.583 0 1 0 3.638 3.638L9.908 8.71A4.5 4.5 0 0 0 11.5 9m-1.292-4.361-.596.893.809-.27a.25.25 0 0 1 .287.377l-.596.893.809-.27.158.475-1.5.5a.25.25 0 0 1-.287-.376l.596-.893-.809.27a.25.25 0 0 1-.287-.377l.596-.893-.809.27-.158-.475 1.5-.5a.25.25 0 0 1 .287.376M3 14a1 1 0 1 1 0-2 1 1 0 0 1 0 2" />
+    </svg>
+  );
+};
+
+//icons.getbootstrap.com/icons/file-earmark-fill/
+export const IconEarmarkFill = ({ className, width, height }: Props) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={width ?? 16}
+      height={height ?? 16}
+      fill="currentColor"
+      className={"bi bi-file-earmark-fill " + className}
+      viewBox="0 0 16 16"
+    >
+      <path d="M4 0h5.293A1 1 0 0 1 10 .293L13.707 4a1 1 0 0 1 .293.707V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2m5.5 1.5v2a1 1 0 0 0 1 1h2z" />
     </svg>
   );
 };

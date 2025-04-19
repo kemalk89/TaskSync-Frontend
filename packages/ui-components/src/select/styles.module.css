@@ -1,0 +1,32 @@
+.dropdown button:first-child,
+.dropdown button:first-child:hover,
+.dropdown button:first-child:active {
+  background-color: transparent;
+  color: var(--bs-body-color);
+  border: var(--bs-border-width) solid var(--bs-border-color);
+}
+
+.dropdownToggleBtn {
+  width: 100%;
+  text-align: left;
+}
+
+.dropdownItem:active,
+.dropdownItemActive:global(.active) {
+  background-color: var(--bs-secondary-bg);
+  color: var(--bs-body-color);
+}
+
+.dropdownItemActive:global(.active) {
+  position: relative;
+}
+
+.dropdownItemActive:before {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  background-color: var(--bs-primary);
+  content: "";
+}

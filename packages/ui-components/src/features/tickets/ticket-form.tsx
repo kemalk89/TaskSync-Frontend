@@ -6,12 +6,14 @@ import { Ref, useEffect, useState } from "react";
 import { Form, FormControl, FormGroup, FormLabel } from "react-bootstrap";
 import { Select } from "../../select";
 import { TicketIconBug, TicketIconStory, TicketIconTask } from "./ticket-icons";
+import { UserName } from "../../user-name/user-name";
 
 export interface FormValues {
   projectId: string;
   type: string; // Bug, Story, Task
   title: string;
   description: string;
+  assignee: string;
 }
 
 interface Props {
@@ -44,6 +46,13 @@ export const TicketForm = ({
     fetchProjects();
   }, []);
 
+  const findProject = (projectId: string | undefined) => {
+    if (!projectId) {
+      return undefined;
+    }
+    return projects.find((p) => p.id === projectId);
+  };
+
   return (
     <Formik<FormValues>
       innerRef={formRef}
@@ -52,21 +61,22 @@ export const TicketForm = ({
         type: "",
         title: "",
         description: "",
+        assignee: "",
       }}
       validate={(values) => {
         const errors: Partial<FormValues> = {};
         if (!values.title) {
-          errors.title = "Required";
+          errors.title = "Pflichtfeld";
         }
         if (!values.type) {
-          errors.title = "Required";
+          errors.type = "Pflichtfeld";
         }
-
+        if (!values.projectId) {
+          errors.projectId = "Pflichtfeld";
+        }
         return errors;
       }}
       onSubmit={async (values) => {
-        console.log(values);
-        return;
         onSubmitStart();
         const result = await saveHandler(values);
         onSubmitFinished(result);
@@ -74,32 +84,38 @@ export const TicketForm = ({
     >
       {(formikProps) => (
         <Form onSubmit={formikProps.handleSubmit}>
-          <FormGroup>
+          <FormGroup className="mb-3">
             <FormLabel htmlFor="type">
               Projekt <span className="required-field-asterisk">*</span>
             </FormLabel>
             <Select
+              isInvalid={
+                formikProps.touched.projectId && !!formikProps.errors.projectId
+              }
               placeholder="Projekt auswählen..."
               value={formikProps.values.projectId}
-              onChange={(value: string) =>
-                formikProps.setFieldValue("projectId", value, false)
+              onChange={(value) =>
+                formikProps.setFieldValue("projectId", value)
               }
               options={projects.map((p) => ({
                 value: p.id,
                 label: p.title,
               }))}
             />
+            <FormControl.Feedback type="invalid">
+              {formikProps.touched.projectId && formikProps.errors.projectId}
+            </FormControl.Feedback>
           </FormGroup>
-          <FormGroup>
+
+          <FormGroup className="mb-3">
             <FormLabel htmlFor="type">
-              Type <span className="required-field-asterisk">*</span>
+              Typ <span className="required-field-asterisk">*</span>
             </FormLabel>
             <Select
-              placeholder="Typ des Tickets auswählen..."
+              isInvalid={formikProps.touched.type && !!formikProps.errors.type}
+              placeholder="Dieses Ticket hat den Typ..."
               value={formikProps.values.type}
-              onChange={(value: string) =>
-                formikProps.setFieldValue("type", value, false)
-              }
+              onChange={(value) => formikProps.setFieldValue("type", value)}
               options={[
                 {
                   value: "story",
@@ -115,29 +131,57 @@ export const TicketForm = ({
                 },
               ]}
             />
+            <FormControl.Feedback type="invalid">
+              {formikProps.touched.type && formikProps.errors.type}
+            </FormControl.Feedback>
           </FormGroup>
-          <FormGroup>
+
+          <FormGroup className="mb-3">
+            <FormLabel htmlFor="assignee">Zugewiesene Person</FormLabel>
+            <Select
+              placeholder="Um dieses Ticket kümmert sich..."
+              value={formikProps.values.assignee}
+              onChange={(value) =>
+                formikProps.setFieldValue("assignee", value, false)
+              }
+              disabled={!findProject(formikProps.values.projectId)}
+              options={
+                findProject(formikProps.values.projectId)?.projectMembers.map(
+                  (projectMember) => ({
+                    label: <UserName user={projectMember.user} />,
+                    value: projectMember.userId,
+                  })
+                ) ?? []
+              }
+            />
+          </FormGroup>
+
+          <FormGroup className="mb-3">
             <FormLabel htmlFor="title">
               Titel <span className="required-field-asterisk">*</span>
             </FormLabel>
             <FormControl
               id="title"
               name="title"
-              isInvalid={!!formikProps.errors.title}
+              isInvalid={
+                formikProps.touched.title && !!formikProps.errors.title
+              }
               value={formikProps.values.title}
               onChange={formikProps.handleChange}
               onBlur={formikProps.handleBlur}
             />
             <FormControl.Feedback type="invalid">
-              {formikProps.errors.title}
+              {formikProps.touched.title && formikProps.errors.title}
             </FormControl.Feedback>
           </FormGroup>
-          <FormGroup>
-            <FormLabel htmlFor="description">Description</FormLabel>
+
+          <FormGroup className="mb-3">
+            <FormLabel htmlFor="description">Beschreibung</FormLabel>
             <FormControl
               id="description"
               name="description"
-              type="textarea"
+              as="textarea"
+              rows={5}
               value={formikProps.values.description}
               onChange={formikProps.handleChange}
             />

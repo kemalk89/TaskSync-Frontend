@@ -3,12 +3,14 @@
 .dropdown button:first-child:active {
   background-color: transparent;
   color: var(--bs-body-color);
-  border: var(--bs-border-width) solid var(--bs-border-color);
 }
 
 .dropdownToggleBtn {
   width: 100%;
   text-align: left;
+
+  border: 0;
+  padding: 0;
 }
 
 .dropdownItem:active,
@@ -29,4 +31,8 @@
   width: 5px;
   background-color: var(--bs-primary);
   content: "";
+}
+
+.placeholderText {
+  color: rgb(105, 105, 105);
 }

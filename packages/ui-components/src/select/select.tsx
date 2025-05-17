@@ -5,7 +5,7 @@ import { Dropdown } from "react-bootstrap";
 import styles from "./styles.module.css";
 
 type SelectOption = {
-  value: string;
+  value: string | number;
   label: ReactNode;
 };
 
@@ -13,22 +13,57 @@ type Props = {
   placeholder: string;
   value: string;
   options: SelectOption[];
-  onChange: (value: string) => void;
+  disabled?: boolean;
+  className?: string;
+  isInvalid?: boolean;
+  onChange: (value: string | number) => void;
 };
 
-export const Select = ({ placeholder, value, options, onChange }: Props) => {
+export const Select = ({
+  placeholder,
+  value,
+  options,
+  className = "",
+  isInvalid,
+  onChange,
+}: Props) => {
+  const findOption = () => options.find((o) => o.value === value);
+
   const getSelectBtnLabel = () => {
-    const selectedOption = options.find((o) => o.value === value);
+    const selectedOption = findOption();
     if (selectedOption) {
       return selectedOption.label;
     }
 
     return placeholder;
   };
+
+  const isDisplayingPlaceholder = () => {
+    const selectedOption = findOption();
+    if (selectedOption) {
+      return false;
+    }
+
+    return true;
+  };
+
   return (
-    <Dropdown className={styles.dropdown}>
+    <Dropdown
+      className={[
+        styles.dropdown,
+        className,
+        "form-control",
+        isInvalid ? "is-invalid" : "",
+      ].join(" ")}
+    >
       <Dropdown.Toggle className={styles.dropdownToggleBtn}>
-        <div className="d-inline-block" style={{ width: "calc(100% - 16px)" }}>
+        <div
+          className={[
+            "d-inline-block",
+            isDisplayingPlaceholder() ? styles.placeholderText : "",
+          ].join(" ")}
+          style={{ width: "calc(100% - 16px)" }}
+        >
           {getSelectBtnLabel()}
         </div>
       </Dropdown.Toggle>

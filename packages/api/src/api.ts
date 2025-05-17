@@ -144,8 +144,10 @@ export const getAPI = () => {
       headers = value;
       return this;
     },
-    fetchTicket: async (ticketId: string) => {
-      return get(`${baseUrl}${getContext()}/ticket/${ticketId}`);
+    fetchTicket: async (
+      ticketId: string
+    ): Promise<ApiResponse<TicketResponse>> => {
+      return get(`${getBaseUrl()}${getContext()}/ticket/${ticketId}`, headers);
     },
     fetchTicketComments: async (
       ticketId: string,

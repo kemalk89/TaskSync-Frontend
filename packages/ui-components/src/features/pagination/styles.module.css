@@ -1,0 +1,12 @@
+.dots {
+  pointer-events: none;
+}
+.dots,
+.paginationItem {
+  width: 46px;
+  text-align: center;
+}
+
+.totalResults {
+  margin-bottom: 1rem;
+}

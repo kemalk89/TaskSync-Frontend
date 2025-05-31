@@ -19,7 +19,7 @@ export async function NavMenu() {
 
   return (
     <Navbar expand="lg">
-      <Container>
+      <Container fluid="xl">
         <Link href="/" passHref legacyBehavior>
           <NavbarBrand>TaskSync</NavbarBrand>
         </Link>

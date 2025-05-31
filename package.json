@@ -12,7 +12,8 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "test:e2e": "npm run -w @app/tests test"
+    "test:e2e": "npm run -w @app/tests test",
+    "test": "npm run -w @app/ui-components test"
   },
   "devDependencies": {
     "prettier": "^3.4.2",

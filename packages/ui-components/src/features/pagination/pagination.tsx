@@ -129,6 +129,8 @@ export const Pagination = ({
         alignItems: "center",
         justifyContent: "flex-end",
         gap: "2rem",
+        maxWidth: "100%",
+        flexWrap: "wrap",
       }}
     >
       <div className={styles.hasMarginBottom}>

@@ -20,9 +20,13 @@ export const useSyncPaginationWithPathParams = ({
       setPageNumber(
         (searchParams.get("pageNumber") ?? DEFAULT_PAGE_NUMBER) as number
       );
+    } else {
+      setPageNumber(1);
     }
     if (searchParams.has("pageSize")) {
       setPageSize((searchParams.get("pageSize") ?? defaultPageSize) as number);
+    } else {
+      setPageSize(defaultPageSize);
     }
   }, [searchParams, defaultPageSize]);
 

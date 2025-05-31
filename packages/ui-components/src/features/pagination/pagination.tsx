@@ -1,15 +1,21 @@
 import { ReactNode } from "react";
 import BsPagination from "react-bootstrap/Pagination";
+import { Form } from "react-bootstrap";
+
 import styles from "./styles.module.css";
 
 interface PaginationProps {
   paged: { total: number; pageSize: number; pageNumber: number };
   onPageSelected: (pageNumber: number) => void;
+  onPageSizeSelected?: (pageSize: number) => void;
 }
 
-export const Pagination = ({ paged, onPageSelected }: PaginationProps) => {
+export const Pagination = ({
+  paged,
+  onPageSelected,
+  onPageSizeSelected,
+}: PaginationProps) => {
   const totalPages = Math.ceil(paged.total / paged.pageSize);
-
   const createPaginationItem = (pageNumber: number) => {
     return (
       <BsPagination.Item
@@ -41,7 +47,7 @@ export const Pagination = ({ paged, onPageSelected }: PaginationProps) => {
 
     const elements: ReactNode[] = [];
     if (canSeeAllPages) {
-      Array.from({ length: SLOTS }).forEach((_, i) => {
+      Array.from({ length: Math.min(SLOTS, totalPages) }).forEach((_, i) => {
         elements.push(createPaginationItem(i + 1));
       });
     } else if (centeredView) {
@@ -121,11 +127,46 @@ export const Pagination = ({ paged, onPageSelected }: PaginationProps) => {
       style={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-between",
+        justifyContent: "flex-end",
+        gap: "2rem",
       }}
     >
-      <div className={styles.totalResults}>{paged.total} Ergebnisse gefunden</div>
-      <BsPagination>
+      <div className={styles.hasMarginBottom}>
+        {paged.total} Ergebnisse gefunden
+      </div>
+      {onPageSizeSelected && (
+        <div
+          className={styles.hasMarginBottom}
+          style={{
+            display: "flex",
+            whiteSpace: "nowrap",
+            gap: "8px",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center" }}>
+            Rows per page{" "}
+          </div>
+          <Form.Select
+            size="sm"
+            aria-label="Rows per page"
+            defaultValue={paged.pageSize}
+          >
+            <option value="10" onClick={() => onPageSizeSelected(10)}>
+              10
+            </option>
+            <option value="25" onClick={() => onPageSizeSelected(25)}>
+              25
+            </option>
+            <option value="50" onClick={() => onPageSizeSelected(50)}>
+              50
+            </option>
+            <option value="100" onClick={() => onPageSizeSelected(100)}>
+              100
+            </option>
+          </Form.Select>
+        </div>
+      )}
+      <BsPagination size="sm">
         <BsPagination.Prev onClick={onPreviousPageSelected} />
         {renderPages()}
         <BsPagination.Next onClick={onNextPageSelected} />

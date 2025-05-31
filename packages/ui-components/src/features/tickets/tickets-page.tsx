@@ -4,32 +4,23 @@ import { useEffect, useState } from "react";
 import { getAPI, PagedResult, TicketResponse } from "@app/api";
 import { Button, Table } from "react-bootstrap";
 import { Pagination } from "../pagination/pagination";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { NewFormModal } from "../../NewFormModal";
 import { FormValues, TicketForm } from "./ticket-form";
+import { useSyncPaginationWithPathParams } from "../pagination/hooks";
 
 export const TicketsPage = () => {
   const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [data, setData] = useState<PagedResult<TicketResponse>>();
-
-  const createQueryString = (name: string, value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set(name, value);
-
-    return params.toString();
-  };
+  const { pageNumber, pageSize, onPageNumberChanged, onPageSizeChanged } =
+    useSyncPaginationWithPathParams({ defaultPageSize: 10 });
 
   useEffect(() => {
-    const page = {
-      pageSize: (searchParams.get("pageSize") || 10) as number,
-      pageNumber: (searchParams.get("pageNumber") || 1) as number,
-    };
-    getAPI()
-      .fetchTickets(page)
-      .then((result) => setData(result.data));
-  }, [searchParams]);
+    if (pageNumber && pageSize)
+      getAPI()
+        .fetchTickets({ pageNumber, pageSize })
+        .then((result) => setData(result.data));
+  }, [pageNumber, pageSize]);
 
   return (
     <>
@@ -79,11 +70,8 @@ export const TicketsPage = () => {
       {data && (
         <Pagination
           paged={data}
-          onPageSelected={(pageNumber) =>
-            router.replace(
-              `${pathname}?${createQueryString("pageNumber", pageNumber.toString())}`
-            )
-          }
+          onPageSizeSelected={(pageSize) => onPageSizeChanged(pageSize)}
+          onPageSelected={(pageNumber) => onPageNumberChanged(pageNumber)}
         />
       )}
     </>

@@ -18,7 +18,7 @@ export async function NavMenu() {
   const session = await auth();
 
   return (
-    <Navbar expand="lg">
+    <Navbar expand="sm">
       <Container fluid="xl">
         <Link href="/" passHref legacyBehavior>
           <NavbarBrand>TaskSync</NavbarBrand>
@@ -41,7 +41,8 @@ export async function NavMenu() {
                 <Link href="/users" passHref legacyBehavior>
                   <NavLink>Users</NavLink>
                 </Link>
-
+              </Nav>
+              <Nav>
                 <NavDropdown title={session.user.name} id="basic-nav-dropdown">
                   <Link href="/my-profile" passHref legacyBehavior>
                     <DropdownItem>Mein Profil</DropdownItem>

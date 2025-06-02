@@ -1,14 +1,12 @@
-import { signOut } from "./../auth";
+"use client";
+
+import { signOut } from "next-auth/react";
+import { DropdownItem } from "react-bootstrap";
 
 export function SignOut() {
   return (
-    <form
-      action={async () => {
-        "use server";
-        await signOut();
-      }}
-    >
-      <button type="submit">Sign Out</button>
-    </form>
+    <DropdownItem as="button" onClick={() => signOut()}>
+      Sign Out
+    </DropdownItem>
   );
 }

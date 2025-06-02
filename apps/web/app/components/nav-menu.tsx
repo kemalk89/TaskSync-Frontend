@@ -13,6 +13,7 @@ import {
   NavLink,
   DropdownItem,
 } from "react-bootstrap";
+import { NewTicketFormModalAdapter } from "./new-ticket-form-modal-adapter";
 
 export async function NavMenu() {
   const session = await auth();
@@ -41,6 +42,7 @@ export async function NavMenu() {
                 <Link href="/users" passHref legacyBehavior>
                   <NavLink>Users</NavLink>
                 </Link>
+                <NewTicketFormModalAdapter />
               </Nav>
               <Nav>
                 <NavDropdown title={session.user.name} id="basic-nav-dropdown">
@@ -50,9 +52,7 @@ export async function NavMenu() {
                   <Link href="/settings" passHref legacyBehavior>
                     <DropdownItem>Einstellungen</DropdownItem>
                   </Link>
-                  <DropdownItem>
-                    <SignOut />
-                  </DropdownItem>
+                  <SignOut />
                 </NavDropdown>
               </Nav>
             </NavbarCollapse>

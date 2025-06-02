@@ -6,7 +6,7 @@ import { Button, Table } from "react-bootstrap";
 import { Pagination } from "../pagination/pagination";
 import { useRouter } from "next/navigation";
 import { NewFormModal } from "../../NewFormModal";
-import { FormValues, TicketForm } from "./ticket-form";
+import { TicketFormValues, TicketForm } from "./ticket-form";
 import { useSyncPaginationWithPathParams } from "../pagination/hooks";
 
 export const TicketsPage = () => {
@@ -24,7 +24,7 @@ export const TicketsPage = () => {
 
   return (
     <>
-      <NewFormModal<FormValues>
+      <NewFormModal<TicketFormValues>
         title="Neues Ticket anlegen"
         buttonLabel="Neues Ticket anlegen"
       >

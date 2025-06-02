@@ -1,3 +1,4 @@
+import { Button } from "react-bootstrap";
 import { signIn } from "../auth";
 
 type Props = {
@@ -13,7 +14,7 @@ export function SignIn({ provider }: Props) {
       }}
     >
       {provider === "auth0" ? (
-        <button type="submit">Signin with Auth0</button>
+        <Button type="submit">Signin with Auth0</Button>
       ) : null}
     </form>
   );

@@ -8,7 +8,7 @@ import { Select } from "../../select";
 import { TicketIconBug, TicketIconStory, TicketIconTask } from "./ticket-icons";
 import { UserName } from "../../user-name/user-name";
 
-export interface FormValues {
+export interface TicketFormValues {
   projectId: string;
   type: string; // Bug, Story, Task
   title: string;
@@ -17,8 +17,10 @@ export interface FormValues {
 }
 
 interface Props {
-  formRef: Ref<FormikProps<FormValues>>;
-  saveHandler: (project: FormValues) => Promise<ApiResponse<TicketResponse>>;
+  formRef: Ref<FormikProps<TicketFormValues>>;
+  saveHandler: (
+    project: TicketFormValues
+  ) => Promise<ApiResponse<TicketResponse>>;
   onSubmitStart: () => void;
   onSubmitFinished: (result: ApiResponse<TicketResponse>) => void;
 }
@@ -54,7 +56,7 @@ export const TicketForm = ({
   };
 
   return (
-    <Formik<FormValues>
+    <Formik<TicketFormValues>
       innerRef={formRef}
       initialValues={{
         projectId: "",
@@ -64,7 +66,7 @@ export const TicketForm = ({
         assignee: "",
       }}
       validate={(values) => {
-        const errors: Partial<FormValues> = {};
+        const errors: Partial<TicketFormValues> = {};
         if (!values.title) {
           errors.title = "Pflichtfeld";
         }

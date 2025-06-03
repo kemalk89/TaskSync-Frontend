@@ -5,9 +5,8 @@ import { getAPI, PagedResult, TicketResponse } from "@app/api";
 import { Button, Table } from "react-bootstrap";
 import { Pagination } from "../pagination/pagination";
 import { useRouter } from "next/navigation";
-import { NewFormModal } from "../../NewFormModal";
-import { TicketFormValues, TicketForm } from "./ticket-form";
 import { useSyncPaginationWithPathParams } from "../pagination/hooks";
+import { NewTicketDialog } from "./new-ticket-dialog";
 
 export const TicketsPage = () => {
   const router = useRouter();
@@ -24,19 +23,7 @@ export const TicketsPage = () => {
 
   return (
     <>
-      <NewFormModal<TicketFormValues>
-        title="Neues Ticket anlegen"
-        buttonLabel="Neues Ticket anlegen"
-      >
-        {({ formRef, setIsSubmitting }) => (
-          <TicketForm
-            formRef={formRef}
-            onSubmitStart={() => setIsSubmitting(true)}
-            onSubmitFinished={() => setIsSubmitting(false)}
-            saveHandler={(values) => getAPI().saveTicket(values)}
-          />
-        )}
-      </NewFormModal>
+      <NewTicketDialog />
 
       <Table>
         <thead>

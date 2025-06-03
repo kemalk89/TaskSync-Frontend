@@ -1,4 +1,4 @@
-import { CreateProjectRequest } from "./request.models";
+import { CreateProjectRequest, CreateTicketCommand } from "./request.models";
 import {
   PagedResult,
   ProjectResponse,
@@ -165,8 +165,17 @@ export const getAPI = () => {
         `${getBaseUrl()}${getContext()}/ticket?pageNumber=${pageNumber}&pageSize=${pageSize}`
       );
     },
-    saveTicket: async (ticket: any): Promise<ApiResponse<TicketResponse>> => {
-      return post(`${getBaseUrl()}${getContext()}/ticket`, ticket);
+    saveTicket: async (
+      ticket: CreateTicketCommand
+    ): Promise<ApiResponse<TicketResponse>> => {
+      const cleaned: CreateTicketCommand = {
+        ...ticket,
+      };
+
+      if (!cleaned.assignee) {
+        delete cleaned["assignee"];
+      }
+      return post(`${getBaseUrl()}${getContext()}/ticket`, cleaned);
     },
     saveTicketComment: async (
       ticketId: string,

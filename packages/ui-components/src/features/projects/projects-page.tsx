@@ -1,6 +1,6 @@
 "use client";
 
-import Link from 'next/link'
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getAPI, PagedResult, ProjectResponse } from "@app/api";
 import { Button, Table } from "react-bootstrap";
@@ -15,12 +15,19 @@ export const ProjectsPage = () => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [data, setData] = useState<PagedResult<ProjectResponse>>();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const createQueryString = (name: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set(name, value);
 
     return params.toString();
+  };
+
+  const handleSaveProject = async (values: ProjectFormValues) => {
+    const data = await getAPI().saveProject(values);
+    setDialogOpen(false);
+    return data;
   };
 
   useEffect(() => {
@@ -38,13 +45,16 @@ export const ProjectsPage = () => {
       <NewFormModal<ProjectFormValues>
         title="Neues Projekt anlegen"
         buttonLabel="Neues Projekt anlegen"
+        open={dialogOpen}
+        onOpenDialog={() => setDialogOpen(true)}
+        onCloseDialog={() => setDialogOpen(false)}
       >
         {({ formRef, setIsSubmitting }) => (
           <ProjectForm
             formRef={formRef}
             onSubmitStart={() => setIsSubmitting(true)}
             onSubmitFinished={() => setIsSubmitting(false)}
-            saveHandler={(values) => getAPI().saveProject(values)}
+            saveHandler={handleSaveProject}
           />
         )}
       </NewFormModal>
@@ -61,9 +71,7 @@ export const ProjectsPage = () => {
           {data?.items.map((project: ProjectResponse) => (
             <tr key={project.id}>
               <td>
-                <Link href={`/projects/${project.id}`}>
-                  {project.title}                
-                </Link>
+                <Link href={`/projects/${project.id}`}>{project.title}</Link>
               </td>
               <td>
                 <UserName user={project.projectManager} />

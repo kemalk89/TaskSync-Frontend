@@ -14,6 +14,9 @@ import {
 type Props<T> = {
   title: string;
   buttonLabel: string;
+  open: boolean;
+  onCloseDialog: () => void;
+  onOpenDialog: () => void;
   children: (data: {
     setIsSubmitting: (value: boolean) => void;
     formRef: Ref<FormikProps<T>>;
@@ -29,27 +32,26 @@ type Props<T> = {
 export const NewFormModal = <T,>({
   title,
   buttonLabel,
+  open,
+  onOpenDialog,
+  onCloseDialog,
   children,
 }: Props<T>) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const formRef = useRef<FormikProps<T>>(null);
-
-  const handleOpenDialog = () => setDialogOpen(true);
-  const handleCloseDialog = () => setDialogOpen(false);
 
   return (
     <>
       <div className="d-flex justify-content-end">
-        <Button onClick={handleOpenDialog}>{buttonLabel}</Button>
+        <Button onClick={onOpenDialog}>{buttonLabel}</Button>
       </div>
-      <Modal size="xl" show={dialogOpen} onHide={handleCloseDialog}>
+      <Modal size="xl" show={open} onHide={onCloseDialog}>
         <ModalHeader closeButton>
           <ModalTitle>{title}</ModalTitle>
         </ModalHeader>
         <ModalBody>{children({ setIsSubmitting, formRef })}</ModalBody>
         <ModalFooter>
-          <Button variant="secondary" onClick={handleCloseDialog}>
+          <Button variant="secondary" onClick={onCloseDialog}>
             Close
           </Button>
           <Button

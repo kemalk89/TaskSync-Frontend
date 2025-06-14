@@ -67,6 +67,11 @@ jobs:
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+
+    - name: Generate AUTH_SECRET
+      run: npx -y auth secret
+      working-directory: apps/web
+
     - name: Run Playwright tests
       run: npx playwright test
       env:

@@ -48,7 +48,8 @@ jobs:
 
     - name: Build .NET Backend Docker image
       run: docker build -t tasksync-backend .
-
+      working-directory: dotnet-backend
+      
     - name: Start .NET Backend with Docker
       run: |
         docker run -d --name tasksync-backend \

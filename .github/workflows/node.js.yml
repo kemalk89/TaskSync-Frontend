@@ -49,12 +49,12 @@ jobs:
     - name: Build .NET Backend Docker image
       run: docker build -t tasksync-backend .
       working-directory: dotnet-backend
-      
+
     - name: Start .NET Backend with Docker
       run: |
         docker run -d --name tasksync-backend \
           -e Auth__Audience=https://tasksync.api.de/api \
-          -e Auth__MetadataAddress=http://host.docker.internal:3002/.well-known/openid-configuration
+          -e Auth__MetadataAddress=http://host.docker.internal:3002/.well-known/openid-configuration \
           -p 8080:8080 \
           tasksync-backend 
       working-directory: dotnet-backend

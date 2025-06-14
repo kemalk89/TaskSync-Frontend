@@ -43,7 +43,7 @@ jobs:
         path: dotnet-backend
 
     - name: Start .NET Backend Dependencies (like postgresql) with Docker Compose
-      run: docker-compose up -d
+      run: docker compose up -d
       working-directory: dotnet-backend
 
     - name: Build .NET Backend Docker image

@@ -75,6 +75,7 @@ jobs:
     - name: Run Playwright tests
       run: npx playwright test
       env:
+        AUTH_AUTH0_ISSUER: ${{ secrets.AUTH_AUTH0_ISSUER }}
         SERVICE_TASKSYNC: http://localhost:8080
         AUTH_AUDIENCE: https://tasksync.api.de/api
     - uses: actions/upload-artifact@v4

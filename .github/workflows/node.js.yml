@@ -9,26 +9,25 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+  NODE_VERSION: 22.x
+  TURBO_TELEMETRY_DISABLED: 1
+  BACKEND_CONTAINER: tasksync-backend
+  BACKEND_IMAGE: tasksync-backend
+
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [22.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: ${{ env.NODE_VERSION }}
         cache: 'npm'
     - run: npm ci
     - run: npm run build --if-present
-      env:
-        TURBO_TELEMETRY_DISABLED: 1
     - run: npm test
       
   playwright-tests:
@@ -47,22 +46,24 @@ jobs:
       working-directory: dotnet-backend
 
     - name: Build .NET Backend Docker image
-      run: docker build -t tasksync-backend .
+      run: docker build -t ${{ env.BACKEND_IMAGE }} .
       working-directory: dotnet-backend
 
     - name: Start .NET Backend with Docker
       run: |
-        docker run -d --name tasksync-backend \
+        docker run -d --name ${{ env.BACKEND_CONTAINER }} \
           -e Auth__Audience=https://tasksync.api.de/api \
           -e Auth__MetadataAddress=http://host.docker.internal:3002/.well-known/openid-configuration \
           -p 8080:8080 \
-          tasksync-backend 
+          ${{ env.BACKEND_IMAGE }} 
       working-directory: dotnet-backend
 
     - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
+    - name: Use Node.js
+      uses: actions/setup-node@v4
       with:
-        node-version: lts/*
+        node-version: ${{ env.node-NODE_VERSION }}
+        cache: 'npm'
     - name: Install dependencies
       run: npm ci
     - name: Install Playwright Browsers
@@ -84,3 +85,14 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 14
+
+    - name: Cleanup containers
+      if: always()
+      run: |
+        docker rm -f ${{ env.BACKEND_CONTAINER }} || true
+
+    - name: Shutdown Docker services
+      if: always()
+      run: docker compose down
+      working-directory: dotnet-backend
+

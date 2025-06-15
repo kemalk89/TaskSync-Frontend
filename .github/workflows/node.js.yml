@@ -91,8 +91,10 @@ jobs:
       run: |
         docker rm -f ${{ env.BACKEND_CONTAINER }} || true
 
+    - name: List files
+      run: ls -la
+
     - name: Shutdown Docker services
-      if: always()
       run: docker compose down
       working-directory: dotnet-backend
 

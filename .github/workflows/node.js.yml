@@ -41,7 +41,7 @@ jobs:
         repository: kemalk89/TaskSync
         path: dotnet-backend
 
-    - name: Start .NET Backend Dependencies (like postgresql) with Docker Compose
+    - name: Start .NET Backend Dependencies with Docker Compose
       run: docker compose up -d
       working-directory: dotnet-backend
 
@@ -92,7 +92,7 @@ jobs:
         docker rm -f ${{ env.BACKEND_CONTAINER }} || true
 
     - name: List files
-      run: ls -la
+      run: cd .. && ls -la
 
     - name: Shutdown Docker services
       run: docker compose down

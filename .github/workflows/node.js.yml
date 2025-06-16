@@ -86,17 +86,17 @@ jobs:
         path: playwright-report/
         retention-days: 14
 
+    # Cleanup running docker services
+    # Checkout .NET Backend again, because files are no longer available
+    - name: Again, Checkout .NET Backend
+      uses: actions/checkout@v4
+      with:
+        repository: kemalk89/TaskSync
+        path: dotnet-backend
     - name: Cleanup containers
       if: always()
       run: |
         docker rm -f ${{ env.BACKEND_CONTAINER }} || true
-
-    - name: Debugging - List files
-      run: cd .. && ls -la
-
-    - name: Debugging - Docker ps
-      run: docker ps
-
     - name: Shutdown Docker services
       run: docker compose down
       working-directory: dotnet-backend

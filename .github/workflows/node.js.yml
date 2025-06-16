@@ -91,8 +91,11 @@ jobs:
       run: |
         docker rm -f ${{ env.BACKEND_CONTAINER }} || true
 
-    - name: List files
+    - name: Debugging - List files
       run: cd .. && ls -la
+
+    - name: Debugging - Docker ps
+      run: docker ps
 
     - name: Shutdown Docker services
       run: docker compose down

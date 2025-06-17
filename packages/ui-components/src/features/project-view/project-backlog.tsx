@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { UserImage } from "../../user-name/user-img";
 import { TicketIcon } from "../tickets/ticket-icons";
+import { NewTicketDialog } from "../tickets/new-ticket-dialog";
 
 type Props = {
   project?: ProjectResponse;
@@ -24,6 +25,24 @@ export const ProjectBacklog = ({ project }: Props) => {
         .then((response) => setData(response.data));
     }
   }, [searchParams, project]);
+
+  if (data?.items.length === 0) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+        }}
+      >
+        No tickets found. Create your first ticket.
+        <NewTicketDialog
+          buttonProps={{ size: "sm"}}
+        />
+      </div>
+    );
+  }
+
   return (
     <Table>
       <tbody>

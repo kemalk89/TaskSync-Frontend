@@ -5,8 +5,13 @@ import { NewFormModal } from "../../NewFormModal";
 import { TicketForm, TicketFormValues } from "./ticket-form";
 import { CreateTicketCommand } from "../../../../api/src/request.models";
 import { useState } from "react";
+import { ButtonProps } from "react-bootstrap";
 
-export const NewTicketDialog = () => {
+type Props = {
+  buttonProps?: ButtonProps;
+};
+
+export const NewTicketDialog = ({ buttonProps = {} }: Props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleSaveTicket = async (values: TicketFormValues) => {
@@ -30,6 +35,7 @@ export const NewTicketDialog = () => {
     <NewFormModal<TicketFormValues>
       title="Neues Ticket anlegen"
       buttonLabel="Ticket anlegen"
+      buttonProps={buttonProps}
       open={dialogOpen}
       onOpenDialog={() => setDialogOpen(true)}
       onCloseDialog={() => setDialogOpen(false)}

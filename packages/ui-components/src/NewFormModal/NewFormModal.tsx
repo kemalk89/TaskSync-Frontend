@@ -4,6 +4,7 @@ import { FormikProps } from "formik";
 import { ReactNode, Ref, useRef, useState } from "react";
 import {
   Button,
+  ButtonProps,
   Modal,
   ModalBody,
   ModalFooter,
@@ -14,6 +15,7 @@ import {
 type Props<T> = {
   title: string;
   buttonLabel: string;
+  buttonProps?: ButtonProps;
   open: boolean;
   onCloseDialog: () => void;
   onOpenDialog: () => void;
@@ -32,6 +34,7 @@ type Props<T> = {
 export const NewFormModal = <T,>({
   title,
   buttonLabel,
+  buttonProps = {},
   open,
   onOpenDialog,
   onCloseDialog,
@@ -43,7 +46,9 @@ export const NewFormModal = <T,>({
   return (
     <>
       <div className="d-flex justify-content-end">
-        <Button onClick={onOpenDialog}>{buttonLabel}</Button>
+        <Button {...buttonProps} onClick={onOpenDialog}>
+          {buttonLabel}
+        </Button>
       </div>
       <Modal size="xl" show={open} onHide={onCloseDialog}>
         <ModalHeader closeButton>

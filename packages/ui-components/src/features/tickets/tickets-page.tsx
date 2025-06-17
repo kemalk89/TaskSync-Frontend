@@ -7,6 +7,7 @@ import { Pagination } from "../pagination/pagination";
 import { useRouter } from "next/navigation";
 import { useSyncPaginationWithPathParams } from "../pagination/hooks";
 import { NewTicketDialog } from "./new-ticket-dialog";
+import { TicketIcon } from "./ticket-icons";
 
 export const TicketsPage = () => {
   const router = useRouter();
@@ -28,6 +29,7 @@ export const TicketsPage = () => {
       <Table>
         <thead>
           <tr>
+            <th></th>
             <th>Titel</th>
             <th>Bearbeiter</th>
             <th></th>
@@ -36,9 +38,12 @@ export const TicketsPage = () => {
         <tbody>
           {data?.items.map((ticket: TicketResponse) => (
             <tr key={ticket.id}>
+              <td width="24" style={{ paddingTop: "10px" }}>
+                <TicketIcon ticket={ticket} />
+              </td>
               <td>{ticket.title}</td>
-              <td></td>
-              <td>
+              <td width="100"></td>
+              <td width="200">
                 <Button
                   size="sm"
                   onClick={() => router.push(`/tickets/${ticket.id}`)}

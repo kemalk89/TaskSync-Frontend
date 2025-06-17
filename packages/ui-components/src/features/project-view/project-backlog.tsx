@@ -3,6 +3,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { UserImage } from "../../user-name/user-img";
+import { TicketIcon } from "../tickets/ticket-icons";
 
 type Props = {
   project?: ProjectResponse;
@@ -28,13 +29,16 @@ export const ProjectBacklog = ({ project }: Props) => {
       <tbody>
         {data?.items.map((i) => (
           <tr key={`row-${i.id}`}>
+            <td width="24" style={{ paddingTop: "10px" }}>
+              <TicketIcon ticket={i} />
+            </td>
             <td>{i.title}</td>
-            <td>
+            <td width="82">
               <Button size="sm" variant="outline-primary">
                 Schätzen
               </Button>
             </td>
-            <td>
+            <td width="48">
               <UserImage />
             </td>
           </tr>

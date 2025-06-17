@@ -31,6 +31,7 @@ export interface TicketResponse {
   title: string;
   assignee: any;
   status: any;
+  type: string;
 }
 
 export interface TicketCommentResponse {

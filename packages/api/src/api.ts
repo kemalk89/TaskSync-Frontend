@@ -157,13 +157,16 @@ export const getAPI = () => {
         `${getBaseUrl()}${getContext()}/ticket/${ticketId}/comment?pageNumber=${pageNumber}&pageSize=${pageSize}`
       );
     },
-    fetchTickets: async ({
-      pageNumber,
-      pageSize,
-    }: Page): Promise<ApiResponse<PagedResult<TicketResponse>>> => {
-      return get(
-        `${getBaseUrl()}${getContext()}/ticket?pageNumber=${pageNumber}&pageSize=${pageSize}`
-      );
+    fetchTickets: async (
+      { pageNumber, pageSize }: Page,
+      { searchText }: { searchText?: string } = {}
+    ): Promise<ApiResponse<PagedResult<TicketResponse>>> => {
+      let url = `${getBaseUrl()}${getContext()}/ticket?pageNumber=${pageNumber}&pageSize=${pageSize}`;
+      if (searchText && searchText.trim().length > 0) {
+        url += `&searchText=${encodeURIComponent(searchText)}`; // encoding needed because of potential white spaces
+      }
+
+      return get(url);
     },
     saveTicket: async (
       ticket: CreateTicketCommand

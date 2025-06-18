@@ -1,30 +1,62 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getAPI, PagedResult, TicketResponse } from "@app/api";
 import { Button, Table } from "react-bootstrap";
 import { Pagination } from "../pagination/pagination";
 import { useRouter } from "next/navigation";
-import { useSyncPaginationWithPathParams } from "../pagination/hooks";
 import { NewTicketDialog } from "./new-ticket-dialog";
 import { TicketIcon } from "./ticket-icons";
+import { SearchBar } from "./search-bar";
+import { DEFAULT_PAGE_SIZE } from "../constants";
+import { useSyncWithSearchParams } from "../../hooks/use-sync-with-search-params";
 
 export const TicketsPage = () => {
   const router = useRouter();
   const [data, setData] = useState<PagedResult<TicketResponse>>();
-  const { pageNumber, pageSize, onPageNumberChanged, onPageSizeChanged } =
-    useSyncPaginationWithPathParams({ defaultPageSize: 10 });
 
+  const { searchParams, updateSearchParams } = useSyncWithSearchParams();
+  const pageNumber = searchParams.get("pageNumber") ?? 1;
+  const pageSize = searchParams.get("pageSize") ?? DEFAULT_PAGE_SIZE;
+  const searchText = searchParams.get("searchText");
+  const filters = useMemo(() => {
+    const _filters: { searchText?: string } = {};
+    if (searchText?.trim()) {
+      _filters["searchText"] = searchText;
+    }
+    return _filters;
+  }, [searchText]);
+
+  // Watch for changes on pagination and filters
   useEffect(() => {
-    if (pageNumber && pageSize)
+    if (pageNumber && pageSize) {
       getAPI()
-        .fetchTickets({ pageNumber, pageSize })
+        .fetchTickets(
+          {
+            pageNumber: pageNumber as unknown as number,
+            pageSize: pageSize as unknown as number,
+          },
+          filters
+        )
         .then((result) => setData(result.data));
-  }, [pageNumber, pageSize]);
+    }
+  }, [pageNumber, pageSize, filters]);
+
+  const searchTickets = (searchText: string) => {
+    updateSearchParams({
+      searchText,
+      pageNumber: 1, // When starting text-search we can reset page number
+      pageSize: searchParams.get("pageSize") ?? DEFAULT_PAGE_SIZE,
+    });
+  };
 
   return (
     <>
       <NewTicketDialog />
+
+      <div className="mb-4">
+        <SearchBar initialSearchText={searchText} onSearch={searchTickets} />
+      </div>
 
       <Table>
         <thead>
@@ -62,8 +94,8 @@ export const TicketsPage = () => {
       {data && (
         <Pagination
           paged={data}
-          onPageSizeSelected={(pageSize) => onPageSizeChanged(pageSize)}
-          onPageSelected={(pageNumber) => onPageNumberChanged(pageNumber)}
+          onPageSizeSelected={(pageSize) => updateSearchParams({ pageSize })}
+          onPageSelected={(pageNumber) => updateSearchParams({ pageNumber })}
         />
       )}
     </>

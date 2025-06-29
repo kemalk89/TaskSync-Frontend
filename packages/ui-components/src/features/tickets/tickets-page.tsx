@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { getAPI, PagedResult, TicketResponse } from "@app/api";
 import { Button, Table } from "react-bootstrap";
 import { Pagination } from "../pagination/pagination";
@@ -10,11 +10,12 @@ import { TicketIcon } from "./ticket-icons";
 import { SearchBar } from "./search-bar";
 import { DEFAULT_PAGE_SIZE } from "../constants";
 import { useSyncWithSearchParams } from "../../hooks/use-sync-with-search-params";
+import { ToastContext } from "../../toast";
 
 export const TicketsPage = () => {
   const router = useRouter();
   const [data, setData] = useState<PagedResult<TicketResponse>>();
-
+  const { newToast } = useContext(ToastContext);
   const { searchParams, updateSearchParams } = useSyncWithSearchParams();
   const pageNumber = searchParams.get("pageNumber") ?? 1;
   const pageSize = searchParams.get("pageSize") ?? DEFAULT_PAGE_SIZE;
@@ -38,9 +39,15 @@ export const TicketsPage = () => {
           },
           filters
         )
-        .then((result) => setData(result.data));
+        .then((result) => {
+          if (result.status === "error") {
+            newToast({ msg: "Ein Fehler ist aufgetreten", type: "error" });
+          } else {
+            return setData(result.data);
+          }
+        });
     }
-  }, [pageNumber, pageSize, filters]);
+  }, [pageNumber, pageSize, filters, newToast]);
 
   const searchTickets = (searchText: string) => {
     updateSearchParams({

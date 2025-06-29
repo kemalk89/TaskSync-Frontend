@@ -4,8 +4,9 @@ import { getAPI } from "@app/api";
 import { NewFormModal } from "../../NewFormModal";
 import { TicketForm, TicketFormValues } from "./ticket-form";
 import { CreateTicketCommand } from "../../../../api/src/request.models";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ButtonProps } from "react-bootstrap";
+import { ToastContext } from "../../toast";
 
 type Props = {
   buttonProps?: ButtonProps;
@@ -13,6 +14,7 @@ type Props = {
 
 export const NewTicketDialog = ({ buttonProps = {} }: Props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const { newToast } = useContext(ToastContext);
 
   const handleSaveTicket = async (values: TicketFormValues) => {
     const cmd: CreateTicketCommand = {
@@ -27,6 +29,7 @@ export const NewTicketDialog = ({ buttonProps = {} }: Props) => {
     }
 
     const data = await getAPI().saveTicket(cmd);
+    newToast({ type: "success", msg: "Ticket erfolgreich angelegt" });
     setDialogOpen(false);
     return data;
   };

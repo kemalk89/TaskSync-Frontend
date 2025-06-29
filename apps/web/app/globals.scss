@@ -1,5 +1,6 @@
 // @import "bootstrap/dist/css/bootstrap.min.css";
 @import "./bootstrap-custom.scss";
+@import "~bootstrap/scss/variables";
 
 :root {
   --background: #ffffff;
@@ -48,5 +49,13 @@ body {
 }
 
 .required-field-asterisk {
-  color: red;
+  color: $danger;
+}
+
+.u-fill-danger {
+  fill: $danger;
+}
+
+.u-fill-success {
+  fill: $success;
 }

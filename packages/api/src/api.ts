@@ -22,7 +22,11 @@ const patch = async (
   });
 
   if (!res.ok) {
-    throw new Error(`Network error on URL ${url}: ${res.status}.`);
+    return {
+      status: "error",
+      statusCode: res.status,
+      message: `Network error on URL ${url}: ${res.status}.`,
+    };
   }
 
   return res.json();
@@ -45,6 +49,7 @@ const post = async <T>(
   if (!res.ok) {
     return {
       status: "error",
+      statusCode: res.status,
       message: `Network error on URL ${url}: ${res.status}.`,
     };
   }
@@ -54,6 +59,7 @@ const post = async <T>(
   const data = responseText ? JSON.parse(responseText) : null;
   return {
     status: "success",
+    statusCode: res.status,
     data,
   };
 };
@@ -70,6 +76,7 @@ const get = async <T>(
   if (!res.ok) {
     return {
       status: "error",
+      statusCode: res.status,
       message: `Network error on URL ${url}: ${res.status}.`,
     };
   }
@@ -77,6 +84,7 @@ const get = async <T>(
   const data = await res.json();
   return {
     status: "success",
+    statusCode: res.status,
     data,
   };
 };
@@ -88,7 +96,11 @@ const remove = async (url: string, headers: Record<string, string> = {}) => {
   });
 
   if (!res.ok) {
-    throw new Error(`Network error on URL ${url}: ${res.status}.`);
+    return {
+      status: "error",
+      statusCode: res.status,
+      message: `Network error on URL ${url}: ${res.status}.`,
+    };
   }
 
   return res;
@@ -101,6 +113,7 @@ interface Page {
 
 export interface ApiResponse<T> {
   status: "success" | "error";
+  statusCode: number;
   message?: string;
   data?: T;
 }

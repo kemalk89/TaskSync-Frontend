@@ -22,7 +22,11 @@ export default async function Home() {
           )}
         </div>
       </main>
-      <footer className={styles.footer}>TaskSync</footer>
+      {!session?.user && (
+        <footer className={styles.footer}>
+          Copyright © 2023 - {new Date().getFullYear()} TaskSync
+        </footer>
+      )}
     </div>
   );
 }

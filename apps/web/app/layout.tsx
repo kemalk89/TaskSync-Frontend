@@ -4,6 +4,8 @@ import { NavMenu } from "./components/nav-menu";
 import { Container } from "react-bootstrap";
 
 import "./globals.scss";
+import { Providers } from "./providers";
+import { ToastContainer } from "@app/ui-components";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,10 +29,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <NavMenu />
-        <Container fluid="xl" style={{ paddingTop: 8 }}>
-          {children}
-        </Container>
+        <Providers>
+          <ToastContainer />
+          <NavMenu />
+          <Container fluid="xl" style={{ paddingTop: 8 }}>
+            {children}
+          </Container>
+        </Providers>
       </body>
     </html>
   );

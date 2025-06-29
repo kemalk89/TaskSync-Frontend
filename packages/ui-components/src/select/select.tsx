@@ -10,7 +10,7 @@ type SelectOption = {
 };
 
 type Props = {
-  placeholder: string;
+  placeholder?: string;
   value: string;
   options: SelectOption[];
   disabled?: boolean;

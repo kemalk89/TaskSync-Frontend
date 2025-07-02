@@ -202,8 +202,8 @@ export const getAPI = () => {
         comment
       );
     },
-    deleteTicket: async (ticket: TicketResponse) => {
-      return remove(`${getBaseUrl()}${getContext()}/ticket/${ticket.id}`);
+    deleteTicket: async (ticketId: string) => {
+      return remove(`${getBaseUrl()}${getContext()}/ticket/${ticketId}`);
     },
     updateTicketStatus: async (ticketId: number, newStatus: any) => {
       return patch(`${getBaseUrl()}${getContext()}/ticket/${ticketId}`, {

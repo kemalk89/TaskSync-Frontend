@@ -16,7 +16,8 @@ async function handleResponse(res: Response) {
     return Response.json(data);
   }
 
-  return new Response(res.statusText, {
+  const serviceResponse = await res.json();
+  return new Response(serviceResponse?.message ?? res.statusText, {
     status: res.status,
   });
 }
@@ -66,6 +67,33 @@ export async function GET(
   const endpoint = buildEndpoint(searchParams, slug);
 
   const res = await fetch(endpoint, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${session?.accessToken}`,
+    },
+  });
+
+  return handleResponse(res);
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  const session = await auth();
+  if (!session?.accessToken) {
+    return new Response("Unauthorized", {
+      status: 401,
+    });
+  }
+
+  const parts = (await params).slug as unknown as string[];
+  const slug = parts.join("/");
+  const searchParams = request.nextUrl.searchParams.toString();
+  const endpoint = buildEndpoint(searchParams, slug);
+
+  const res = await fetch(endpoint, {
+    method: "DELETE",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${session?.accessToken}`,

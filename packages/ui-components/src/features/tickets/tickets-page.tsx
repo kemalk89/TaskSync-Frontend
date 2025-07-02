@@ -11,9 +11,19 @@ import { SearchBar } from "./search-bar";
 import { DEFAULT_PAGE_SIZE } from "../constants";
 import { useSyncWithSearchParams } from "../../hooks/use-sync-with-search-params";
 import { ToastContext } from "../../toast";
+import { ConfirmationModal } from "../../ConfirmationModal";
 
 export const TicketsPage = () => {
   const router = useRouter();
+  const [modalDeleteTicketOpen, setModalDeleteTicket] = useState<{
+    show: boolean;
+    ticket: TicketResponse | null;
+    confirmButtonDisabled: boolean;
+  }>({
+    show: false,
+    ticket: null,
+    confirmButtonDisabled: false,
+  });
   const [data, setData] = useState<PagedResult<TicketResponse>>();
   const { newToast } = useContext(ToastContext);
   const { searchParams, updateSearchParams } = useSyncWithSearchParams();
@@ -57,9 +67,63 @@ export const TicketsPage = () => {
     });
   };
 
+  const onClickDeleteTicket = (ticket: TicketResponse) => {
+    setModalDeleteTicket({ ...modalDeleteTicketOpen, show: true, ticket });
+  };
+
+  const onConfirmDeleteTicket = async () => {
+    const ticketId = modalDeleteTicketOpen.ticket?.id;
+    if (ticketId) {
+      setModalDeleteTicket({
+        ...modalDeleteTicketOpen,
+        confirmButtonDisabled: true,
+      });
+
+      try {
+        const result = await getAPI().deleteTicket(ticketId);
+        if (result.status === "error") {
+          newToast({
+            msg: "Ticket konnte nicht gelöscht werden: Es fehlen notwendige Berechtigungen.",
+            type: "error",
+          });
+        } else {
+          newToast({
+            msg: "Ticket erfolgreich gelöscht.",
+            type: "success",
+          });
+        }
+      } catch {
+        newToast({
+          msg: "Ticket konnte nicht gelöscht werden.",
+          type: "error",
+        });
+      } finally {
+        closeDeleteTicketModal();
+      }
+    }
+  };
+
+  const closeDeleteTicketModal = () => {
+    setModalDeleteTicket({
+      show: false,
+      confirmButtonDisabled: false,
+      ticket: null,
+    });
+  };
+
   return (
     <>
       <NewTicketDialog />
+
+      <ConfirmationModal
+        show={modalDeleteTicketOpen.show}
+        onConfirm={onConfirmDeleteTicket}
+        onCancel={closeDeleteTicketModal}
+        confirmButtonText="Delete"
+        confirmButtonDisabled={modalDeleteTicketOpen.confirmButtonDisabled}
+        title="Ticket löschen"
+        body={<p>Möchten Sie das Ticket wirklich löschen?</p>}
+      />
 
       <div className="mb-4">
         <SearchBar initialSearchText={searchText} onSearch={searchTickets} />
@@ -90,7 +154,11 @@ export const TicketsPage = () => {
                   View
                 </Button>{" "}
                 <Button size="sm">Edit</Button>{" "}
-                <Button size="sm" variant="danger">
+                <Button
+                  size="sm"
+                  variant="danger"
+                  onClick={() => onClickDeleteTicket(ticket)}
+                >
                   Delete
                 </Button>
               </td>

@@ -2,19 +2,16 @@
 
 import { useContext, useEffect, useMemo, useState } from "react";
 import { getAPI, PagedResult, TicketResponse } from "@app/api";
-import { Button, Table } from "react-bootstrap";
 import { Pagination } from "../pagination/pagination";
-import { useRouter } from "next/navigation";
 import { NewTicketDialog } from "./new-ticket-dialog";
-import { TicketIcon } from "./ticket-icons";
 import { SearchBar } from "./search-bar";
 import { DEFAULT_PAGE_SIZE } from "../constants";
 import { useSyncWithSearchParams } from "../../hooks/use-sync-with-search-params";
 import { ToastContext } from "../../toast";
 import { ConfirmationModal } from "../../ConfirmationModal";
+import { TicketsTable } from "./tickets-table";
 
 export const TicketsPage = () => {
-  const router = useRouter();
   const [modalDeleteTicketOpen, setModalDeleteTicket] = useState<{
     show: boolean;
     ticket: TicketResponse | null;
@@ -129,43 +126,12 @@ export const TicketsPage = () => {
         <SearchBar initialSearchText={searchText} onSearch={searchTickets} />
       </div>
 
-      <Table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Titel</th>
-            <th>Bearbeiter</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {data?.items.map((ticket: TicketResponse) => (
-            <tr key={ticket.id}>
-              <td width="24" style={{ paddingTop: "10px" }}>
-                <TicketIcon ticket={ticket} />
-              </td>
-              <td>{ticket.title}</td>
-              <td width="100"></td>
-              <td width="200">
-                <Button
-                  size="sm"
-                  onClick={() => router.push(`/tickets/${ticket.id}`)}
-                >
-                  View
-                </Button>{" "}
-                <Button size="sm">Edit</Button>{" "}
-                <Button
-                  size="sm"
-                  variant="danger"
-                  onClick={() => onClickDeleteTicket(ticket)}
-                >
-                  Delete
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <TicketsTable
+        tickets={data?.items}
+        onEditTicket={console.log}
+        onDeleteTicket={onClickDeleteTicket}
+      />
+
       {data && (
         <Pagination
           paged={data}

@@ -1,5 +1,16 @@
 import Image from "next/image";
 import { auth } from "../auth";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const session = await auth();
+
+  if (!session?.user) return {};
+
+  return {
+    title: `Profile: ${session.user.name}`,
+  };
+}
 
 export default async function Page() {
   const session = await auth();

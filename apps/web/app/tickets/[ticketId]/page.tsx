@@ -1,37 +1,42 @@
 import React from "react";
-import { auth } from "../../auth";
-import { getAPI } from "@app/api";
+import { TicketResponse } from "@app/api";
+import { Metadata } from "next";
+import { fetchDataById } from "../../page-utils";
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ ticketId: string }>;
-}) {
-  const ticketId = (await params).ticketId;
+type Params = { params: Promise<{ ticketId: string }> };
 
-  const session = await auth();
-  if (!session) {
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const { ticketId } = await params;
+
+  const result = await fetchDataById<TicketResponse>((api) =>
+    api.fetchTicket(ticketId)
+  );
+
+  if (result.status !== "success") {
+    return {};
+  }
+
+  return {
+    title: result.data?.title,
+  };
+}
+
+export default async function Page({ params }: Params) {
+  const { ticketId } = await params;
+
+  const result = await fetchDataById<TicketResponse>((api) =>
+    api.fetchTicket(ticketId)
+  );
+
+  if (result.status === "unauthorized") {
     return <div>Unauthorized</div>;
   }
 
-  const accessToken = session.accessToken;
-  if (!accessToken) {
-    return <div>Unauthorized</div>;
-  }
-
-  const response = await getAPI()
-    .enableServerMode()
-    .setBaseUrl(process.env.SERVICE_TASKSYNC as string)
-    .setHeaders({
-      Authorization: `Bearer ${accessToken}`,
-    })
-    .fetchTicket(ticketId);
-
-  if (response.status !== "success") {
+  if (result.status !== "success") {
     return <div>Error calling backend service</div>;
   }
 
-  const data = response.data;
+  const data = result.data;
 
   return (
     <div>

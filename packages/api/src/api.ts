@@ -272,3 +272,8 @@ export const getAPI = () => {
     },
   };
 };
+
+/**
+ * Helper, that represents the shape of the object returned by {@link getAPI}.
+ */
+export type Api = ReturnType<typeof getAPI>;

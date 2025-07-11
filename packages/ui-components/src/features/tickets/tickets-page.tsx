@@ -1,7 +1,7 @@
 "use client";
 
-import { useContext, useEffect, useMemo, useState } from "react";
-import { getAPI, PagedResult, TicketResponse } from "@app/api";
+import { useContext, useMemo, useState } from "react";
+import { getAPI, TicketResponse } from "@app/api";
 import { Pagination } from "../pagination/pagination";
 import { NewTicketDialog } from "./new-ticket-dialog";
 import { SearchBar } from "./search-bar";
@@ -10,6 +10,7 @@ import { useSyncWithSearchParams } from "../../hooks/use-sync-with-search-params
 import { ToastContext } from "../../toast";
 import { ConfirmationModal } from "../../ConfirmationModal";
 import { TicketsTable } from "./tickets-table";
+import { useQuery } from "@tanstack/react-query";
 
 export const TicketsPage = () => {
   const [modalDeleteTicketOpen, setModalDeleteTicket] = useState<{
@@ -21,7 +22,6 @@ export const TicketsPage = () => {
     ticket: null,
     confirmButtonDisabled: false,
   });
-  const [data, setData] = useState<PagedResult<TicketResponse>>();
   const { newToast } = useContext(ToastContext);
   const { searchParams, updateSearchParams } = useSyncWithSearchParams();
   const pageNumber = searchParams.get("pageNumber") ?? 1;
@@ -35,26 +35,24 @@ export const TicketsPage = () => {
     return _filters;
   }, [searchText]);
 
-  // Watch for changes on pagination and filters
-  useEffect(() => {
-    if (pageNumber && pageSize) {
-      getAPI()
-        .fetchTickets(
-          {
-            pageNumber: pageNumber as unknown as number,
-            pageSize: pageSize as unknown as number,
-          },
-          filters
-        )
-        .then((result) => {
-          if (result.status === "error") {
-            newToast({ msg: "Ein Fehler ist aufgetreten", type: "error" });
-          } else {
-            return setData(result.data);
-          }
-        });
-    }
-  }, [pageNumber, pageSize, filters, newToast]);
+  const { data, isLoading } = useQuery({
+    // Watch for changes on pagination and filters
+    queryKey: ["tickets", pageNumber, pageSize, filters],
+    queryFn: async () => {
+      const result = await getAPI().fetchTickets(
+        {
+          pageNumber: pageNumber as unknown as number,
+          pageSize: pageSize as unknown as number,
+        },
+        filters
+      );
+
+      if (result.status === "error") {
+        newToast({ msg: "Ein Fehler ist aufgetreten", type: "error" });
+      }
+      return result.data;
+    },
+  });
 
   const searchTickets = (searchText: string) => {
     updateSearchParams({
@@ -127,6 +125,7 @@ export const TicketsPage = () => {
       </div>
 
       <TicketsTable
+        isLoading={isLoading}
         tickets={data?.items}
         onEditTicket={console.log}
         onDeleteTicket={onClickDeleteTicket}

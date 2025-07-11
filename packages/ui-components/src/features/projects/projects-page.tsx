@@ -1,20 +1,18 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getAPI, PagedResult, ProjectResponse } from "@app/api";
-import { Button, Table } from "react-bootstrap";
+import { getAPI } from "@app/api";
 import { Pagination } from "../pagination/pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ProjectForm, ProjectFormValues } from "./project-form";
 import { NewFormModal } from "../../NewFormModal";
-import { UserName } from "../../user-name/user-name";
+import { ProjectsTable } from "./projects-table";
+import { useQuery } from "@tanstack/react-query";
 
 export const ProjectsPage = () => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [data, setData] = useState<PagedResult<ProjectResponse>>();
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const createQueryString = (name: string, value: string) => {
@@ -30,15 +28,19 @@ export const ProjectsPage = () => {
     return data;
   };
 
-  useEffect(() => {
-    const page = {
-      pageSize: (searchParams.get("pageSize") || 10) as number,
-      pageNumber: (searchParams.get("pageNumber") || 1) as number,
-    };
-    getAPI()
-      .fetchProjects(page)
-      .then((response) => setData(response.data));
-  }, [searchParams]);
+  const { data, isLoading } = useQuery({
+    queryKey: ["projects", searchParams],
+    queryFn: async () => {
+      const page = {
+        pageSize: (searchParams.get("pageSize") || 10) as number,
+        pageNumber: (searchParams.get("pageNumber") || 1) as number,
+      };
+      const response = await getAPI().fetchProjects(page);
+      return response.data;
+    },
+  });
+
+  useEffect(() => {}, [searchParams]);
 
   return (
     <>
@@ -59,39 +61,7 @@ export const ProjectsPage = () => {
         )}
       </NewFormModal>
 
-      <Table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Projektleiter</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {data?.items.map((project: ProjectResponse) => (
-            <tr key={project.id}>
-              <td>
-                <Link href={`/projects/${project.id}`}>{project.title}</Link>
-              </td>
-              <td>
-                <UserName user={project.projectManager} />
-              </td>
-              <td>
-                <Button
-                  size="sm"
-                  onClick={() => router.push(`/projects/${project.id}`)}
-                >
-                  View
-                </Button>{" "}
-                <Button size="sm">Edit</Button>{" "}
-                <Button size="sm" variant="danger">
-                  Delete
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      <ProjectsTable projects={data?.items} isLoading={isLoading} />
       {data && (
         <Pagination
           paged={data}

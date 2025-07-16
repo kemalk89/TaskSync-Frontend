@@ -32,6 +32,7 @@ export interface TicketResponse {
   assignee: any;
   status: any;
   type: string;
+  description?: string;
 }
 
 export interface TicketCommentResponse {

@@ -1,8 +1,7 @@
 import { Button, Table } from "react-bootstrap";
-import Link from "next/link";
-import { TicketIcon } from "./ticket-icons";
 import { TicketResponse } from "@app/api";
 import { useRouter } from "next/navigation";
+import { TicketTitleWithLink } from "./ticket-title-with-link";
 
 type Props = {
   isLoading?: boolean;
@@ -37,12 +36,7 @@ export const TicketsTable = ({
             tickets?.map((ticket) => (
               <tr key={ticket.id}>
                 <td>
-                  <Link href={`/tickets/${ticket.id}`}>
-                    <div style={{ display: "flex", gap: "8px" }}>
-                      <TicketIcon ticket={ticket} />
-                      {ticket.title}
-                    </div>
-                  </Link>
+                  <TicketTitleWithLink ticket={ticket} />
                 </td>
                 <td width="100"></td>
                 <td width="200">

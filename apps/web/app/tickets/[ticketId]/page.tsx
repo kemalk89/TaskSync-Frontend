@@ -2,6 +2,7 @@ import React from "react";
 import { TicketResponse } from "@app/api";
 import { Metadata } from "next";
 import { fetchDataById } from "../../page-utils";
+import { TicketViewPage } from "@app/ui-components";
 
 type Params = { params: Promise<{ ticketId: string }> };
 
@@ -38,10 +39,5 @@ export default async function Page({ params }: Params) {
 
   const data = result.data;
 
-  return (
-    <div>
-      <h3>{data?.title}</h3>
-      Ticket View Page: {ticketId}
-    </div>
-  );
+  return <TicketViewPage ticket={data} />;
 }

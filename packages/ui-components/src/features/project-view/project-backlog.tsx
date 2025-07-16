@@ -3,8 +3,8 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { UserImage } from "../../user-name/user-img";
-import { TicketIcon } from "../tickets/ticket-icons";
 import { NewTicketDialog } from "../tickets/new-ticket-dialog";
+import { TicketTitleWithLink } from "../tickets/ticket-title-with-link";
 
 type Props = {
   project?: ProjectResponse;
@@ -36,9 +36,7 @@ export const ProjectBacklog = ({ project }: Props) => {
         }}
       >
         No tickets found. Create your first ticket.
-        <NewTicketDialog
-          buttonProps={{ size: "sm"}}
-        />
+        <NewTicketDialog buttonProps={{ size: "sm" }} />
       </div>
     );
   }
@@ -48,10 +46,9 @@ export const ProjectBacklog = ({ project }: Props) => {
       <tbody>
         {data?.items.map((i) => (
           <tr key={`row-${i.id}`}>
-            <td width="24" style={{ paddingTop: "10px" }}>
-              <TicketIcon ticket={i} />
+            <td style={{ paddingTop: "10px" }}>
+              <TicketTitleWithLink ticket={i} />
             </td>
-            <td>{i.title}</td>
             <td width="82">
               <Button size="sm" variant="outline-primary">
                 Schätzen

@@ -2,13 +2,47 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>JatEditor Test Server</title>
+    <title>JatEditor Quickstart</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+      crossorigin="anonymous"
+    />
   </head>
   <body>
-    <h1>JatEditor Test Server</h1>
+    <div>
+      <button id="h1">H1</button>
+      <button id="h2">H2</button>
+      <button id="h3">H3</button>
+      <button id="bold">B</button>
+      <button id="italic">I</button>
+      <button id="underline">U</button>
+      <button id="bullet-list">UL</button>
+    </div>
+    <br />
+    <div id="editor"></div>
 
-    <div id="root"></div>
+    <script type="module" src="src/main.ts"></script>
 
-    <script type="module" src="/src/dev-server.tsx"></script>
+    <script type="module">
+      window.onload = () => {
+        const ctrl = new EditorController("#editor", {});
+        document.getElementById("bold").addEventListener("click", () => {
+          ctrl.toggleInlineFormat("strong");
+        });
+      };
+    </script>
+
+    <style>
+      body {
+        padding: 1rem;
+      }
+
+      #editor {
+        border: 1px solid black;
+        padding: 0.5rem;
+      }
+    </style>
   </body>
 </html>

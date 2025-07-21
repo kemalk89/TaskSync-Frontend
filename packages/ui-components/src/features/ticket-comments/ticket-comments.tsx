@@ -1,5 +1,9 @@
-import { JatEditor } from "@app/jat-editor";
+import { TextEditor } from "../../texteditor/texteditor";
 
 export const TicketComments = () => {
-  return <JatEditor />;
+  return (
+    <div>
+      <TextEditor />
+    </div>
+  );
 };

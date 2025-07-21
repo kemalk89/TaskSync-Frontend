@@ -22,12 +22,12 @@ export const IconCardList = () => {
 };
 
 // https://icons.getbootstrap.com/icons/list-ul/
-export const IconListUl = () => {
+export const IconListUl = ({ width, height }: Props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
+      width={width ?? 16}
+      height={height ?? 16}
       fill="currentColor"
       className="bi bi-list-ul"
       viewBox="0 0 16 16"
@@ -41,12 +41,12 @@ export const IconListUl = () => {
 };
 
 // https://icons.getbootstrap.com/icons/list-ol/
-export const IconListOl = () => {
+export const IconListOl = ({ width, height }: Props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
+      width={width ?? 16}
+      height={height ?? 16}
       fill="currentColor"
       className="bi bi-list-ol"
       viewBox="0 0 16 16"

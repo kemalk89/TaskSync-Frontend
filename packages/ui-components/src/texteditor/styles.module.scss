@@ -1,0 +1,14 @@
+.editorContainer {
+  border: 1px solid black;
+
+  padding: 0.5rem;
+
+  :global(.tiptap) {
+    outline: none;
+  }
+
+  :global(pre) {
+    background-color: rgb(238, 238, 238);
+    padding: 0.5rem;
+  }
+}

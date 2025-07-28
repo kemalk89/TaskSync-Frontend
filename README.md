@@ -16,6 +16,8 @@ Start the application.
 ## Run tests
 ```sh
 npm run test:e2e
+# with UI
+npm run test:e2e -- --ui
 ```
 ## After tests
 Terminate the application.

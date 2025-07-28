@@ -1,6 +1,7 @@
 import { TicketResponse } from "@app/api";
 import { TicketIcon } from "../tickets/ticket-icons";
 import { TicketComments } from "../ticket-comments/ticket-comments";
+import { TextEditorReadonly } from "../../texteditor/texteditor-readonly";
 
 type Props = {
   ticket?: TicketResponse;
@@ -18,9 +19,13 @@ export const TicketViewPage = ({ ticket }: Props) => {
       </h3>
       <div className="mt-4">
         <h4>Beschreibung</h4>
-        {ticket.description || (
-          <div>Dieses Ticket hat noch keine Beschreibung</div>
-        )}
+        <TextEditorReadonly
+          content={
+            ticket.description ?? (
+              <p>Dieses Ticket hat noch keine Beschreibung</p>
+            )
+          }
+        />
       </div>
       <div className="mt-4">
         <h4>Kommentare</h4>

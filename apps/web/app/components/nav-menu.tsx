@@ -42,6 +42,7 @@ export async function NavMenu() {
                 <Link href="/users" passHref legacyBehavior>
                   <NavLink>Users</NavLink>
                 </Link>
+                <div className="px-3"></div>
                 <NewTicketDialog />
               </Nav>
               <Nav>

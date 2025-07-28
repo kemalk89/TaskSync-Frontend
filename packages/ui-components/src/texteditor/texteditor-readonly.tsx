@@ -11,6 +11,7 @@ export const TextEditorReadonly = ({ content }: Props) => {
   const editor = useEditor({
     extensions: [StarterKit],
     content: typeof content === "string" ? JSON.parse(content) : content,
+    editable: false,
     // Don't render immediately on the server to avoid SSR issues
     immediatelyRender: false,
   });

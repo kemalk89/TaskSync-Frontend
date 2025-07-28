@@ -7,13 +7,17 @@ import { Form, FormControl, FormGroup, FormLabel } from "react-bootstrap";
 import { Select } from "../../select";
 import { TicketIconBug, TicketIconStory, TicketIconTask } from "./ticket-icons";
 import { UserName } from "../../user-name/user-name";
+import { TextEditor } from "../../texteditor/texteditor";
+import { useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { Placeholder } from "@tiptap/extensions";
 
 export interface TicketFormValues {
   projectId: string;
   type: string; // Bug, Story, Task
   title: string;
-  description: string;
   assignee: string;
+  description?: string;
 }
 
 interface Props {
@@ -32,6 +36,17 @@ export const TicketForm = ({
   onSubmitFinished,
 }: Props) => {
   const [projects, setProjects] = useState<ProjectResponse[]>([]);
+
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Placeholder.configure({
+        placeholder: "Hier können Details eingegeben werden...",
+      }),
+    ],
+    // Don't render immediately on the server to avoid SSR issues
+    immediatelyRender: false,
+  });
 
   useEffect(() => {
     async function fetchProjects() {
@@ -62,7 +77,6 @@ export const TicketForm = ({
         projectId: "",
         type: "",
         title: "",
-        description: "",
         assignee: "",
       }}
       validate={(values) => {
@@ -80,7 +94,10 @@ export const TicketForm = ({
       }}
       onSubmit={async (values) => {
         onSubmitStart();
-        const result = await saveHandler(values);
+        const result = await saveHandler({
+          ...values,
+          description: JSON.stringify(editor?.getJSON() ?? {}),
+        });
         onSubmitFinished(result);
       }}
     >
@@ -106,6 +123,25 @@ export const TicketForm = ({
             />
             <FormControl.Feedback type="invalid">
               {formikProps.touched.projectId && formikProps.errors.projectId}
+            </FormControl.Feedback>
+          </FormGroup>
+
+          <FormGroup className="mb-3">
+            <FormLabel htmlFor="title">
+              Titel <span className="required-field-asterisk">*</span>
+            </FormLabel>
+            <FormControl
+              id="title"
+              name="title"
+              isInvalid={
+                formikProps.touched.title && !!formikProps.errors.title
+              }
+              value={formikProps.values.title}
+              onChange={formikProps.handleChange}
+              onBlur={formikProps.handleBlur}
+            />
+            <FormControl.Feedback type="invalid">
+              {formikProps.touched.title && formikProps.errors.title}
             </FormControl.Feedback>
           </FormGroup>
 
@@ -159,34 +195,8 @@ export const TicketForm = ({
           </FormGroup>
 
           <FormGroup className="mb-3">
-            <FormLabel htmlFor="title">
-              Titel <span className="required-field-asterisk">*</span>
-            </FormLabel>
-            <FormControl
-              id="title"
-              name="title"
-              isInvalid={
-                formikProps.touched.title && !!formikProps.errors.title
-              }
-              value={formikProps.values.title}
-              onChange={formikProps.handleChange}
-              onBlur={formikProps.handleBlur}
-            />
-            <FormControl.Feedback type="invalid">
-              {formikProps.touched.title && formikProps.errors.title}
-            </FormControl.Feedback>
-          </FormGroup>
-
-          <FormGroup className="mb-3">
             <FormLabel htmlFor="description">Beschreibung</FormLabel>
-            <FormControl
-              id="description"
-              name="description"
-              as="textarea"
-              rows={5}
-              value={formikProps.values.description}
-              onChange={formikProps.handleChange}
-            />
+            <TextEditor editor={editor} />
           </FormGroup>
         </Form>
       )}

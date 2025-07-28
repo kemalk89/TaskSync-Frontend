@@ -3,6 +3,7 @@ export interface UserResponse {
   username: string;
   email: string;
   picture: string;
+  externalSource?: string;
 }
 
 export interface ProjectResponse {

@@ -5,6 +5,7 @@ import { getAPI, PagedResult, UserResponse } from "@app/api";
 import { Button, Table } from "react-bootstrap";
 import { Pagination } from "../pagination/pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { UserName } from "../../user-name/user-name";
 
 export const UsersPage = () => {
   const router = useRouter();
@@ -35,13 +36,20 @@ export const UsersPage = () => {
         <thead>
           <tr>
             <th>Name</th>
+            <th>Email</th>
+            <th>Source</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           {data?.items.map((user: UserResponse) => (
             <tr key={user.id}>
+              <td>
+                <UserName user={user} />
+              </td>
               <td>{user.email}</td>
+              <td>{user.externalSource}</td>
+
               <td>
                 <Button size="sm">View</Button> <Button size="sm">Edit</Button>{" "}
                 <Button size="sm" variant="danger">

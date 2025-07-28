@@ -38,8 +38,8 @@ export const TicketsTable = ({
                 <td>
                   <TicketTitleWithLink ticket={ticket} />
                 </td>
-                <td width="100"></td>
-                <td width="200">
+                <td width="300"></td>
+                <td width="180">
                   <Button
                     size="sm"
                     onClick={() => router.push(`/tickets/${ticket.id}`)}

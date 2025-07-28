@@ -29,10 +29,10 @@ export const ProjectsTable = ({ isLoading, projects }: Props) => {
                 <td>
                   <Link href={`/projects/${project.id}`}>{project.title}</Link>
                 </td>
-                <td>
+                <td width="300">
                   <UserName user={project.projectManager} />
                 </td>
-                <td>
+                <td width="180">
                   <Button
                     size="sm"
                     onClick={() => router.push(`/projects/${project.id}`)}

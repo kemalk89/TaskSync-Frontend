@@ -56,8 +56,8 @@ export const NewFormModal = <T,>({
         </ModalHeader>
         <ModalBody>{children({ setIsSubmitting, formRef })}</ModalBody>
         <ModalFooter>
-          <Button variant="secondary" onClick={onCloseDialog}>
-            Close
+          <Button variant="outline-secondary" onClick={onCloseDialog}>
+            Abbrechen
           </Button>
           <Button
             variant="primary"
@@ -66,7 +66,7 @@ export const NewFormModal = <T,>({
               formRef.current?.submitForm();
             }}
           >
-            Save
+            Speichern
           </Button>
         </ModalFooter>
       </Modal>

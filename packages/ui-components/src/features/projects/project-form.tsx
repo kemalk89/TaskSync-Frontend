@@ -1,7 +1,10 @@
-import { ApiResponse, ProjectResponse } from "@app/api";
+import { ApiResponse, getAPI, ProjectResponse } from "@app/api";
 import { Formik, FormikProps } from "formik";
 import { Ref } from "react";
 import { Form, FormControl, FormGroup, FormLabel } from "react-bootstrap";
+import { Select } from "../../select";
+import { useQuery } from "@tanstack/react-query";
+import { UserName } from "../../user-name/user-name";
 
 enum ProjectVisibility {
   Everybody,
@@ -12,6 +15,7 @@ export interface ProjectFormValues {
   title: string;
   description: string;
   visibility?: ProjectVisibility;
+  projectManagerId?: string;
 }
 
 interface ProjectFormProps {
@@ -29,12 +33,20 @@ export const ProjectForm = ({
   onSubmitStart,
   onSubmitFinished,
 }: ProjectFormProps) => {
+  const { data: users, isLoading } = useQuery({
+    queryKey: ["fetchUsers"],
+    queryFn: async () => {
+      return await getAPI().fetchUsers({ pageNumber: 1, pageSize: 100 });
+    },
+  });
+
   return (
     <Formik<ProjectFormValues>
       innerRef={formRef}
       initialValues={{
         title: "",
         description: "",
+        projectManagerId: "",
         visibility: ProjectVisibility.TeamOnly,
       }}
       validate={(values) => {
@@ -58,13 +70,10 @@ export const ProjectForm = ({
         handleChange,
         handleBlur,
         isSubmitting,
+        setFieldValue,
       }) => (
         <Form onSubmit={handleSubmit}>
-          <div>
-            <h3>Debug</h3>
-            <div>Is Submitting: {isSubmitting ? "Yes" : "No"}</div>
-          </div>
-          <FormGroup>
+          <FormGroup className="mb-3">
             <FormLabel htmlFor="visibility">Visiblity</FormLabel>
             <FormControl
               id="title"
@@ -83,8 +92,10 @@ export const ProjectForm = ({
                 ))}
             </FormControl>
           </FormGroup>
-          <FormGroup>
-            <FormLabel htmlFor="title">Title</FormLabel>
+          <FormGroup className="mb-3">
+            <FormLabel htmlFor="title">
+              Titel <span className="required-field-asterisk">*</span>
+            </FormLabel>
             <FormControl
               id="title"
               name="title"
@@ -94,8 +105,8 @@ export const ProjectForm = ({
             />
             <FormControl.Feedback>{errors.title}</FormControl.Feedback>
           </FormGroup>
-          <FormGroup>
-            <FormLabel htmlFor="description">Description</FormLabel>
+          <FormGroup className="mb-3">
+            <FormLabel htmlFor="description">Beschreibung</FormLabel>
             <FormControl
               id="description"
               name="description"
@@ -104,7 +115,26 @@ export const ProjectForm = ({
               onChange={handleChange}
             />
           </FormGroup>
-          <div>Project Lead</div>
+
+          <FormGroup className="mb-3">
+            <FormLabel htmlFor="projectManager">Projektleiter</FormLabel>
+            <Select
+              placeholder="Nach einer Person suchen..."
+              value={values.projectManagerId ?? ""}
+              disabled={isLoading}
+              onChange={(value) =>
+                setFieldValue("projectManagerId", value, false)
+              }
+              options={
+                users?.data?.items
+                  ? users.data.items.map((user) => ({
+                      label: <UserName user={user} />,
+                      value: user.id,
+                    }))
+                  : []
+              }
+            />
+          </FormGroup>
           <div>Team members (What is role of this member?)</div>
         </Form>
       )}

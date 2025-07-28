@@ -46,7 +46,7 @@ jobs:
       working-directory: dotnet-backend
 
     - name: Build .NET Backend Docker image
-      run: docker build -t ${{ env.BACKEND_IMAGE }} -f Dockerfile_Local .
+      run: docker build -t ${{ env.BACKEND_IMAGE }} -f Dockerfile .
       working-directory: dotnet-backend
 
     - name: Start .NET Backend with Docker

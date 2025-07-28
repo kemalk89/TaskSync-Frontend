@@ -1,14 +1,17 @@
+"use client";
+
 import { ReactNode } from "react";
 import { Button, Modal } from "react-bootstrap";
 
 type Props = {
   show: boolean;
-  title: string;
+  title: ReactNode;
   confirmButtonText: string;
   confirmButtonDisabled: boolean;
   body: ReactNode;
-  onConfirm: () => void;
-  onCancel: () => void;
+  data: unknown;
+  onConfirm?: (data: unknown) => void;
+  onCancel?: () => void;
 };
 
 export const ConfirmationModal = ({
@@ -17,6 +20,7 @@ export const ConfirmationModal = ({
   confirmButtonDisabled,
   title,
   body,
+  data,
   onConfirm,
   onCancel,
 }: Props) => {
@@ -29,13 +33,17 @@ export const ConfirmationModal = ({
       <Modal.Body>{body}</Modal.Body>
 
       <Modal.Footer>
-        <Button variant="secondary" onClick={onCancel}>
+        <Button variant="light" onClick={onCancel}>
           Cancel
         </Button>
         <Button
-          variant="primary"
+          variant="danger"
           disabled={confirmButtonDisabled}
-          onClick={onConfirm}
+          onClick={() => {
+            if (onConfirm) {
+              onConfirm(data);
+            }
+          }}
         >
           {confirmButtonText}
         </Button>

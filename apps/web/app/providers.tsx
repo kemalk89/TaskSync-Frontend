@@ -4,6 +4,7 @@ import { ToastContext, ToastMessage } from "@app/ui-components";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { PropsWithChildren, useCallback, useState } from "react";
 import { getQueryClient } from "./get-query-client";
+import { ConfirmationModalProvider } from "../../../packages/ui-components/src/confirmation-modal";
 
 let TOAST_ID_COUNTER = 0;
 
@@ -32,7 +33,7 @@ export const Providers = ({ children }: PropsWithChildren) => {
           removeToast,
         }}
       >
-        {children}
+        <ConfirmationModalProvider>{children}</ConfirmationModalProvider>
       </ToastContext>
     </QueryClientProvider>
   );

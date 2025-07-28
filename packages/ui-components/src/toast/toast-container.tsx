@@ -14,7 +14,7 @@ export const ToastContainer = () => {
       className="p-3"
       position="top-end"
       style={{
-        zIndex: 1,
+        zIndex: 1056, // with zIndex 1056, ensure toasts appear above modals
       }}
     >
       {toastMessages.map((t, i) => (

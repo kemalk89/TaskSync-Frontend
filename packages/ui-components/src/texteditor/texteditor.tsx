@@ -1,7 +1,6 @@
 "use client";
 
-import { useEditor, EditorContent, useEditorState } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
+import { EditorContent, useEditorState, Editor } from "@tiptap/react";
 import {
   IconBold,
   IconCode,
@@ -16,18 +15,15 @@ import { Button, ButtonGroup } from "react-bootstrap";
 
 import styles from "./styles.module.scss";
 
+type Props = {
+  editor: Editor | null;
+};
+
 /**
  * TODO:
  * - Mentions: https://tiptap.dev/docs/examples/advanced/mentions
  */
-export const TextEditor = () => {
-  const editor = useEditor({
-    extensions: [StarterKit],
-    content: "<p>Start typing...</p>",
-    // Don't render immediately on the server to avoid SSR issues
-    immediatelyRender: false,
-  });
-
+export const TextEditor = ({ editor }: Props) => {
   const editorState = useEditorState({
     editor,
     selector: (ctx) => {
@@ -46,11 +42,15 @@ export const TextEditor = () => {
     },
   });
 
+  if (!editor) {
+    return null;
+  }
+
   return (
     <div>
       <div>
         <div className={styles.editorContainer}>
-          <div className="mb-2 d-flex gap-2">
+          <div className="mb-4 d-flex gap-2">
             <ButtonGroup>
               <Button
                 title="Normal Text"

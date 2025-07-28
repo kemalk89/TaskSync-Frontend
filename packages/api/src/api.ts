@@ -165,7 +165,7 @@ export const getAPI = () => {
     fetchTicketComments: async (
       ticketId: string,
       { pageNumber, pageSize }: Page
-    ) => {
+    ): Promise<ApiResponse<PagedResult<TicketCommentResponse>>> => {
       return get(
         `${getBaseUrl()}${getContext()}/ticket/${ticketId}/comment?pageNumber=${pageNumber}&pageSize=${pageSize}`
       );
@@ -195,15 +195,19 @@ export const getAPI = () => {
     },
     saveTicketComment: async (
       ticketId: string,
-      comment: any
+      comment: object
     ): Promise<ApiResponse<TicketCommentResponse>> => {
-      return post(
-        `${getBaseUrl()}${getContext()}/ticket/${ticketId}/comment`,
-        comment
-      );
+      return post(`${getBaseUrl()}${getContext()}/ticket/${ticketId}/comment`, {
+        comment: JSON.stringify(comment),
+      });
     },
     deleteTicket: async (ticketId: string) => {
       return remove(`${getBaseUrl()}${getContext()}/ticket/${ticketId}`);
+    },
+    deleteTicketComment: async (ticketId: string, commentId: string) => {
+      return remove(
+        `${getBaseUrl()}${getContext()}/ticket/${ticketId}/comment/${commentId}`
+      );
     },
     updateTicketStatus: async (ticketId: number, newStatus: any) => {
       return patch(`${getBaseUrl()}${getContext()}/ticket/${ticketId}`, {

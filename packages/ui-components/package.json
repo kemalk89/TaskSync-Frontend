@@ -15,7 +15,6 @@
     "@app/api": "*",
     "@app/jat-editor": "*",
     "@app/utils": "*",
-    "@lexical/react": "^0.23.1",
     "@tanstack/react-query": "^5.64.2",
     "@tiptap/extension-code-block-lowlight": "^3.0.7",
     "@tiptap/pm": "^3.0.7",

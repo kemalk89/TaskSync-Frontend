@@ -11,4 +11,11 @@
     background-color: rgb(238, 238, 238);
     padding: 0.5rem;
   }
+  :global(.tiptap p.is-editor-empty:first-child::before) {
+    color: #adb5bd;
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+  }
 }

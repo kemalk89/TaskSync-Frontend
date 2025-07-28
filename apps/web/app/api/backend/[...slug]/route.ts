@@ -2,21 +2,38 @@ import { type NextRequest } from "next/server";
 import { auth } from "../../../auth";
 import { envServiceTaskSync } from "../../../environment-variables";
 
-function buildEndpoint(searchParams: string, slug: string) {
+function buildEndpoint(searchParams: string, slug: string | string[]) {
   const baseUrl = `${envServiceTaskSync as string}/api/`;
+
+  const path = Array.isArray(slug) ? slug.join("/") : slug;
+
   return searchParams
-    ? `${baseUrl}${slug}?${searchParams}`
-    : `${baseUrl}${slug}`;
+    ? `${baseUrl}${path}?${searchParams}`
+    : `${baseUrl}${path}`;
 }
 
 async function handleResponse(res: Response) {
   const isSuccess = res.status >= 200 && res.status < 400;
-  if (isSuccess) {
+  const isJsonResponse = res.headers
+    .get("content-type")
+    ?.includes("application/json");
+
+  // Handle success
+  if (isSuccess && res.status === 204) {
+    return res;
+  } else if (isSuccess && isJsonResponse) {
     const data = await res.json();
     return Response.json(data);
+  } else if (isSuccess) {
+    return res;
   }
 
-  const serviceResponse = await res.json();
+  // Handle failure
+  let serviceResponse;
+  if (isJsonResponse) {
+    serviceResponse = await res.json();
+  }
+
   return new Response(serviceResponse?.message ?? res.statusText, {
     status: res.status,
   });

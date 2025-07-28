@@ -38,7 +38,9 @@ export interface TicketResponse {
 export interface TicketCommentResponse {
   id: string;
   createdBy: any;
-  createdAt: any;
+  createdDate: any;
+  comment: string;
+  isDeleted?: boolean;
 }
 
 export interface PagedResult<T> {

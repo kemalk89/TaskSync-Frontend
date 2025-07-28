@@ -12,3 +12,11 @@ export { UsersPage } from "./features/users/users-page";
 export { NewFormModal } from "./NewFormModal/NewFormModal";
 export type { ToastMessage } from "./toast";
 export { ToastContext, ToastContainer } from "./toast";
+export {
+  ConfirmationModalContainer,
+  ConfirmationModalProvider,
+} from "./confirmation-modal";
+export type {
+  ConfirmationModalContentData,
+  ConfirmationModalCallbacks,
+} from "./confirmation-modal";

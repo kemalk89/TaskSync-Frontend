@@ -14,6 +14,7 @@ import { IconTrash } from "../../icons/icons";
 import { useContext } from "react";
 import { ToastContext } from "../../toast";
 import { useConfirmationModal } from "../../confirmation-modal";
+import { useTextEditor } from "../../texteditor/use-texteditor";
 
 type Props = {
   ticketId: string;
@@ -27,16 +28,7 @@ export const TicketComments = ({ ticketId }: Props) => {
     closeConfirmationModal,
   } = useConfirmationModal();
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Placeholder.configure({
-        placeholder: "Write a comment...",
-      }),
-    ],
-    // Don't render immediately on the server to avoid SSR issues
-    immediatelyRender: false,
-  });
+  const editor = useTextEditor({ placeholder: "Einen Kommentar schreiben..." });
 
   const { data: commentsResponse, refetch: reloadComments } = useQuery({
     queryKey: ["load-comments", ticketId],

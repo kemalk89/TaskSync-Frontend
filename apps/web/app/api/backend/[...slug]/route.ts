@@ -67,6 +67,34 @@ export async function POST(
   return handleResponse(res);
 }
 
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
+) {
+  const session = await auth();
+  if (!session?.accessToken) {
+    return new Response("Unauthorized", {
+      status: 401,
+    });
+  }
+
+  const slug = (await params).slug;
+  const searchParams = request.nextUrl.searchParams.toString();
+  const endpoint = buildEndpoint(searchParams, slug);
+
+  const res = await fetch(endpoint, {
+    method: "PATCH",
+    body: request.body,
+    duplex: "half",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${session?.accessToken}`,
+    },
+  } as RequestInit);
+
+  return handleResponse(res);
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }

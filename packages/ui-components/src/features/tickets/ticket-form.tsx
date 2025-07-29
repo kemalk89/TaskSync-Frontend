@@ -8,9 +8,7 @@ import { Select } from "../../select";
 import { TicketIconBug, TicketIconStory, TicketIconTask } from "./ticket-icons";
 import { UserName } from "../../user-name/user-name";
 import { TextEditor } from "../../texteditor/texteditor";
-import { useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { Placeholder } from "@tiptap/extensions";
+import { useTextEditor } from "../../texteditor/use-texteditor";
 
 export interface TicketFormValues {
   projectId: string;
@@ -37,15 +35,8 @@ export const TicketForm = ({
 }: Props) => {
   const [projects, setProjects] = useState<ProjectResponse[]>([]);
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Placeholder.configure({
-        placeholder: "Hier können Details eingegeben werden...",
-      }),
-    ],
-    // Don't render immediately on the server to avoid SSR issues
-    immediatelyRender: false,
+  const editor = useTextEditor({
+    placeholder: "Hier können Details eingegeben werden...",
   });
 
   useEffect(() => {

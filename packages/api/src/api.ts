@@ -244,6 +244,15 @@ export const getAPI = () => {
         project
       );
     },
+    updateProjectManager: async (
+      projectId: number,
+      projectManagerId: number
+    ): Promise<ApiResponse<boolean>> => {
+      return patch(
+        `${getBaseUrl()}${getContext()}/project/${projectId}/${projectManagerId}`,
+        {}
+      );
+    },
     deleteProject: async (project: ProjectResponse) => {
       return remove(`${getBaseUrl()}${getContext()}/project/${project.id}`);
     },

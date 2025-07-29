@@ -1,3 +1,5 @@
+"use client";
+
 import { ApiResponse, getAPI, ProjectResponse } from "@app/api";
 import { Formik, FormikProps } from "formik";
 import { Ref } from "react";
@@ -5,6 +7,7 @@ import { Form, FormControl, FormGroup, FormLabel } from "react-bootstrap";
 import { Select } from "../../select";
 import { useQuery } from "@tanstack/react-query";
 import { UserName } from "../../user-name/user-name";
+import { QUERY_KEY_FETCH_USERS } from "../constants";
 
 enum ProjectVisibility {
   Everybody,
@@ -15,7 +18,7 @@ export interface ProjectFormValues {
   title: string;
   description: string;
   visibility?: ProjectVisibility;
-  projectManagerId?: string;
+  projectManagerId?: string | null;
 }
 
 interface ProjectFormProps {
@@ -34,7 +37,7 @@ export const ProjectForm = ({
   onSubmitFinished,
 }: ProjectFormProps) => {
   const { data: users, isLoading } = useQuery({
-    queryKey: ["fetchUsers"],
+    queryKey: QUERY_KEY_FETCH_USERS,
     queryFn: async () => {
       return await getAPI().fetchUsers({ pageNumber: 1, pageSize: 100 });
     },
@@ -46,7 +49,7 @@ export const ProjectForm = ({
       initialValues={{
         title: "",
         description: "",
-        projectManagerId: "",
+        projectManagerId: null,
         visibility: ProjectVisibility.TeamOnly,
       }}
       validate={(values) => {
@@ -69,7 +72,6 @@ export const ProjectForm = ({
         handleSubmit,
         handleChange,
         handleBlur,
-        isSubmitting,
         setFieldValue,
       }) => (
         <Form onSubmit={handleSubmit}>
@@ -102,8 +104,11 @@ export const ProjectForm = ({
               value={values.title}
               onChange={handleChange}
               onBlur={handleBlur}
+              isInvalid={touched.title && !!errors.title}
             />
-            <FormControl.Feedback>{errors.title}</FormControl.Feedback>
+            <FormControl.Feedback type="invalid">
+              {touched.title && errors.title}
+            </FormControl.Feedback>
           </FormGroup>
           <FormGroup className="mb-3">
             <FormLabel htmlFor="description">Beschreibung</FormLabel>
@@ -120,7 +125,11 @@ export const ProjectForm = ({
             <FormLabel htmlFor="projectManager">Projektleiter</FormLabel>
             <Select
               placeholder="Nach einer Person suchen..."
-              value={values.projectManagerId ?? ""}
+              value={
+                values.projectManagerId
+                  ? values.projectManagerId.toString()
+                  : ""
+              }
               disabled={isLoading}
               onChange={(value) =>
                 setFieldValue("projectManagerId", value, false)

@@ -1,6 +1,7 @@
 export interface CreateProjectRequest {
   title: string;
   description?: string;
+  projectManagerId?: number | null;
 }
 
 export interface CreateTicketCommand {

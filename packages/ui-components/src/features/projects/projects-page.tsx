@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { getAPI } from "@app/api";
 import { Pagination } from "../pagination/pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -8,8 +8,11 @@ import { ProjectForm, ProjectFormValues } from "./project-form";
 import { NewFormModal } from "../../NewFormModal";
 import { ProjectsTable } from "./projects-table";
 import { useQuery } from "@tanstack/react-query";
+import { ToastContext } from "../../toast";
 
 export const ProjectsPage = () => {
+  const { newToast } = useContext(ToastContext);
+
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -23,7 +26,12 @@ export const ProjectsPage = () => {
   };
 
   const handleSaveProject = async (values: ProjectFormValues) => {
-    const data = await getAPI().saveProject(values);
+    const data = await getAPI().saveProject({
+      ...values,
+      projectManagerId: values.projectManagerId
+        ? Number(values.projectManagerId)
+        : null,
+    });
     setDialogOpen(false);
     return data;
   };
@@ -55,7 +63,16 @@ export const ProjectsPage = () => {
           <ProjectForm
             formRef={formRef}
             onSubmitStart={() => setIsSubmitting(true)}
-            onSubmitFinished={() => setIsSubmitting(false)}
+            onSubmitFinished={(result) => {
+              setIsSubmitting(false);
+              if (result.data?.id) {
+                router.push(`/projects/${result.data.id}?tab=info`);
+                newToast({
+                  msg: "Projekt erfolgreich angelegt",
+                  type: "success",
+                });
+              }
+            }}
             saveHandler={handleSaveProject}
           />
         )}

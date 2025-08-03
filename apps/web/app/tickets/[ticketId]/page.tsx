@@ -37,7 +37,5 @@ export default async function Page({ params }: Params) {
     return <div>Error calling backend service</div>;
   }
 
-  const data = result.data;
-
-  return <TicketViewPage ticket={data} />;
+  return <TicketViewPage ticketId={ticketId as unknown as number} />;
 }

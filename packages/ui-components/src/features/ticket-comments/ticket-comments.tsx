@@ -2,9 +2,6 @@
 
 import { Button } from "react-bootstrap";
 import { TextEditor } from "../../texteditor/texteditor";
-import { useEditor } from "@tiptap/react";
-import { Placeholder } from "@tiptap/extensions";
-import StarterKit from "@tiptap/starter-kit";
 import { getAPI } from "@app/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { TextEditorReadonly } from "../../texteditor/texteditor-readonly";
@@ -28,7 +25,9 @@ export const TicketComments = ({ ticketId }: Props) => {
     closeConfirmationModal,
   } = useConfirmationModal();
 
-  const editor = useTextEditor({ placeholder: "Einen Kommentar schreiben..." });
+  const editor = useTextEditor({
+    placeholder: "Einen Kommentar schreiben...",
+  });
 
   const { data: commentsResponse, refetch: reloadComments } = useQuery({
     queryKey: ["load-comments", ticketId],
@@ -43,7 +42,7 @@ export const TicketComments = ({ ticketId }: Props) => {
   const { mutateAsync: saveComment, isPending: isPendingSaveComment } =
     useMutation({
       mutationFn: (comment: object) => {
-        return getAPI().saveTicketComment(ticketId, comment);
+        return getAPI().post.saveTicketComment(ticketId, comment);
       },
     });
 

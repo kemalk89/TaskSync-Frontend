@@ -1,4 +1,9 @@
-import { CreateProjectRequest, CreateTicketCommand } from "./request.models";
+import {
+  CreateProjectRequest,
+  CreateTicketCommand,
+  UpdateProjectCommand,
+  UpdateTicketCommand,
+} from "./request.models";
 import {
   PagedResult,
   ProjectResponse,
@@ -22,14 +27,24 @@ const patch = async (
   });
 
   if (!res.ok) {
-    return {
+    const errorResponse: ApiResponse<void> = {
       status: "error",
       statusCode: res.status,
       message: `Network error on URL ${url}: ${res.status}.`,
     };
+    return errorResponse;
   }
 
-  return res.json();
+  // Check if response contains data before parsing
+  const data = await res.json();
+  return {
+    status: "success",
+    statusCode: res.status,
+    data,
+  };
+
+  const result = await res.json();
+  return result;
 };
 
 const post = async <T>(
@@ -118,6 +133,12 @@ export interface ApiResponse<T> {
   data?: T;
 }
 
+export type Result<T> = {
+  success: boolean;
+  value: T;
+  error: string;
+};
+
 /**
  * This module can be used on both the server side and the client side.
  *
@@ -158,7 +179,7 @@ export const getAPI = () => {
       return this;
     },
     fetchTicket: async (
-      ticketId: string
+      ticketId: string | number
     ): Promise<ApiResponse<TicketResponse>> => {
       return get(`${getBaseUrl()}${getContext()}/ticket/${ticketId}`, headers);
     },
@@ -193,14 +214,6 @@ export const getAPI = () => {
       }
       return post(`${getBaseUrl()}${getContext()}/ticket`, cleaned);
     },
-    saveTicketComment: async (
-      ticketId: string,
-      comment: object
-    ): Promise<ApiResponse<TicketCommentResponse>> => {
-      return post(`${getBaseUrl()}${getContext()}/ticket/${ticketId}/comment`, {
-        comment: JSON.stringify(comment),
-      });
-    },
     deleteTicket: async (ticketId: string) => {
       return remove(`${getBaseUrl()}${getContext()}/ticket/${ticketId}`);
     },
@@ -209,13 +222,8 @@ export const getAPI = () => {
         `${getBaseUrl()}${getContext()}/ticket/${ticketId}/comment/${commentId}`
       );
     },
-    updateTicketStatus: async (ticketId: number, newStatus: any) => {
-      return patch(`${getBaseUrl()}${getContext()}/ticket/${ticketId}`, {
-        status: newStatus,
-      });
-    },
     fetchProject: async (
-      projectId: string
+      projectId: string | number
     ): Promise<ApiResponse<ProjectResponse>> => {
       return get(
         `${getBaseUrl()}${getContext()}/project/${projectId}`,
@@ -244,15 +252,37 @@ export const getAPI = () => {
         project
       );
     },
-    updateProjectManager: async (
-      projectId: number,
-      projectManagerId: number
-    ): Promise<ApiResponse<boolean>> => {
-      return patch(
-        `${getBaseUrl()}${getContext()}/project/${projectId}/${projectManagerId}`,
-        {}
-      );
+    post: {
+      saveTicketComment: async (
+        ticketId: string,
+        comment: object
+      ): Promise<ApiResponse<TicketCommentResponse>> => {
+        return post(
+          `${getBaseUrl()}${getContext()}/ticket/${ticketId}/comment`,
+          {
+            comment: JSON.stringify(comment),
+          }
+        );
+      },
     },
+    patch: {
+      updateTicket: async (
+        ticketId: number,
+        body: UpdateTicketCommand
+      ): Promise<ApiResponse<boolean>> => {
+        return patch(`${getBaseUrl()}${getContext()}/ticket/${ticketId}`, body);
+      },
+      updateProject: async (
+        projectId: string | number,
+        body: UpdateProjectCommand
+      ): Promise<ApiResponse<Result<boolean>>> => {
+        return patch(
+          `${getBaseUrl()}${getContext()}/project/${projectId}`,
+          body
+        );
+      },
+    },
+
     deleteProject: async (project: ProjectResponse) => {
       return remove(`${getBaseUrl()}${getContext()}/project/${project.id}`);
     },

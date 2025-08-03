@@ -13,7 +13,7 @@ import {
 } from "../icons/icons";
 import { Button, ButtonGroup } from "react-bootstrap";
 
-import styles from "./styles.module.scss";
+import styles from "./styles.module.css";
 
 type Props = {
   editor: Editor | null;

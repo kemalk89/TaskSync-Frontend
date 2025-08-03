@@ -32,7 +32,9 @@ export const AssignProjectManager = ({ projectId }: Props) => {
 
   const { mutateAsync } = useMutation({
     mutationFn: (projectManagerId: number) => {
-      return getAPI().updateProjectManager(projectId, projectManagerId);
+      return getAPI().patch.updateProject(projectId, {
+        projectManagerId,
+      });
     },
   });
 

@@ -41,6 +41,5 @@ export default async function Page({
     return <div>Error calling backend service</div>;
   }
 
-  const data = result.data;
-  return <ProjectViewPage project={data} />;
+  return <ProjectViewPage projectId={projectId as unknown as number} />;
 }

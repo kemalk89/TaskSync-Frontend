@@ -4,6 +4,8 @@ export interface CreateProjectRequest {
   projectManagerId?: number | null;
 }
 
+export type UpdateProjectCommand = Partial<CreateProjectRequest>;
+
 export interface CreateTicketCommand {
   projectId: number;
   title: string;
@@ -11,3 +13,7 @@ export interface CreateTicketCommand {
   assignee?: number;
   type: string;
 }
+
+export type UpdateTicketCommand = Partial<CreateTicketCommand> & {
+  statusId?: number;
+};

@@ -50,3 +50,6 @@ export interface PagedResult<T> {
   total: number;
   items: T[];
 }
+
+export const ResultCodeResourceNotFound = "RESOURCE_NOT_FOUND";
+export const ResultCodeNoPermissions = "NO_PERMISSIONS_FOR_THE_OPERATION";

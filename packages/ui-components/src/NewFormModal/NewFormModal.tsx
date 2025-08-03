@@ -50,7 +50,7 @@ export const NewFormModal = <T,>({
           {buttonLabel}
         </Button>
       </div>
-      <Modal size="xl" show={open} onHide={onCloseDialog}>
+      <Modal size="xl" fullscreen="lg-down" show={open} onHide={onCloseDialog}>
         <ModalHeader closeButton>
           <ModalTitle>{title}</ModalTitle>
         </ModalHeader>

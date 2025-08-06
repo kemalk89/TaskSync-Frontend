@@ -18,10 +18,10 @@ import { Select } from "../../select";
 import { UserName } from "../../user-name/user-name";
 
 type Props = {
-  projectId: number;
+  projectId?: string;
 };
 
-export const AssignProjectManager = ({ projectId }: Props) => {
+export const AssignTeamMember = ({ projectId }: Props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const {
@@ -38,16 +38,20 @@ export const AssignProjectManager = ({ projectId }: Props) => {
 
   const { mutateAsync } = useMutation({
     mutationFn: (projectManagerId: number) => {
-      return getAPI().patch.updateProject(projectId, {
-        projectManagerId,
-      });
+      if (projectId) {
+        return getAPI().patch.updateProject(projectId, {
+          projectManagerId,
+        });
+      }
+
+      return Promise.resolve(undefined);
     },
   });
 
   return (
     <>
-      <NewFormModal<Partial<ProjectFormValues>>
-        title="Projektleiter zuweisen"
+      <NewFormModal<FormValues>
+        title="Neues Mitglied im Team"
         renderButton={() => {
           return (
             <Button
@@ -56,7 +60,7 @@ export const AssignProjectManager = ({ projectId }: Props) => {
                 refetch();
               }}
             >
-              Projektleiter zuweisen
+              Neue Person hinzufügen
             </Button>
           );
         }}
@@ -64,44 +68,46 @@ export const AssignProjectManager = ({ projectId }: Props) => {
         onCloseDialog={() => setDialogOpen(false)}
       >
         {({ formRef, setIsSubmitting }) => (
-          <Formik<Partial<ProjectFormValues>>
+          <Formik<FormValues>
             innerRef={formRef}
             initialValues={{
-              projectManagerId: "",
+              userId: "",
+              roleInProject: "",
             }}
             validate={(values) => {
               const errors: Partial<ProjectFormValues> = {};
-              if (!values.projectManagerId) {
+              if (!values.userId) {
                 errors.projectManagerId = "Required";
               }
               return errors;
             }}
             onSubmit={async (values) => {
               setIsSubmitting(true);
-              await mutateAsync(Number(values.projectManagerId));
+              await mutateAsync(Number(values.userId));
               setIsSubmitting(false);
               setDialogOpen(false);
             }}
           >
-            {({ values, errors, touched, handleSubmit, setFieldValue }) => (
+            {({
+              values,
+              errors,
+              touched,
+              handleSubmit,
+              handleChange,
+              handleBlur,
+              setFieldValue,
+            }) => (
               <Form onSubmit={handleSubmit}>
-                <FormGroup>
-                  <FormLabel htmlFor="projectManager">
-                    Projektleiter{" "}
-                    <span className="required-field-asterisk">*</span>
+                <FormGroup className="mb-3">
+                  <FormLabel htmlFor="userId">
+                    Person <span className="required-field-asterisk">*</span>
                   </FormLabel>
                   <Select
-                    isInvalid={
-                      touched.projectManagerId && !!errors.projectManagerId
-                    }
+                    isInvalid={touched.userId && !!errors.userId}
                     placeholder="Nach einer Person suchen..."
-                    value={
-                      values.projectManagerId ? values.projectManagerId : ""
-                    }
+                    value={values.userId ? values.userId : ""}
                     disabled={isLoading}
-                    onChange={(value) =>
-                      setFieldValue("projectManagerId", value, false)
-                    }
+                    onChange={(value) => setFieldValue("userId", value, false)}
                     options={
                       users?.data?.items
                         ? users.data.items.map((user) => ({
@@ -112,8 +118,24 @@ export const AssignProjectManager = ({ projectId }: Props) => {
                     }
                   />
                   <FormControl.Feedback type="invalid">
-                    {touched.projectManagerId && errors.projectManagerId}
+                    {touched.userId && errors.userId}
                   </FormControl.Feedback>
+                </FormGroup>
+
+                <FormGroup className="mb-3">
+                  <FormLabel htmlFor="roleInProject">
+                    Rolle im Projekt{" "}
+                    <span className="required-field-asterisk">*</span>
+                  </FormLabel>
+                  <FormControl
+                    id="roleInProject"
+                    name="roleInProject"
+                    placeholder="Welche Rolle hat diese Person im Projekt?"
+                    value={values.roleInProject}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isInvalid={touched.roleInProject && !!errors.roleInProject}
+                  />
                 </FormGroup>
               </Form>
             )}
@@ -122,4 +144,9 @@ export const AssignProjectManager = ({ projectId }: Props) => {
       </NewFormModal>
     </>
   );
+};
+
+type FormValues = {
+  userId: string;
+  roleInProject: string;
 };

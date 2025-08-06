@@ -1,7 +1,6 @@
 "use client";
 
-import { getAPI } from "@app/api";
-import { ProjectInfo } from "./project-info";
+import { ProjectInfo } from "./project-team";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ProjectBacklog } from "./project-backlog";
@@ -15,9 +14,10 @@ type Props = {
 };
 
 const TAB_BOARD = "board";
-const TAB_INFO = "info";
+const TAB_TEAM = "team";
 const TAB_BACKLOG = "backlog";
 const TAB_SPRINTS = "sprints";
+const TAB_HISTORY = "history";
 
 export const ProjectViewPage = ({ projectId }: Props) => {
   const searchParams = useSearchParams();
@@ -53,8 +53,7 @@ export const ProjectViewPage = ({ projectId }: Props) => {
       <h3>Beschreibung</h3>
       {projectResult?.data && (
         <TextEditorReadonly
-          placeholderEditMode="Beschreiben Sie das Projekt..."
-          placeholderReadonlyMode="Noch keine Beschreibung vorhanden. Hier klicken, um eine Beschreibung zu schreiben."
+          placeholder="Noch keine Beschreibung vorhanden. Hier klicken, um eine Beschreibung zu schreiben."
           content={projectResult.data.description}
           onSubmit={(newContent) =>
             updateProject({
@@ -93,19 +92,28 @@ export const ProjectViewPage = ({ projectId }: Props) => {
         </li>
         <li className="nav-item">
           <Link
-            className={`nav-link ${activeTab === TAB_INFO ? "active" : ""}`}
-            href={`?tab=${TAB_INFO}`}
+            className={`nav-link ${activeTab === TAB_TEAM ? "active" : ""}`}
+            href={`?tab=${TAB_TEAM}`}
           >
-            Info
+            Team
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link
+            className={`nav-link ${activeTab === TAB_HISTORY ? "active" : ""}`}
+            href={`?tab=${TAB_HISTORY}`}
+          >
+            History
           </Link>
         </li>
       </ul>
-      {activeTab === TAB_INFO && <ProjectInfo project={projectResult?.data} />}
+      {activeTab === TAB_TEAM && <ProjectInfo project={projectResult?.data} />}
       {activeTab === TAB_BOARD && <div>Board</div>}
       {activeTab === TAB_BACKLOG && (
         <ProjectBacklog project={projectResult?.data} />
       )}
-      {activeTab === TAB_SPRINTS && <div>Sprints </div>}
+      {activeTab === TAB_SPRINTS && <div>Sprints</div>}
+      {activeTab === TAB_HISTORY && <div>History</div>}
     </>
   );
 };

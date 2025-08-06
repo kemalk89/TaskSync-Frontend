@@ -10,8 +10,7 @@ import { useTextEditor } from "./use-texteditor";
 
 type Props = {
   content?: Content;
-  placeholderReadonlyMode?: string;
-  placeholderEditMode?: string;
+  placeholder?: string;
   isSubmitting?: boolean;
   isSuccess?: boolean;
   onSubmit?: (newContent: object) => void;
@@ -19,17 +18,14 @@ type Props = {
 
 export const TextEditorReadonly = ({
   content,
-  placeholderReadonlyMode,
-  placeholderEditMode,
+  placeholder,
   isSubmitting,
   isSuccess,
   onSubmit,
 }: Props) => {
   const [editMode, setEditMode] = useState<boolean>();
   const editor = useTextEditor({
-    placeholder: placeholderEditMode,
     content: getContent(content),
-    ...(editMode ? {} : { editable: false }),
   });
 
   // enter read mode because the submit process has finished successfully
@@ -88,8 +84,8 @@ export const TextEditorReadonly = ({
       className={styles.readonlyTextEditor}
       onClick={() => setEditMode(true)}
     >
-      {editor.isEmpty && placeholderReadonlyMode && (
-        <span className="text-secondary">{placeholderReadonlyMode}</span>
+      {editor.isEmpty && placeholder && (
+        <span className="text-secondary">{placeholder}</span>
       )}
 
       <EditorContent editor={editor} />

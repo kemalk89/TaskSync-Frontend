@@ -8,6 +8,8 @@ import { Select } from "../../select";
 import { useQuery } from "@tanstack/react-query";
 import { UserName } from "../../user-name/user-name";
 import { QUERY_KEY_FETCH_USERS } from "../constants";
+import { TextEditor } from "../../texteditor/texteditor";
+import { useTextEditor } from "../../texteditor/use-texteditor";
 
 enum ProjectVisibility {
   Everybody,
@@ -18,7 +20,7 @@ export interface ProjectFormValues {
   title: string;
   description: string;
   visibility?: ProjectVisibility;
-  projectManagerId?: string | null;
+  projectManagerId?: string;
 }
 
 interface ProjectFormProps {
@@ -43,13 +45,17 @@ export const ProjectForm = ({
     },
   });
 
+  const editor = useTextEditor({
+    placeholder: "Hier können Details eingegeben werden...",
+  });
+
   return (
     <Formik<ProjectFormValues>
       innerRef={formRef}
       initialValues={{
         title: "",
         description: "",
-        projectManagerId: null,
+        projectManagerId: "",
         visibility: ProjectVisibility.TeamOnly,
       }}
       validate={(values) => {
@@ -61,7 +67,10 @@ export const ProjectForm = ({
       }}
       onSubmit={async (values) => {
         onSubmitStart();
-        const result = await saveHandler(values);
+        const result = await saveHandler({
+          ...values,
+          description: JSON.stringify(editor?.getJSON() ?? {}),
+        });
         onSubmitFinished(result);
       }}
     >
@@ -78,7 +87,7 @@ export const ProjectForm = ({
           <FormGroup className="mb-3">
             <FormLabel htmlFor="visibility">Visiblity</FormLabel>
             <FormControl
-              id="title"
+              id="visibility"
               as="select"
               name="visibility"
               value={values.visibility}
@@ -111,25 +120,17 @@ export const ProjectForm = ({
             </FormControl.Feedback>
           </FormGroup>
           <FormGroup className="mb-3">
-            <FormLabel htmlFor="description">Beschreibung</FormLabel>
-            <FormControl
-              id="description"
-              name="description"
-              type="textarea"
-              value={values.description}
-              onChange={handleChange}
-            />
+            <FormLabel onClick={() => editor?.commands.focus()}>
+              Beschreibung
+            </FormLabel>
+            <TextEditor editor={editor} />
           </FormGroup>
 
           <FormGroup className="mb-3">
             <FormLabel htmlFor="projectManager">Projektleiter</FormLabel>
             <Select
               placeholder="Nach einer Person suchen..."
-              value={
-                values.projectManagerId
-                  ? values.projectManagerId.toString()
-                  : ""
-              }
+              value={values.projectManagerId ?? ""}
               disabled={isLoading}
               onChange={(value) =>
                 setFieldValue("projectManagerId", value, false)

@@ -7,16 +7,14 @@ import { Placeholder } from "@tiptap/extensions";
 type Params = {
   placeholder?: string;
   content?: Content;
-  editable?: boolean;
 };
 
-export const useTextEditor = ({ placeholder, content, editable }: Params) => {
+export const useTextEditor = ({ placeholder, content }: Params) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
       ...(placeholder ? [Placeholder.configure({ placeholder })] : []),
     ],
-    ...(editable ? { editable } : {}),
     ...(content ? { content } : {}),
     // Don't render immediately on the server to avoid SSR issues
     immediatelyRender: false,

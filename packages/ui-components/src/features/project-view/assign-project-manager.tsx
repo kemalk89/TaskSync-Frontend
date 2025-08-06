@@ -45,81 +45,77 @@ export const AssignProjectManager = ({ projectId }: Props) => {
   });
 
   return (
-    <>
-      <NewFormModal<Partial<ProjectFormValues>>
-        title="Projektleiter zuweisen"
-        renderButton={() => {
-          return (
-            <Button
-              onClick={() => {
-                setDialogOpen(true);
-                refetch();
-              }}
-            >
-              Projektleiter zuweisen
-            </Button>
-          );
-        }}
-        open={dialogOpen}
-        onCloseDialog={() => setDialogOpen(false)}
-      >
-        {({ formRef, setIsSubmitting }) => (
-          <Formik<Partial<ProjectFormValues>>
-            innerRef={formRef}
-            initialValues={{
-              projectManagerId: "",
-            }}
-            validate={(values) => {
-              const errors: Partial<ProjectFormValues> = {};
-              if (!values.projectManagerId) {
-                errors.projectManagerId = "Required";
-              }
-              return errors;
-            }}
-            onSubmit={async (values) => {
-              setIsSubmitting(true);
-              await mutateAsync(Number(values.projectManagerId));
-              setIsSubmitting(false);
-              setDialogOpen(false);
+    <NewFormModal<Partial<ProjectFormValues>>
+      title="Projektleiter zuweisen"
+      renderButton={() => {
+        return (
+          <Button
+            onClick={() => {
+              setDialogOpen(true);
+              refetch();
             }}
           >
-            {({ values, errors, touched, handleSubmit, setFieldValue }) => (
-              <Form onSubmit={handleSubmit}>
-                <FormGroup>
-                  <FormLabel htmlFor="projectManager">
-                    Projektleiter{" "}
-                    <span className="required-field-asterisk">*</span>
-                  </FormLabel>
-                  <Select
-                    isInvalid={
-                      touched.projectManagerId && !!errors.projectManagerId
-                    }
-                    placeholder="Nach einer Person suchen..."
-                    value={
-                      values.projectManagerId ? values.projectManagerId : ""
-                    }
-                    disabled={isLoading}
-                    onChange={(value) =>
-                      setFieldValue("projectManagerId", value, false)
-                    }
-                    options={
-                      users?.data?.items
-                        ? users.data.items.map((user) => ({
-                            label: <UserName user={user} />,
-                            value: user.id,
-                          }))
-                        : []
-                    }
-                  />
-                  <FormControl.Feedback type="invalid">
-                    {touched.projectManagerId && errors.projectManagerId}
-                  </FormControl.Feedback>
-                </FormGroup>
-              </Form>
-            )}
-          </Formik>
-        )}
-      </NewFormModal>
-    </>
+            Projektleiter zuweisen
+          </Button>
+        );
+      }}
+      open={dialogOpen}
+      onCloseDialog={() => setDialogOpen(false)}
+    >
+      {({ formRef, setIsSubmitting }) => (
+        <Formik<Partial<ProjectFormValues>>
+          innerRef={formRef}
+          initialValues={{
+            projectManagerId: "",
+          }}
+          validate={(values) => {
+            const errors: Partial<ProjectFormValues> = {};
+            if (!values.projectManagerId) {
+              errors.projectManagerId = "Required";
+            }
+            return errors;
+          }}
+          onSubmit={async (values) => {
+            setIsSubmitting(true);
+            await mutateAsync(Number(values.projectManagerId));
+            setIsSubmitting(false);
+            setDialogOpen(false);
+          }}
+        >
+          {({ values, errors, touched, handleSubmit, setFieldValue }) => (
+            <Form onSubmit={handleSubmit}>
+              <FormGroup>
+                <FormLabel htmlFor="projectManager">
+                  Projektleiter{" "}
+                  <span className="required-field-asterisk">*</span>
+                </FormLabel>
+                <Select
+                  isInvalid={
+                    touched.projectManagerId && !!errors.projectManagerId
+                  }
+                  placeholder="Nach einer Person suchen..."
+                  value={values.projectManagerId ? values.projectManagerId : ""}
+                  disabled={isLoading}
+                  onChange={(value) =>
+                    setFieldValue("projectManagerId", value, false)
+                  }
+                  options={
+                    users?.data?.items
+                      ? users.data.items.map((user) => ({
+                          label: <UserName user={user} />,
+                          value: user.id,
+                        }))
+                      : []
+                  }
+                />
+                <FormControl.Feedback type="invalid">
+                  {touched.projectManagerId && errors.projectManagerId}
+                </FormControl.Feedback>
+              </FormGroup>
+            </Form>
+          )}
+        </Formik>
+      )}
+    </NewFormModal>
   );
 };

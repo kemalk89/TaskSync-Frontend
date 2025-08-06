@@ -52,8 +52,7 @@ export const TicketViewPage = ({ ticketId }: Props) => {
       <div className="mt-4">
         <h4>Beschreibung</h4>
         <TextEditorReadonly
-          placeholderEditMode="Schreiben Sie die Problemstellung, die Akzeptanzkriterien, usw..."
-          placeholderReadonlyMode="Noch keine Beschreibung vorhanden. Hier klicken, um eine Beschreibung zu schreiben."
+          placeholder="Noch keine Beschreibung vorhanden. Hier klicken, um eine Beschreibung zu schreiben."
           content={ticketResult.data.description}
           onSubmit={(newContent) =>
             updateTicket({

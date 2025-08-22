@@ -11,7 +11,7 @@ export async function POST(_: Request) {
   })
     .setProtectedHeader({ alg: "RS256", kid: "test-key-id" })
     .setIssuedAt()
-    .setIssuer(process.env.AUTH_ISSUER ?? "")
+    .setIssuer(process.env.AUTH_AUTH0_ISSUER ?? "")
     .setAudience(process.env.AUTH_AUDIENCE ?? "")
     .setExpirationTime("1h")
     .sign(privateKey);
@@ -23,7 +23,7 @@ export async function POST(_: Request) {
   })
     .setProtectedHeader({ alg: "RS256", kid: "test-key-id" })
     .setIssuedAt()
-    .setIssuer(process.env.AUTH_ISSUER ?? "")
+    .setIssuer(process.env.AUTH_AUTH0_ISSUER ?? "")
     .setAudience(process.env.AUTH_AUTH0_ID ?? "")
     .setExpirationTime("1h")
     .sign(privateKey);

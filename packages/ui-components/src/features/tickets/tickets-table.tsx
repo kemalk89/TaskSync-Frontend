@@ -2,6 +2,7 @@ import { Button, Table } from "react-bootstrap";
 import { TicketResponse } from "@app/api";
 import { useRouter } from "next/navigation";
 import { TicketTitleWithLink } from "./ticket-title-with-link";
+import { UserName } from "../../user-name/user-name";
 
 type Props = {
   isLoading?: boolean;
@@ -38,7 +39,9 @@ export const TicketsTable = ({
                 <td>
                   <TicketTitleWithLink ticket={ticket} />
                 </td>
-                <td width="300"></td>
+                <td width="300">
+                  <UserName user={ticket.assignee} />
+                </td>
                 <td width="180">
                   <Button
                     size="sm"

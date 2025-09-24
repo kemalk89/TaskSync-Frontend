@@ -7,7 +7,7 @@ import { CreateTicketCommand } from "../../../../api/src/request.models";
 import { useContext, useState } from "react";
 import { ButtonProps } from "react-bootstrap";
 import { ToastContext } from "../../toast";
-
+import { useParams } from "next/navigation";
 type Props = {
   buttonProps?: ButtonProps;
 };
@@ -15,6 +15,7 @@ type Props = {
 export const NewTicketDialog = ({ buttonProps = {} }: Props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const { newToast } = useContext(ToastContext);
+  const { projectId: projectIdInUrl } = useParams();
 
   const handleSaveTicket = async (values: TicketFormValues) => {
     const cmd: CreateTicketCommand = {
@@ -46,6 +47,9 @@ export const NewTicketDialog = ({ buttonProps = {} }: Props) => {
       {({ formRef, setIsSubmitting }) => (
         <TicketForm
           formRef={formRef}
+          preselectedProjectId={
+            projectIdInUrl ? (projectIdInUrl as string) : ""
+          }
           onSubmitStart={() => setIsSubmitting(true)}
           onSubmitFinished={() => setIsSubmitting(false)}
           saveHandler={handleSaveTicket}

@@ -10,16 +10,9 @@ import { UserName } from "../../user-name/user-name";
 import { TextEditor } from "../../texteditor/texteditor";
 import { useTextEditor } from "../../texteditor/use-texteditor";
 
-export interface TicketFormValues {
-  projectId: string;
-  type: string; // Bug, Story, Task
-  title: string;
-  assignee: string;
-  description?: string;
-}
-
 interface Props {
   formRef: Ref<FormikProps<TicketFormValues>>;
+  preselectedProjectId?: string;
   saveHandler: (
     project: TicketFormValues
   ) => Promise<ApiResponse<TicketResponse>>;
@@ -29,12 +22,12 @@ interface Props {
 
 export const TicketForm = ({
   formRef,
+  preselectedProjectId,
   saveHandler,
   onSubmitStart,
   onSubmitFinished,
 }: Props) => {
   const [projects, setProjects] = useState<ProjectResponse[]>([]);
-
   const editor = useTextEditor({
     placeholder: "Hier können Details eingegeben werden...",
   });
@@ -65,7 +58,7 @@ export const TicketForm = ({
     <Formik<TicketFormValues>
       innerRef={formRef}
       initialValues={{
-        projectId: "",
+        projectId: preselectedProjectId ?? "",
         type: "",
         title: "",
         assignee: "",
@@ -108,7 +101,7 @@ export const TicketForm = ({
                 formikProps.setFieldValue("projectId", value)
               }
               options={projects.map((p) => ({
-                value: p.id,
+                value: p.id.toString(),
                 label: p.title,
               }))}
             />
@@ -194,3 +187,11 @@ export const TicketForm = ({
     </Formik>
   );
 };
+
+export interface TicketFormValues {
+  projectId: string;
+  type: string; // Bug, Story, Task
+  title: string;
+  assignee: string;
+  description?: string;
+}

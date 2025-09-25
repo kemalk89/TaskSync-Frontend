@@ -4,6 +4,8 @@ export interface UserResponse {
   email: string;
   picture: string;
   externalSource?: string;
+  createdDate: string;
+  modifiedDate?: string;
 }
 
 export interface ProjectResponse {

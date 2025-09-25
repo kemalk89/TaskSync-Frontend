@@ -6,6 +6,7 @@ import { Button, Table } from "react-bootstrap";
 import { Pagination } from "../pagination/pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { UserName } from "../../user-name/user-name";
+import { TextDate } from "../../text-date";
 
 export const UsersPage = () => {
   const router = useRouter();
@@ -38,6 +39,9 @@ export const UsersPage = () => {
             <th>Name</th>
             <th>Email</th>
             <th>Source</th>
+            <th>Rollen</th>
+            <th>Created Date</th>
+            <th>Modified Date</th>
             <th></th>
           </tr>
         </thead>
@@ -49,6 +53,17 @@ export const UsersPage = () => {
               </td>
               <td>{user.email}</td>
               <td>{user.externalSource}</td>
+              <td>Todo</td>
+              <td>
+                <TextDate mode="short" date={user.createdDate} />
+              </td>
+              <td>
+                {user.modifiedDate ? (
+                  <TextDate mode="short" date={user.modifiedDate} />
+                ) : (
+                  "-"
+                )}
+              </td>
 
               <td>
                 <Button size="sm">View</Button> <Button size="sm">Edit</Button>{" "}

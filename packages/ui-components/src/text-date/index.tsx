@@ -1,8 +1,13 @@
 type Props = {
   date?: string | Date;
+  mode?: "full" | "short";
 };
 
-export const TextDate = ({ date }: Props) => {
+/**
+ * Mode full = Donnerstag, 25. September 2025 um 12:37
+ * Mode short = 25.09.2025, 12:05:10
+ */
+export const TextDate = ({ date, mode = "full" }: Props) => {
   if (date === undefined) {
     return <span>unbekannt</span>;
   }
@@ -13,10 +18,14 @@ export const TextDate = ({ date }: Props) => {
     dateStyle: "medium",
   }).format(_date);
 
-  const displayedText = new Intl.DateTimeFormat("de-DE", {
+  let displayedText = new Intl.DateTimeFormat("de-DE", {
     timeStyle: "short",
     dateStyle: "full",
   }).format(_date);
+
+  if (mode === "short") {
+    displayedText = formatted;
+  }
 
   return <span title={formatted}>{displayedText}</span>;
 };

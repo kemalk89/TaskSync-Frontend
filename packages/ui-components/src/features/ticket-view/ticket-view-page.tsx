@@ -8,6 +8,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { getAPI } from "@app/api";
 import { QUERY_KEY_FETCH_TICKET_BY_ID } from "../constants";
 import { UpdateTicketCommand } from "../../../../api/src/request.models";
+import { TextDate } from "../../text-date";
+import { Badge } from "react-bootstrap";
 
 type Props = {
   ticketId: number;
@@ -49,6 +51,20 @@ export const TicketViewPage = ({ ticketId }: Props) => {
           />
         </div>
       </h3>
+      <p>
+        <small>
+          erstellt von {ticketResult?.data?.createdBy?.username}, am{" "}
+          <TextDate date={ticketResult?.data?.createdDate} />
+        </small>
+      </p>
+      {ticketResult.data.labels?.length > 0 && (
+        <div>
+          <h4>Labels</h4>
+          {ticketResult.data.labels.map((i) => (
+            <Badge key={i.id}>{i.text}</Badge>
+          ))}
+        </div>
+      )}
       <div className="mt-4">
         <h4>Beschreibung</h4>
         <TextEditorReadonly

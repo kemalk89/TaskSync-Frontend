@@ -36,6 +36,19 @@ export interface TicketResponse {
   status: any;
   type: string;
   description?: string;
+  createdDate: string;
+  labels: TicketLabelResponse[];
+  createdBy?: {
+    id: string;
+    email: string;
+    username: string;
+    picture: string;
+  };
+}
+
+export interface TicketLabelResponse {
+  id: number;
+  text: string;
 }
 
 export interface TicketCommentResponse {

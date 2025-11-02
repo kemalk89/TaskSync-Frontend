@@ -1,0 +1,43 @@
+.dropdown {
+  --app-badge-border-radius: 4px;
+  --app-badge-bg-color: rgb(221, 219, 219);
+}
+
+.dropdown button:first-child,
+.dropdown button:first-child:hover,
+.dropdown button:first-child:active {
+  background-color: transparent;
+  color: var(--bs-body-color);
+  border-color: var(--bs-border-color);
+}
+
+.inputControlContainer {
+  display: inline-block;
+  width: calc(100% - 16px);
+}
+
+.placeholderText {
+  color: rgb(105, 105, 105);
+}
+
+.badge {
+  display: flex;
+  background-color: rgb(221, 219, 219);
+  border: 1px solid var(--bs-body-color);
+  border-radius: var(--app-badge-border-radius);
+}
+
+.badgeLabelWrapper {
+  padding: 0 8;
+}
+
+.unselectBadgeControl {
+  width: 24px;
+  text-align: center;
+  border-top-right-radius: var(--app-badge-border-radius);
+  border-bottom-right-radius: var(--app-badge-border-radius);
+}
+
+.unselectBadgeControl:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}

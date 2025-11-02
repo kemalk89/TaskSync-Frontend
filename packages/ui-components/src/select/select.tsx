@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { Dropdown } from "react-bootstrap";
 import styles from "./styles.module.css";
 
-type SelectOption = {
+export type SelectOption = {
   value: string | number;
   label: ReactNode;
 };
@@ -62,7 +62,6 @@ export const Select = ({
             "d-inline-block",
             isDisplayingPlaceholder() ? styles.placeholderText : "",
           ].join(" ")}
-          style={{ width: "calc(100% - 16px)" }}
         >
           {getSelectBtnLabel()}
         </div>

@@ -9,6 +9,7 @@ import { TicketIconBug, TicketIconStory, TicketIconTask } from "./ticket-icons";
 import { UserName } from "../../user-name/user-name";
 import { TextEditor } from "../../texteditor/texteditor";
 import { useTextEditor } from "../../texteditor/use-texteditor";
+import { SelectMulti } from "../../select-multi";
 
 interface Props {
   formRef: Ref<FormikProps<TicketFormValues>>;
@@ -62,6 +63,7 @@ export const TicketForm = ({
         type: "",
         title: "",
         assignee: "",
+        labels: [],
       }}
       validate={(values) => {
         const errors: Partial<TicketFormValues> = {};
@@ -159,6 +161,37 @@ export const TicketForm = ({
           </FormGroup>
 
           <FormGroup className="mb-3">
+            <FormLabel htmlFor="labels">Labels</FormLabel>
+            <SelectMulti
+              value={formikProps.values.labels.map((v) => ({
+                value: v.id,
+                label: v.text,
+              }))}
+              onUnselect={(option) => {
+                const currentLabels = formikProps.values.labels;
+                const newLabels = currentLabels.filter(
+                  (label) => label.id !== option.value
+                );
+                formikProps.setFieldValue("labels", newLabels);
+              }}
+              onSelect={(option) => {
+                const currentLabels = formikProps.values.labels;
+                formikProps.setFieldValue("labels", [
+                  ...currentLabels,
+                  { id: option.value, text: option.label },
+                ]);
+              }}
+              options={[
+                { value: 1, label: "Awaiting Deployment" },
+                { value: 2, label: "Pair Programming" },
+                { value: 3, label: "Quick Win" },
+                { value: 4, label: "Functional Requirement" },
+                { value: 5, label: "Needs Design" },
+              ]}
+            />
+          </FormGroup>
+
+          <FormGroup className="mb-3">
             <FormLabel htmlFor="assignee">Zugewiesene Person</FormLabel>
             <Select
               placeholder="Um dieses Ticket kümmert sich..."
@@ -194,4 +227,8 @@ export interface TicketFormValues {
   title: string;
   assignee: string;
   description?: string;
+  labels: {
+    id: string;
+    text: string;
+  }[];
 }

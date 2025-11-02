@@ -12,6 +12,7 @@ export interface CreateTicketCommand {
   description?: string;
   assignee?: number;
   type: string;
+  labels: { labelId: string; title: string }[];
 }
 
 export type UpdateTicketCommand = Partial<CreateTicketCommand> & {

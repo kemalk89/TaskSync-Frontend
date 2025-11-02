@@ -23,6 +23,7 @@ export const NewTicketDialog = ({ buttonProps = {} }: Props) => {
       title: values.title,
       description: values.description,
       type: values.type,
+      labels: values.labels.map((i) => ({ labelId: i.id, title: i.text })),
     };
 
     if (values.assignee) {

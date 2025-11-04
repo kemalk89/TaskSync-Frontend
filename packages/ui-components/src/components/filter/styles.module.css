@@ -1,0 +1,12 @@
+.dropdownInactive button:first-child,
+.dropdownInactive button:first-child:hover,
+.dropdownInactive button:first-child:active {
+  background-color: transparent;
+  color: var(--bs-body-color);
+  border-color: var(--bs-border-color);
+}
+.dropdownToggle {
+  max-width: 280px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,7 +1,7 @@
 import { Dropdown } from "react-bootstrap";
 import { SelectOption } from "../select";
 import styles from "./styles.module.css";
-import { IconCheckSquare, IconSquare } from "../icons/icons";
+import { SelectMultiDropdownMenu } from "../components/select-multi-dropdown-menu/select-multi-dropdown-menu";
 
 export const SelectMulti = ({
   value = [],
@@ -9,32 +9,36 @@ export const SelectMulti = ({
   onSelect,
   onUnselect,
 }: {
-  value: SelectOption[];
+  value: string[];
   options: SelectOption[];
-  onSelect: (value: SelectOption) => void;
-  onUnselect: (value: SelectOption) => void;
+  onSelect: (value: string) => void;
+  onUnselect: (value: string) => void;
 }) => {
   const handleSelect = (
     event: React.MouseEvent<HTMLElement, MouseEvent>,
-    option: SelectOption
+    optionId: string
   ) => {
     event.stopPropagation();
 
-    const isSelected = value.findIndex((o) => o.value === option.value) > -1;
+    const isSelected = value.findIndex((id) => id === optionId) > -1;
     if (isSelected) {
-      onUnselect(option);
+      onUnselect(optionId);
     } else {
-      onSelect(option);
+      onSelect(optionId);
     }
   };
 
   const handleUnselectBadge = (
     event: React.MouseEvent<HTMLSpanElement, MouseEvent>,
-    option: SelectOption
+    id: string
   ) => {
     event.stopPropagation();
 
-    onUnselect(option);
+    onUnselect(id);
+  };
+
+  const findLabelById = (id: string) => {
+    return options.find((item) => id === item.value);
   };
 
   return (
@@ -53,12 +57,14 @@ export const SelectMulti = ({
                 " "
               )}
             >
-              {value.map((o) => (
-                <div className={styles.badge} key={o.value}>
-                  <div className={styles.badgeLabelWrapper}>{o.label}</div>
+              {value.map((id) => (
+                <div className={styles.badge} key={id}>
+                  <div className={styles.badgeLabelWrapper}>
+                    {findLabelById(id)?.label}
+                  </div>
                   <div
                     className={styles.unselectBadgeControl}
-                    onClick={(e) => handleUnselectBadge(e, o)}
+                    onClick={(e) => handleUnselectBadge(e, id)}
                   >
                     x
                   </div>
@@ -69,22 +75,12 @@ export const SelectMulti = ({
         </div>
       </Dropdown.Toggle>
 
-      <Dropdown.Menu className="w-100">
-        {options.map((o) => (
-          <Dropdown.Item
-            key={o.value}
-            onClick={(e) => handleSelect(e, o)}
-            className="d-flex gap-2 align-items-center"
-          >
-            {value.find((v) => v.value === o.value) ? (
-              <IconCheckSquare />
-            ) : (
-              <IconSquare />
-            )}
-            {o.label}
-          </Dropdown.Item>
-        ))}
-      </Dropdown.Menu>
+      <SelectMultiDropdownMenu
+        className="w-100"
+        options={options}
+        selectedOptions={value}
+        onSelect={handleSelect}
+      />
     </Dropdown>
   );
 };

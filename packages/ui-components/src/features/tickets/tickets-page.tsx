@@ -110,9 +110,7 @@ export const TicketsPage = () => {
 
   return (
     <>
-      <NewTicketDialog />
-
-      <div className="mb-4">
+      <div className="mb-4 mt-2">
         <SearchBar initialSearchText={searchText} onSearch={searchTickets} />
       </div>
 

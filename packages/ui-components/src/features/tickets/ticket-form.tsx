@@ -55,6 +55,10 @@ export const TicketForm = ({
     return projects.find((p) => p.id === projectId);
   };
 
+  const findLabelById = (labelId: string) => {
+    return labelOptions.find((item) => labelId === item.value);
+  };
+
   return (
     <Formik<TicketFormValues>
       innerRef={formRef}
@@ -163,31 +167,25 @@ export const TicketForm = ({
           <FormGroup className="mb-3">
             <FormLabel htmlFor="labels">Labels</FormLabel>
             <SelectMulti
-              value={formikProps.values.labels.map((v) => ({
-                value: v.id,
-                label: v.text,
-              }))}
-              onUnselect={(option) => {
+              value={formikProps.values.labels.map((v) => v.id)}
+              onUnselect={(labelId) => {
                 const currentLabels = formikProps.values.labels;
                 const newLabels = currentLabels.filter(
-                  (label) => label.id !== option.value
+                  (label) => label.id !== labelId
                 );
                 formikProps.setFieldValue("labels", newLabels);
               }}
-              onSelect={(option) => {
-                const currentLabels = formikProps.values.labels;
-                formikProps.setFieldValue("labels", [
-                  ...currentLabels,
-                  { id: option.value, text: option.label },
-                ]);
+              onSelect={(labelId) => {
+                const label = findLabelById(labelId);
+                if (label) {
+                  const currentLabels = formikProps.values.labels;
+                  formikProps.setFieldValue("labels", [
+                    ...currentLabels,
+                    { id: labelId, text: label.label },
+                  ]);
+                }
               }}
-              options={[
-                { value: 1, label: "Awaiting Deployment" },
-                { value: 2, label: "Pair Programming" },
-                { value: 3, label: "Quick Win" },
-                { value: 4, label: "Functional Requirement" },
-                { value: 5, label: "Needs Design" },
-              ]}
+              options={labelOptions}
             />
           </FormGroup>
 
@@ -204,7 +202,7 @@ export const TicketForm = ({
                 findProject(formikProps.values.projectId)?.projectMembers.map(
                   (projectMember) => ({
                     label: <UserName user={projectMember.user} />,
-                    value: projectMember.userId,
+                    value: projectMember.userId.toString(),
                   })
                 ) ?? []
               }
@@ -232,3 +230,11 @@ export interface TicketFormValues {
     text: string;
   }[];
 }
+
+const labelOptions = [
+  { value: "1", label: "Awaiting Deployment" },
+  { value: "2", label: "Pair Programming" },
+  { value: "3", label: "Quick Win" },
+  { value: "4", label: "Functional Requirement" },
+  { value: "5", label: "Needs Design" },
+];

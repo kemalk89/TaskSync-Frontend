@@ -5,7 +5,7 @@ import { Dropdown } from "react-bootstrap";
 import styles from "./styles.module.css";
 
 export type SelectOption = {
-  value: string | number;
+  value: string;
   label: ReactNode;
 };
 

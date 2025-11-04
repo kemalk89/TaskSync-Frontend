@@ -9,6 +9,7 @@ import {
   ProjectResponse,
   TicketCommentResponse,
   TicketResponse,
+  TicketStatusModel,
   UserResponse,
 } from "./response.models";
 
@@ -200,6 +201,12 @@ export const getAPI = () => {
         url += `&searchText=${encodeURIComponent(searchText)}`; // encoding needed because of potential white spaces
       }
 
+      return get(url);
+    },
+    fetchTicketStatusList: async (): Promise<
+      ApiResponse<TicketStatusModel[]>
+    > => {
+      let url = `${getBaseUrl()}${getContext()}/ticket/status`;
       return get(url);
     },
     saveTicket: async (

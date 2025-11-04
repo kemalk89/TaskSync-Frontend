@@ -50,6 +50,19 @@ export const TicketsPage = () => {
     },
   });
 
+  const { data: ticketStatusList } = useQuery({
+    queryKey: ["ticketStatusList"],
+    queryFn: async () => {
+      const result = await getAPI().fetchTicketStatusList();
+
+      if (result.status === "error") {
+        newToast({ msg: "Ein Fehler ist aufgetreten", type: "error" });
+      }
+
+      return result.data;
+    },
+  });
+
   const searchTickets = (searchText: string) => {
     updateSearchParams({
       searchText,
@@ -111,7 +124,11 @@ export const TicketsPage = () => {
   return (
     <>
       <div className="mb-4 mt-2">
-        <SearchBar initialSearchText={searchText} onSearch={searchTickets} />
+        <SearchBar
+          initialSearchText={searchText}
+          onSearch={searchTickets}
+          ticketStatusList={ticketStatusList ?? []}
+        />
       </div>
 
       <TicketsTable

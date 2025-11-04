@@ -29,6 +29,11 @@ interface ProjectMemberResponse {
   user: UserResponse;
 }
 
+export interface TicketStatusModel {
+  id: number;
+  name: string;
+}
+
 export interface TicketResponse {
   id: string;
   title: string;

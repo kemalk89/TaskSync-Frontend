@@ -1,14 +1,16 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Col, Form } from "react-bootstrap";
 import FilterDropdown from "../../components/filter/filter-dropdown";
+import { TicketStatusModel } from "@app/api";
 
 type Props = {
   initialSearchText?: string | null;
   initialSelectedLabels?: string[] | null;
   initialSelectedAssignees?: string[] | null;
   initialSelectedStatus?: string[] | null;
+  ticketStatusList: TicketStatusModel[];
   onSearch: (searchText: string) => void;
 };
 
@@ -17,6 +19,7 @@ export const SearchBar = ({
   initialSelectedLabels,
   initialSelectedAssignees,
   initialSelectedStatus,
+  ticketStatusList,
   onSearch,
 }: Props) => {
   const [searchText, setSearchText] = useState(initialSearchText ?? "");
@@ -77,13 +80,10 @@ export const SearchBar = ({
             />
             <FilterDropdown
               title="Status"
-              options={[
-                { value: "1", label: "Awaiting Deployment" },
-                { value: "2", label: "Pair Programming" },
-                { value: "3", label: "Quick Win" },
-                { value: "4", label: "Functional Requirement" },
-                { value: "5", label: "Needs Design" },
-              ]}
+              options={ticketStatusList.map((i) => ({
+                value: i.id.toString(),
+                label: i.name,
+              }))}
               selectedOptions={selectedStatus}
               onSelect={(id) => setSelectedStatus([...selectedStatus, id])}
               onUnselect={(id) =>

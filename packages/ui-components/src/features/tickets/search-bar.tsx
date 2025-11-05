@@ -11,7 +11,7 @@ type Props = {
   initialSelectedAssignees?: string[] | null;
   initialSelectedStatus?: string[] | null;
   ticketStatusList: TicketStatusModel[];
-  onSearch: (searchText: string) => void;
+  onSearch: (searchText: string, status: string[]) => void;
 };
 
 export const SearchBar = ({
@@ -36,7 +36,7 @@ export const SearchBar = ({
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    onSearch(searchText);
+    onSearch(searchText, selectedStatus);
   };
 
   return (
@@ -85,10 +85,16 @@ export const SearchBar = ({
                 label: i.name,
               }))}
               selectedOptions={selectedStatus}
-              onSelect={(id) => setSelectedStatus([...selectedStatus, id])}
-              onUnselect={(id) =>
-                setSelectedStatus(selectedStatus.filter((i) => i !== id))
-              }
+              onSelect={(id) => {
+                const newList = [...selectedStatus, id];
+                setSelectedStatus(newList);
+                onSearch(searchText, newList);
+              }}
+              onUnselect={(id) => {
+                const newList = selectedStatus.filter((i) => i !== id);
+                setSelectedStatus(newList);
+                onSearch(searchText, newList);
+              }}
             />
             <FilterDropdown
               title="Labels"

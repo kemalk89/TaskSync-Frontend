@@ -194,11 +194,18 @@ export const getAPI = () => {
     },
     fetchTickets: async (
       { pageNumber, pageSize }: Page,
-      { searchText }: { searchText?: string } = {}
+      {
+        searchText,
+        statusIds,
+      }: { searchText?: string; statusIds?: string } = {}
     ): Promise<ApiResponse<PagedResult<TicketResponse>>> => {
       let url = `${getBaseUrl()}${getContext()}/ticket?pageNumber=${pageNumber}&pageSize=${pageSize}`;
       if (searchText && searchText.trim().length > 0) {
         url += `&searchText=${encodeURIComponent(searchText)}`; // encoding needed because of potential white spaces
+      }
+
+      if (statusIds && statusIds.trim().length > 0) {
+        url += `&status=${statusIds}`;
       }
 
       return get(url);

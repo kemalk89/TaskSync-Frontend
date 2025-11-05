@@ -3,7 +3,6 @@
 import { useContext, useMemo } from "react";
 import { getAPI, TicketResponse } from "@app/api";
 import { Pagination } from "../pagination/pagination";
-import { NewTicketDialog } from "./new-ticket-dialog";
 import { SearchBar } from "./search-bar";
 import { DEFAULT_PAGE_SIZE } from "../constants";
 import { useSyncWithSearchParams } from "../../hooks/use-sync-with-search-params";
@@ -23,13 +22,17 @@ export const TicketsPage = () => {
   const pageNumber = searchParams.get("pageNumber") ?? 1;
   const pageSize = searchParams.get("pageSize") ?? DEFAULT_PAGE_SIZE;
   const searchText = searchParams.get("searchText");
+  const selectedStatus = searchParams.get("status");
   const filters = useMemo(() => {
-    const _filters: { searchText?: string } = {};
+    const _filters: { searchText?: string; statusIds?: string } = {};
     if (searchText?.trim()) {
       _filters["searchText"] = searchText;
     }
+    if (selectedStatus?.trim()) {
+      _filters["statusIds"] = selectedStatus;
+    }
     return _filters;
-  }, [searchText]);
+  }, [searchText, selectedStatus]);
 
   const { data, isLoading } = useQuery({
     // Watch for changes on pagination and filters
@@ -63,8 +66,9 @@ export const TicketsPage = () => {
     },
   });
 
-  const searchTickets = (searchText: string) => {
+  const searchTickets = (searchText: string, status: string[]) => {
     updateSearchParams({
+      status: status.join(","),
       searchText,
       pageNumber: 1, // When starting text-search we can reset page number
       pageSize: searchParams.get("pageSize") ?? DEFAULT_PAGE_SIZE,
@@ -126,6 +130,7 @@ export const TicketsPage = () => {
       <div className="mb-4 mt-2">
         <SearchBar
           initialSearchText={searchText}
+          initialSelectedStatus={selectedStatus?.split(",")}
           onSearch={searchTickets}
           ticketStatusList={ticketStatusList ?? []}
         />

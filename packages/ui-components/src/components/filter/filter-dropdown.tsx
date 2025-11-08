@@ -37,6 +37,15 @@ const FilterDropdown = ({
     }
   };
 
+  const renderSelection = (optionId: string) => {
+    const option = findOption(optionId);
+    if (!option) {
+      return "";
+    }
+
+    return option.label;
+  };
+
   return (
     <Dropdown
       className={selectedOptions.length === 0 ? styles.dropdownInactive : ""}
@@ -46,7 +55,20 @@ const FilterDropdown = ({
         {selectedOptions.length > 0 && (
           <span>
             {title + ": "}
-            {selectedOptions.map((i) => findOption(i)?.label).join(", ")}
+            {selectedOptions.map((option, index) => {
+              const selection = renderSelection(option);
+              const isLast = index === selectedOptions.length - 1;
+              if (isLast) {
+                return selection;
+              }
+
+              return (
+                <>
+                  {selection}
+                  {", "}
+                </>
+              );
+            })}
           </span>
         )}
       </Dropdown.Toggle>

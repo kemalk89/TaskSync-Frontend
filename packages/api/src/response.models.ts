@@ -9,7 +9,7 @@ export interface UserResponse {
 }
 
 export interface ProjectResponse {
-  id: string;
+  id: number;
   title: string;
   description?: string;
   createdBy?: {

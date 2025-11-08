@@ -52,7 +52,10 @@ export const TicketForm = ({
     if (!projectId) {
       return undefined;
     }
-    return projects.find((p) => p.id === projectId);
+
+    const parsedProjectId = parseInt(projectId);
+
+    return projects.find((p) => p.id === parsedProjectId);
   };
 
   const findLabelById = (labelId: string) => {

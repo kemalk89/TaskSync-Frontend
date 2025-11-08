@@ -197,7 +197,14 @@ export const getAPI = () => {
       {
         searchText,
         statusIds,
-      }: { searchText?: string; statusIds?: string } = {}
+        projectIds,
+        assigneeIds,
+      }: {
+        searchText?: string;
+        statusIds?: string;
+        projectIds?: string;
+        assigneeIds?: string;
+      } = {}
     ): Promise<ApiResponse<PagedResult<TicketResponse>>> => {
       let url = `${getBaseUrl()}${getContext()}/ticket?pageNumber=${pageNumber}&pageSize=${pageSize}`;
       if (searchText && searchText.trim().length > 0) {
@@ -206,6 +213,14 @@ export const getAPI = () => {
 
       if (statusIds && statusIds.trim().length > 0) {
         url += `&status=${statusIds}`;
+      }
+
+      if (projectIds && projectIds.trim().length > 0) {
+        url += `&projects=${projectIds}`;
+      }
+
+      if (assigneeIds && assigneeIds.trim().length > 0) {
+        url += `&assignees=${assigneeIds}`;
       }
 
       return get(url);

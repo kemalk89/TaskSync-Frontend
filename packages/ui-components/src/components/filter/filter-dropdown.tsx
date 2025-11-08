@@ -12,7 +12,7 @@ interface Props {
   onUnselect: (optionId: string) => void;
 }
 
-const FilterDropdown = ({
+export const FilterDropdown = ({
   title,
   options = [],
   selectedOptions = [],
@@ -37,40 +37,18 @@ const FilterDropdown = ({
     }
   };
 
-  const renderSelection = (optionId: string) => {
-    const option = findOption(optionId);
-    if (!option) {
-      return "";
-    }
-
-    return option.label;
-  };
-
   return (
     <Dropdown
       className={selectedOptions.length === 0 ? styles.dropdownInactive : ""}
     >
       <Dropdown.Toggle className={styles.dropdownToggle}>
         {selectedOptions.length === 0 && title}
-        {selectedOptions.length > 0 && (
-          <span>
-            {title + ": "}
-            {selectedOptions.map((option, index) => {
-              const selection = renderSelection(option);
-              const isLast = index === selectedOptions.length - 1;
-              if (isLast) {
-                return selection;
-              }
-
-              return (
-                <>
-                  {selection}
-                  {", "}
-                </>
-              );
-            })}
-          </span>
-        )}
+        {selectedOptions.length > 0 &&
+          title +
+            ": " +
+            selectedOptions
+              .map((optionValue) => findOption(optionValue)?.label)
+              .join(", ")}
       </Dropdown.Toggle>
       <SelectMultiDropdownMenu
         options={options}
@@ -80,5 +58,3 @@ const FilterDropdown = ({
     </Dropdown>
   );
 };
-
-export default FilterDropdown;

@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { Button, Col, Form } from "react-bootstrap";
-import FilterDropdown from "../../components/filter/filter-dropdown";
+import { FilterDropdown } from "../../components/filter/filter-dropdown";
 import { ProjectResponse, TicketStatusModel, UserResponse } from "@app/api";
 import { UserName } from "../../user-name/user-name";
 
@@ -85,7 +85,8 @@ export const SearchBar = ({
               title="Bearbeiter"
               options={userList.map((i) => ({
                 value: i.id.toString(),
-                label: <UserName user={i} />,
+                label: i.username,
+                renderOption: () => <UserName user={i} />,
               }))}
               selectedOptions={selectedAssignees}
               onSelect={(id) => {

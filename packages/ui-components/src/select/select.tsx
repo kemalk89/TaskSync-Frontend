@@ -7,6 +7,7 @@ import styles from "./styles.module.css";
 export type SelectOption = {
   value: string;
   label: ReactNode;
+  renderOption?: (option: SelectOption) => ReactNode;
 };
 
 type Props = {
@@ -77,7 +78,7 @@ export const Select = ({
               o.value === value ? styles.dropdownItemActive : "",
             ].join(" ")}
           >
-            {o.label}
+            {o.renderOption ? o.renderOption(o) : o.label}
           </Dropdown.Item>
         ))}
       </Dropdown.Menu>

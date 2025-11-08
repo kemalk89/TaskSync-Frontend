@@ -31,7 +31,7 @@ export const SelectMultiDropdownMenu = ({
           className="d-flex gap-2 align-items-center"
         >
           {isSelected(o.value) ? <IconCheckSquare /> : <IconSquare />}
-          {o.label}
+          {o.renderOption ? o.renderOption(o) : o.label}
         </Dropdown.Item>
       ))}
     </Dropdown.Menu>

@@ -18,7 +18,7 @@ import { Select } from "../../select";
 import { UserName } from "../../user-name/user-name";
 
 type Props = {
-  projectId?: string;
+  projectId?: number;
 };
 
 export const AssignTeamMember = ({ projectId }: Props) => {

@@ -260,7 +260,7 @@ export const getAPI = () => {
       );
     },
     fetchProjectTickets: async (
-      projectId: string,
+      projectId: number,
       { pageNumber, pageSize }: Page
     ): Promise<ApiResponse<PagedResult<TicketResponse>>> => {
       return get(

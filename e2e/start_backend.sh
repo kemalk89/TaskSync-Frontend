@@ -5,10 +5,8 @@ mkdir e2e/tmp-api
 
 cd e2e/tmp-api
 
-# git clone https://github.com/kemalk89/TaskSync.git
-# cd TaskSync
-
-cd /Users/kkaya/jam-dev/Times
+git clone https://github.com/kemalk89/TaskSync.git
+cd TaskSync
 
 docker stop tasksync-backend
 docker rm tasksync-backend
@@ -18,7 +16,6 @@ docker run -d --name tasksync-backend \
     -e Auth__MetadataAddress=http://host.docker.internal:3002/.well-known/openid-configuration \
     -e Auth__Authority=http://host.docker.internal:3002 \
     -e Auth__Audience=https://tasksync.api.de/api \
-    -e Auth__ValidIssuers=http://localhost:3002/ \
     -e Auth__MachineToMachineApplication__Domain=http://host.docker.internal:3002 \
     -e Auth__MachineToMachineApplication__ClientId=tasksync_e2e \
     -e Auth__MachineToMachineApplication__ClientSecret=any \

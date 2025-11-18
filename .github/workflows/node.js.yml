@@ -83,6 +83,7 @@ jobs:
       run: npx playwright test
       env:
         AUTH_AUTH0_ISSUER: http://localhost:3002/
+        AUTH_AUTH0_TOKEN_ENDPOINT: http://localhost:3002/oauth/token
         AUTH_AUTH0_ID: ${{ secrets.AUTH_AUTH0_ID }}
         SERVICE_TASKSYNC: http://localhost:8080
         AUTH_AUDIENCE: https://tasksync.api.de/api

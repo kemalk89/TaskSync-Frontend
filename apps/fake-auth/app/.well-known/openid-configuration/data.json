@@ -5,7 +5,7 @@
   "device_authorization_endpoint": "http://localhost:3002/oauth/device/code",
   "userinfo_endpoint": "http://localhost:3002/userinfo",
   "mfa_challenge_endpoint": "http://localhost:3002/mfa/challenge",
-  "jwks_uri": "http://localhost:3002/.well-known/jwks.json",
+  "jwks_uri": "http://host.docker.internal:3002/.well-known/jwks.json",
   "registration_endpoint": "http://localhost:3002/oidc/register",
   "revocation_endpoint": "http://localhost:3002/oauth/revoke",
   "scopes_supported": [

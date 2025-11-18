@@ -5,6 +5,7 @@ import { Button, Table } from "react-bootstrap";
 import { UserImage } from "../../user-name/user-img";
 import { NewTicketDialog } from "../tickets/new-ticket-dialog";
 import { TicketTitleWithLink } from "../tickets/ticket-title-with-link";
+import { TicketsSearchBar } from "../tickets-search-bar/tickets-search-bar";
 
 type Props = {
   project?: ProjectResponse;
@@ -42,24 +43,41 @@ export const ProjectBacklog = ({ project }: Props) => {
   }
 
   return (
-    <Table>
-      <tbody>
-        {data?.items.map((i) => (
-          <tr key={`row-${i.id}`}>
-            <td style={{ paddingTop: "10px" }}>
-              <TicketTitleWithLink ticket={i} />
-            </td>
-            <td width="82">
-              <Button size="sm" variant="outline-primary">
-                Schätzen
-              </Button>
-            </td>
-            <td width="48">
-              <UserImage />
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </Table>
+    <>
+      <div className="mb-4">
+        <TicketsSearchBar
+          hiddenFilters={["projects"]}
+          initialSearchText={""}
+          initialSelectedAssignees={[]}
+          initialSelectedLabels={[]}
+          initialSelectedProjects={[]}
+          initialSelectedStatus={[]}
+          onSearch={console.log}
+          ticketStatusList={[]}
+          projectList={[]}
+          userList={[]}
+        />
+      </div>
+
+      <Table>
+        <tbody>
+          {data?.items.map((i) => (
+            <tr key={`row-${i.id}`}>
+              <td style={{ paddingTop: "10px" }}>
+                <TicketTitleWithLink ticket={i} />
+              </td>
+              <td width="82">
+                <Button size="sm" variant="outline-primary">
+                  Schätzen
+                </Button>
+              </td>
+              <td width="48">
+                <UserImage />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </>
   );
 };

@@ -3,14 +3,14 @@
 import { useContext, useMemo } from "react";
 import { getAPI, TicketResponse } from "@app/api";
 import { Pagination } from "../pagination/pagination";
-import { SearchBar } from "./search-bar";
+import { TicketsSearchBar } from "../tickets-search-bar/tickets-search-bar";
 import { DEFAULT_PAGE_SIZE } from "../constants";
 import { useSyncWithSearchParams } from "../../hooks/use-sync-with-search-params";
 import { ToastContext } from "../../toast";
 import { TicketsTable } from "./tickets-table";
 import { useQuery } from "@tanstack/react-query";
 import { useConfirmationModal } from "../../confirmation-modal";
-import { TicketSearchFilter } from "./types";
+import { TicketSearchFilter } from "../tickets-search-bar/types";
 
 export const TicketsPage = () => {
   const { newToast } = useContext(ToastContext);
@@ -199,7 +199,7 @@ export const TicketsPage = () => {
   return (
     <>
       <div className="mb-4 mt-2">
-        <SearchBar
+        <TicketsSearchBar
           initialSearchText={searchText}
           initialSelectedStatus={
             selectedStatus ? selectedStatus?.split(",") : null

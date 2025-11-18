@@ -14,13 +14,16 @@ npm run build
 
 # E2E Testing
 ## Prerequisites
-Start the application.
+Prepare the environment variables in your .env.local.
+
+Ensure, the API is running:
+```sh
+sh e2e/start_backend.sh
+```
+
 ## Run tests
 ```sh
 npm run test:e2e
 # with UI
 npm run test:e2e -- --ui
 ```
-Ensure, the API is running with environment variables configured in node.js.yml (step "Start .NET Backend with Docker").
-## After tests
-Terminate the application.

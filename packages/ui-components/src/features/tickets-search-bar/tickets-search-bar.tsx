@@ -17,6 +17,8 @@ type Props = {
   userList: UserResponse[];
   ticketStatusList: TicketStatusModel[];
 
+  hiddenFilters?: Array<"projects">;
+
   onSearch: (
     searchText: string,
     status: string[],
@@ -25,7 +27,9 @@ type Props = {
   ) => void;
 };
 
-export const SearchBar = ({
+export const TicketsSearchBar = ({
+  hiddenFilters = [],
+
   initialSearchText,
   initialSelectedLabels,
   initialSelectedAssignees,
@@ -128,34 +132,37 @@ export const SearchBar = ({
                 );
               }}
             />
-            <FilterDropdown
-              title="Projekt"
-              options={projectList.map((i) => ({
-                value: i.id.toString(),
-                label: i.title,
-              }))}
-              selectedOptions={selectedProjects}
-              onSelect={(id) => {
-                const newList = [...selectedProjects, id];
-                setSelectedProjects(newList);
-                onSearch(
-                  searchText,
-                  selectedStatus,
-                  newList,
-                  selectedAssignees
-                );
-              }}
-              onUnselect={(id) => {
-                const newList = selectedProjects.filter((i) => i !== id);
-                setSelectedProjects(newList);
-                onSearch(
-                  searchText,
-                  selectedStatus,
-                  newList,
-                  selectedAssignees
-                );
-              }}
-            />
+            {!hiddenFilters.find((i) => i === "projects") && (
+              <FilterDropdown
+                title="Projekt"
+                options={projectList.map((i) => ({
+                  value: i.id.toString(),
+                  label: i.title,
+                }))}
+                selectedOptions={selectedProjects}
+                onSelect={(id) => {
+                  const newList = [...selectedProjects, id];
+                  setSelectedProjects(newList);
+                  onSearch(
+                    searchText,
+                    selectedStatus,
+                    newList,
+                    selectedAssignees
+                  );
+                }}
+                onUnselect={(id) => {
+                  const newList = selectedProjects.filter((i) => i !== id);
+                  setSelectedProjects(newList);
+                  onSearch(
+                    searchText,
+                    selectedStatus,
+                    newList,
+                    selectedAssignees
+                  );
+                }}
+              />
+            )}
+
             <FilterDropdown
               title="Labels"
               options={[

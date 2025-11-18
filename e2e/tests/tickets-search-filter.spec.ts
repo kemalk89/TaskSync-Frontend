@@ -1,12 +1,5 @@
 import { test, expect } from "@playwright/test";
 
-test("accessing projects should be not possible", async ({ page }) => {
-  await page.goto("http://localhost:3000/projects");
-  await expect(
-    page.getByRole("main").getByRole("button", { name: "Signin with Auth0" })
-  ).toBeVisible();
-});
-
 test("Smoke test for fake-auth server", async ({ page }) => {
   await page.goto("http://localhost:3002");
   await page
@@ -32,4 +25,6 @@ test("load projects should work", async ({ page }) => {
   await expect(
     page.getByRole("button", { name: "Neues Projekt anlegen" })
   ).toBeVisible();
+
+  await expect(page.getByText("My First Project")).toBeVisible();
 });

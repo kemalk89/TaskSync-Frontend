@@ -1,30 +1,61 @@
 import { test, expect } from "@playwright/test";
+import { loginCommand, selectDropdownOption } from "./commands/commands";
 
-test("Smoke test for fake-auth server", async ({ page }) => {
-  await page.goto("http://localhost:3002");
+test("Create tickets and filter tickets by assignees", async ({ page }) => {
+  await page.goto("http://localhost:3000");
+
+  await loginCommand(page);
+
+  await page.getByRole("link", { name: "Tickets" }).click();
+  // Create new ticket for Deniz
+  await page.getByRole("button", { name: "Ticket anlegen" }).click();
+
+  await selectDropdownOption(page, {
+    name: "Projekt auswählen",
+    option: "My First Project",
+  });
   await page
-    .getByRole("button", { name: /Request Access Token For Default User/i })
-    .click();
-  const pre = page.getByTestId("accesstoken");
+    .getByRole("textbox", { name: "Titel *" })
+    .fill("E2E Test Ticket for Deniz");
+  await selectDropdownOption(page, {
+    name: "Dieses Ticket hat den Typ",
+    option: "Story",
+  });
+  await selectDropdownOption(page, {
+    name: "Um dieses Ticket kümmert sich",
+    option: "Deniz",
+  });
+  await page.getByRole("button", { name: "Speichern" }).click();
 
-  await expect(pre).not.toHaveText("");
-  const accessToken = await pre.innerText();
-  expect(accessToken).toContain("ey");
-});
+  // Create new ticket for Kerem
+  await page.getByRole("button", { name: "Ticket anlegen" }).click();
 
-test("load projects should work", async ({ page }) => {
-  await page.goto("http://localhost:3000/projects");
-
+  await selectDropdownOption(page, {
+    name: "Projekt auswählen",
+    option: "My First Project",
+  });
   await page
-    .getByRole("main")
-    .getByRole("button", { name: "Signin with Auth0" })
-    .click();
+    .getByRole("textbox", { name: "Titel *" })
+    .fill("E2E Test Ticket for Kerem");
+  await selectDropdownOption(page, {
+    name: "Dieses Ticket hat den Typ",
+    option: "Bug",
+  });
+  await selectDropdownOption(page, {
+    name: "Um dieses Ticket kümmert sich",
+    option: "Kerem",
+  });
+  await page.getByRole("button", { name: "Speichern" }).click();
 
-  await page.getByRole("link", { name: "Projekte" }).click();
+  // Now use filters to find the newly created ticket
+  await selectDropdownOption(page, {
+    name: "Bearbeiter",
+    option: "Kerem",
+  });
+  await expect(page.getByText("E2E Test Ticket for Kerem")).toBeVisible();
+  await expect(page.getByText("E2E Test Ticket for Deniz")).not.toBeVisible();
 
-  await expect(
-    page.getByRole("button", { name: "Neues Projekt anlegen" })
-  ).toBeVisible();
+  await page.getByRole("button", { name: "Deniz" }).click();
 
-  await expect(page.getByText("My First Project")).toBeVisible();
+  await expect(page.getByText("E2E Test Ticket for Deniz")).toBeVisible();
 });

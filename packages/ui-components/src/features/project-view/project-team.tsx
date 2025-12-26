@@ -8,7 +8,7 @@ type Props = {
   project?: ProjectResponse;
 };
 
-export const ProjectInfo = ({ project }: Props) => {
+export const ProjectTeam = ({ project }: Props) => {
   return (
     <>
       {!project?.projectManager && (

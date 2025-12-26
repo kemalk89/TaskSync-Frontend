@@ -1,13 +1,12 @@
 "use client";
 
-import { ProjectInfo } from "./project-team";
+import { ProjectTeam } from "./project-team";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ProjectBacklog } from "./project-backlog";
-import { TextDate } from "../../text-date";
 import { EditableLine } from "../../editable-content/editable-content";
-import { TextEditorReadonly } from "../../texteditor/texteditor-readonly";
 import { useProjectApi } from "../project-hooks/useProjectApi";
+import { ProjectInfo } from "./project-info";
 
 type Props = {
   projectId: number;
@@ -18,6 +17,7 @@ const TAB_TEAM = "team";
 const TAB_BACKLOG = "backlog";
 const TAB_SPRINTS = "sprints";
 const TAB_HISTORY = "history";
+const TAB_PROJECT_INFO = "projectInfo";
 
 export const ProjectViewPage = ({ projectId }: Props) => {
   const searchParams = useSearchParams();
@@ -44,27 +44,6 @@ export const ProjectViewPage = ({ projectId }: Props) => {
         isSuccess={isSuccess}
         onSubmit={(newTitle) => updateProject({ title: newTitle })}
       />
-      <p>
-        <small>
-          erstellt von {projectResult?.data?.createdBy?.username}, am{" "}
-          <TextDate date={projectResult?.data?.createdDate} />
-        </small>
-      </p>
-      <h3>Beschreibung</h3>
-      {projectResult?.data && (
-        <TextEditorReadonly
-          placeholder="Noch keine Beschreibung vorhanden. Hier klicken, um eine Beschreibung zu schreiben."
-          content={projectResult.data.description}
-          onSubmit={(newContent) =>
-            updateProject({
-              description: JSON.stringify(newContent),
-            })
-          }
-          isSubmitting={isPending}
-          isSuccess={isSuccess}
-        />
-      )}
-
       <ul className="nav nav-underline mb-4">
         <li className="nav-item">
           <Link
@@ -106,14 +85,25 @@ export const ProjectViewPage = ({ projectId }: Props) => {
             History
           </Link>
         </li>
+        <li className="nav-item">
+          <Link
+            className={`nav-link ${activeTab === TAB_PROJECT_INFO ? "active" : ""}`}
+            href={`?tab=${TAB_PROJECT_INFO}`}
+          >
+            Info
+          </Link>
+        </li>
       </ul>
-      {activeTab === TAB_TEAM && <ProjectInfo project={projectResult?.data} />}
+      {activeTab === TAB_TEAM && <ProjectTeam project={projectResult?.data} />}
       {activeTab === TAB_BOARD && <div>Board</div>}
       {activeTab === TAB_BACKLOG && (
         <ProjectBacklog project={projectResult?.data} />
       )}
       {activeTab === TAB_SPRINTS && <div>Sprints</div>}
       {activeTab === TAB_HISTORY && <div>History</div>}
+      {activeTab === TAB_PROJECT_INFO && (
+        <ProjectInfo project={projectResult?.data} />
+      )}
     </>
   );
 };

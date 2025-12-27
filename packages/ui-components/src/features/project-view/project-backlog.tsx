@@ -1,11 +1,12 @@
-import { getAPI, PagedResult, ProjectResponse, TicketResponse } from "@app/api";
+import { getAPI, ProjectResponse } from "@app/api";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { UserImage } from "../../user-name/user-img";
 import { NewTicketDialog } from "../tickets/new-ticket-dialog";
 import { TicketTitleWithLink } from "../tickets/ticket-title-with-link";
 import { TicketsSearchBar } from "../tickets-search-bar/tickets-search-bar";
+import { useQuery } from "@tanstack/react-query";
+import { QUERY_KEY_PREFIX_FETCH_TICKETS } from "../constants";
 
 type Props = {
   project?: ProjectResponse;
@@ -13,19 +14,20 @@ type Props = {
 
 export const ProjectBacklog = ({ project }: Props) => {
   const searchParams = useSearchParams();
-  const [data, setData] = useState<PagedResult<TicketResponse>>();
+  const pageSize = 1000;
+  const pageNumber = (searchParams.get("pageNumber") || 1) as number;
+  const { data } = useQuery({
+    enabled: !!project,
+    queryKey: [QUERY_KEY_PREFIX_FETCH_TICKETS, { pageSize, pageNumber }],
+    queryFn: async () => {
+      const response = await getAPI().fetchProjectTickets(project!.id, {
+        pageSize,
+        pageNumber,
+      });
 
-  useEffect(() => {
-    if (project) {
-      const page = {
-        pageSize: (searchParams.get("pageSize") || 10) as number,
-        pageNumber: (searchParams.get("pageNumber") || 1) as number,
-      };
-      getAPI()
-        .fetchProjectTickets(project?.id, page)
-        .then((response) => setData(response.data));
-    }
-  }, [searchParams, project]);
+      return response.data;
+    },
+  });
 
   if (data?.items.length === 0) {
     return (

@@ -8,6 +8,9 @@ import { useContext, useState } from "react";
 import { ButtonProps } from "react-bootstrap";
 import { ToastContext } from "../../toast";
 import { useParams } from "next/navigation";
+import { QueryClientContext } from "@tanstack/react-query";
+import { QUERY_KEY_PREFIX_FETCH_TICKETS } from "../constants";
+
 type Props = {
   buttonProps?: ButtonProps;
 };
@@ -15,6 +18,7 @@ type Props = {
 export const NewTicketDialog = ({ buttonProps = {} }: Props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const { newToast } = useContext(ToastContext);
+  const queryClient = useContext(QueryClientContext);
   const { projectId: projectIdInUrl } = useParams();
 
   const handleSaveTicket = async (values: TicketFormValues) => {
@@ -33,6 +37,10 @@ export const NewTicketDialog = ({ buttonProps = {} }: Props) => {
     const data = await getAPI().saveTicket(cmd);
     newToast({ type: "success", msg: "Ticket erfolgreich angelegt" });
     setDialogOpen(false);
+
+    queryClient?.invalidateQueries({
+      queryKey: [QUERY_KEY_PREFIX_FETCH_TICKETS],
+    });
     return data;
   };
 

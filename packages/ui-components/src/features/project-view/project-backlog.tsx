@@ -15,12 +15,14 @@ import {
 } from "../../components/more-menu/more-menu";
 import { copyTextToClipboard } from "@app/utils";
 import { useDeleteTicketModal } from "../ticket-hooks/use-delete-ticket-modal";
+import { useRouter } from "next/navigation";
 
 type Props = {
   project?: ProjectResponse;
 };
 
 export const ProjectBacklog = ({ project }: Props) => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const pageSize = 1000;
   const pageNumber = (searchParams.get("pageNumber") || 1) as number;
@@ -95,7 +97,9 @@ export const ProjectBacklog = ({ project }: Props) => {
               </td>
               <td width="50">
                 <MoreMenu button={<IconThreeDots />}>
-                  <MoreMenuItem href={`/tickets/${i.id}`}>Öffne</MoreMenuItem>
+                  <MoreMenuItem onClick={() => router.push(`/tickets/${i.id}`)}>
+                    Öffnen
+                  </MoreMenuItem>
                   <MoreMenuItem href={`/tickets/${i.id}`} target="_blank">
                     Öffne im neuen Tab
                   </MoreMenuItem>

@@ -171,7 +171,6 @@ export const TicketsPage = () => {
       <TicketsTable
         isLoading={isLoading}
         tickets={data?.items}
-        onEditTicket={console.log}
         onDeleteTicket={deleteTicket}
       />
 

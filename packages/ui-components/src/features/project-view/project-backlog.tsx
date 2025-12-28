@@ -7,6 +7,14 @@ import { TicketTitleWithLink } from "../tickets/ticket-title-with-link";
 import { TicketsSearchBar } from "../tickets-search-bar/tickets-search-bar";
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEY_PREFIX_FETCH_TICKETS } from "../constants";
+import { IconThreeDots } from "../../icons/icons";
+import {
+  MoreMenu,
+  MoreMenuItem,
+  MoreMenuItemDivider,
+} from "../../components/more-menu/more-menu";
+import { copyTextToClipboard } from "@app/utils";
+import { useDeleteTicketModal } from "../ticket-hooks/use-delete-ticket-modal";
 
 type Props = {
   project?: ProjectResponse;
@@ -29,6 +37,8 @@ export const ProjectBacklog = ({ project }: Props) => {
     },
   });
 
+  const { deleteTicket } = useDeleteTicketModal();
+
   if (data?.items.length === 0) {
     return (
       <div
@@ -43,6 +53,13 @@ export const ProjectBacklog = ({ project }: Props) => {
       </div>
     );
   }
+
+  const handleCopyLinkToClipboard = async (url: string) => {
+    const success = await copyTextToClipboard(url);
+    if (success) {
+      alert("Link copied!");
+    }
+  };
 
   return (
     <>
@@ -75,6 +92,28 @@ export const ProjectBacklog = ({ project }: Props) => {
               </td>
               <td width="48">
                 <UserImage />
+              </td>
+              <td width="50">
+                <MoreMenu button={<IconThreeDots />}>
+                  <MoreMenuItem href={`/tickets/${i.id}`}>Öffne</MoreMenuItem>
+                  <MoreMenuItem href={`/tickets/${i.id}`} target="_blank">
+                    Öffne im neuen Tab
+                  </MoreMenuItem>
+                  <MoreMenuItemDivider />
+                  <MoreMenuItem
+                    onClick={() =>
+                      handleCopyLinkToClipboard(
+                        `${window.location.origin}/tickets/${i.id}`
+                      )
+                    }
+                  >
+                    Link kopieren
+                  </MoreMenuItem>
+                  <MoreMenuItemDivider />
+                  <MoreMenuItem onClick={() => deleteTicket(i)}>
+                    Löschen
+                  </MoreMenuItem>
+                </MoreMenu>
               </td>
             </tr>
           ))}

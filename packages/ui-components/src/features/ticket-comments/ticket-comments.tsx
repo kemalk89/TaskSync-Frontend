@@ -10,7 +10,7 @@ import { TextDate } from "../../text-date";
 import { IconTrash } from "../../icons/icons";
 import { useContext } from "react";
 import { ToastContext } from "../../toast";
-import { useConfirmationModal } from "../../confirmation-modal";
+import { useConfirmationModal } from "../../components/confirmation-modal";
 import { useTextEditor } from "../../texteditor/use-texteditor";
 
 type Props = {

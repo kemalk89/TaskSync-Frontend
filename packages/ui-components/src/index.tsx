@@ -15,8 +15,8 @@ export { ToastContext, ToastContainer } from "./toast";
 export {
   ConfirmationModalContainer,
   ConfirmationModalProvider,
-} from "./confirmation-modal";
+} from "./components/confirmation-modal";
 export type {
   ConfirmationModalContentData,
   ConfirmationModalCallbacks,
-} from "./confirmation-modal";
+} from "./components/confirmation-modal";

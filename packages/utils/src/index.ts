@@ -4,3 +4,4 @@
 export * from "./date";
 export * from "./pagination";
 export * from "./uuid";
+export * from "./clipboard";

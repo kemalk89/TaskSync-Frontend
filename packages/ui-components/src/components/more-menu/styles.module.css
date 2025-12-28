@@ -1,0 +1,4 @@
+/* Remove the dropdown arrow in bootstrap */
+button.toggle::after {
+  display: none;
+}

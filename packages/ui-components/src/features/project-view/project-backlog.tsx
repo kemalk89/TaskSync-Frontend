@@ -1,13 +1,13 @@
 import { getAPI, ProjectResponse } from "@app/api";
 import { useSearchParams } from "next/navigation";
-import { Button, Table } from "react-bootstrap";
+import { Alert, Button, Table } from "react-bootstrap";
 import { UserImage } from "../../user-name/user-img";
 import { NewTicketDialog } from "../tickets/new-ticket-dialog";
 import { TicketTitleWithLink } from "../tickets/ticket-title-with-link";
 import { TicketsSearchBar } from "../tickets-search-bar/tickets-search-bar";
 import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEY_PREFIX_FETCH_TICKETS } from "../constants";
-import { IconThreeDots } from "../../icons/icons";
+import { IconInfoCircle, IconThreeDots } from "../../icons/icons";
 import {
   MoreMenu,
   MoreMenuItem,
@@ -79,7 +79,15 @@ export const ProjectBacklog = ({ project }: Props) => {
           userList={[]}
         />
       </div>
-
+      <div className="mb-4">
+        <h3>Nächster Sprint</h3>
+        <Alert variant="info">
+          <IconInfoCircle /> Es sind noch keine Tickets eingeplant für das
+          nächste Sprint eingeplant. Tickets können per Drag&Drop in diesen
+          Abschnitt gezogen werden.
+        </Alert>
+      </div>
+      <h3>Backlog</h3>
       <Table>
         <tbody>
           {data?.items.map((i) => (

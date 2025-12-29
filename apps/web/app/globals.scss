@@ -49,6 +49,13 @@ body {
   }
 }
 
+/* style for bootstrap icons */
+.bi {
+  display: inline-block;
+  vertical-align: -0.125em;
+  fill: currentcolor;
+}
+
 .required-field-asterisk {
   color: $danger;
 }

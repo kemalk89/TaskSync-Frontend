@@ -7,6 +7,7 @@ import { ProjectBacklog } from "./project-backlog";
 import { EditableLine } from "../../editable-content/editable-content";
 import { useProjectApi } from "../project-hooks/useProjectApi";
 import { ProjectInfo } from "./project-info";
+import { TabContentActiveSprint } from "./tab-content-active-sprint";
 
 type Props = {
   projectId: number;
@@ -47,18 +48,18 @@ export const ProjectViewPage = ({ projectId }: Props) => {
       <ul className="nav nav-underline mb-4">
         <li className="nav-item">
           <Link
-            className={`nav-link ${activeTab === TAB_BOARD ? "active" : ""}`}
-            href={`?tab=${TAB_BOARD}`}
-          >
-            Board
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link
             className={`nav-link ${activeTab === TAB_BACKLOG ? "active" : ""}`}
             href={`?tab=${TAB_BACKLOG}`}
           >
             Backlog
+          </Link>
+        </li>
+        <li className="nav-item">
+          <Link
+            className={`nav-link ${activeTab === TAB_BOARD ? "active" : ""}`}
+            href={`?tab=${TAB_BOARD}`}
+          >
+            Aktiver Sprint
           </Link>
         </li>
         <li className="nav-item">
@@ -95,7 +96,7 @@ export const ProjectViewPage = ({ projectId }: Props) => {
         </li>
       </ul>
       {activeTab === TAB_TEAM && <ProjectTeam project={projectResult?.data} />}
-      {activeTab === TAB_BOARD && <div>Board</div>}
+      {activeTab === TAB_BOARD && <TabContentActiveSprint />}
       {activeTab === TAB_BACKLOG && (
         <ProjectBacklog project={projectResult?.data} />
       )}

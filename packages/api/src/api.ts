@@ -1,6 +1,7 @@
 import {
   CreateProjectRequest,
   CreateTicketCommand,
+  ReorderBacklogTicketsCommand,
   UpdateProjectCommand,
   UpdateTicketCommand,
 } from "./request.models";
@@ -259,6 +260,11 @@ export const getAPI = () => {
         headers
       );
     },
+    fetchBacklogTickets: async (
+      projectId: number
+    ): Promise<ApiResponse<Array<TicketResponse>>> => {
+      return get(`${getBaseUrl()}${getContext()}/Project/${projectId}/backlog`);
+    },
     fetchProjectTickets: async (
       projectId: number,
       { pageNumber, pageSize }: Page
@@ -282,6 +288,18 @@ export const getAPI = () => {
       );
     },
     post: {
+      reorderBacklogTickets: async (
+        projectId: number,
+        command: ReorderBacklogTicketsCommand
+      ): Promise<ApiResponse<TicketCommentResponse>> => {
+        if (!projectId) {
+          throw "No projectId defined";
+        }
+        return post(
+          `${getBaseUrl()}${getContext()}/project/${projectId}/backlog/reorder`,
+          command
+        );
+      },
       saveTicketComment: async (
         ticketId: string,
         comment: object

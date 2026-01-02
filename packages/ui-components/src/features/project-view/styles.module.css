@@ -1,0 +1,31 @@
+.card :global(.card-body) {
+  padding: 0px;
+}
+
+.draggableControl {
+  padding: 4px 2px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.draggableControl :global(svg) {
+  width: auto;
+  height: 24px;
+}
+
+.draggableControl:hover {
+  background-color: var(--bs-secondary);
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  cursor: move;
+}
+
+.cardContent {
+  padding: 1rem;
+  padding-left: 4px;
+}
+
+div.draggingElement {
+  opacity: 0.3;
+}

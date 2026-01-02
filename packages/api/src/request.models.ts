@@ -18,3 +18,8 @@ export interface CreateTicketCommand {
 export type UpdateTicketCommand = Partial<CreateTicketCommand> & {
   statusId?: number;
 };
+
+export type ReorderBacklogTicketsCommand = Array<{
+  ticketId: number;
+  position: number;
+}>;

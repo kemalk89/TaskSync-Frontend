@@ -1,44 +1,33 @@
-import { getAPI, ProjectResponse, TicketResponse } from "@app/api";
+import {
+  getAPI,
+  ProjectResponse,
+  SprintResponse,
+  TicketResponse,
+} from "@app/api";
 import { useSearchParams } from "next/navigation";
-import { Alert, Button, Card } from "react-bootstrap";
-import { UserImage } from "../../user-name/user-img";
+import { Alert } from "react-bootstrap";
 import { NewTicketDialog } from "../tickets/new-ticket-dialog";
-import { TicketTitleWithLink } from "../tickets/ticket-title-with-link";
 import { TicketsSearchBar } from "../tickets-search-bar/tickets-search-bar";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { QUERY_KEY_PREFIX_FETCH_TICKETS } from "../constants";
-import {
-  IconGripVertical,
-  IconInfoCircle,
-  IconThreeDots,
-} from "../../icons/icons";
-import {
-  MoreMenu,
-  MoreMenuItem,
-  MoreMenuItemDivider,
-} from "../../components/more-menu/more-menu";
-import { copyTextToClipboard } from "@app/utils";
-import { useDeleteTicketModal } from "../ticket-hooks/use-delete-ticket-modal";
-import { useRouter } from "next/navigation";
+import { IconInfoCircle } from "../../icons/icons";
 
-import styles from "./styles.module.css";
-import {
-  Draggable,
-  DroppableSlot,
-} from "../../components/drag-and-drop/drag-and-drop";
 import { useState } from "react";
 import { ReorderBacklogTicketsCommand } from "../../../../api/src/request.models";
+import { TicketListSortable } from "./ticketlist-sortable";
 
 type Props = {
   project?: ProjectResponse;
 };
 
 export const ProjectBacklog = ({ project }: Props) => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const pageSize = 1000;
   const pageNumber = (searchParams.get("pageNumber") || 1) as number;
   const [tickets, setTickets] = useState<TicketResponse[]>([]);
+  const [draftSprint, setDraftSprint] = useState<SprintResponse>();
+
+  // Queries
   useQuery({
     enabled: !!project,
     queryKey: [QUERY_KEY_PREFIX_FETCH_TICKETS, { pageSize, pageNumber }],
@@ -50,6 +39,18 @@ export const ProjectBacklog = ({ project }: Props) => {
     },
   });
 
+  useQuery({
+    enabled: !!project,
+    queryKey: [QUERY_KEY_PREFIX_FETCH_TICKETS, "fetchDraftSprint"],
+    queryFn: async () => {
+      const response = await getAPI().fetchDraftSprint(project!.id);
+
+      setDraftSprint(response.data?.value);
+      return response.data;
+    },
+  });
+
+  // Mutations
   const reorderBacklogTickets = useMutation({
     mutationFn: (command: {
       projectId: number;
@@ -57,12 +58,26 @@ export const ProjectBacklog = ({ project }: Props) => {
     }) => {
       return getAPI().post.reorderBacklogTickets(
         command.projectId,
-        command.ticketOrder
+        command.ticketOrder,
       );
     },
   });
 
-  const { deleteTicket } = useDeleteTicketModal();
+  const assignTicketToDraftSprint = useMutation({
+    mutationFn: (command: {
+      projectId: number;
+      sprintId?: number;
+      ticketId: number;
+      newPosition?: number;
+    }) => {
+      return getAPI().post.assignTicketToSprint(
+        command.projectId,
+        command.sprintId ?? 0,
+        command.ticketId,
+        command.newPosition ?? 1,
+      );
+    },
+  });
 
   if (!tickets) {
     return (
@@ -79,9 +94,23 @@ export const ProjectBacklog = ({ project }: Props) => {
     );
   }
 
-  const changeOrderOfTickets = (ticketId: string, newPosition: number) => {
+  const changeOrderOfTicketsInSprint = (
+    ticketId: string,
+    newPosition: number,
+  ) => {
+    console.log("Added ticket to sprint", ticketId, newPosition);
+    assignTicketToDraftSprint.mutate({
+      projectId: project!.id,
+      ticketId: Number(ticketId),
+    });
+  };
+
+  const changeOrderOfTicketsInBacklog = (
+    ticketId: string,
+    newPosition: number,
+  ) => {
     const currentTicketIndex = tickets.findIndex(
-      (t) => parseInt(t.id) === parseInt(ticketId)
+      (t) => parseInt(t.id) === parseInt(ticketId),
     );
     // no ticket found by id -> exit
     if (currentTicketIndex === -1) {
@@ -135,13 +164,6 @@ export const ProjectBacklog = ({ project }: Props) => {
     });
   };
 
-  const handleCopyLinkToClipboard = async (url: string) => {
-    const success = await copyTextToClipboard(url);
-    if (success) {
-      alert("Link copied!");
-    }
-  };
-
   return (
     <>
       <div className="mb-4">
@@ -160,120 +182,34 @@ export const ProjectBacklog = ({ project }: Props) => {
       </div>
       <div className="mb-4">
         <h3>Nächster Sprint</h3>
-        <Alert variant="info">
-          <IconInfoCircle /> Es sind noch keine Tickets eingeplant für das
-          nächste Sprint eingeplant. Tickets können per Drag&Drop in diesen
-          Abschnitt gezogen werden.
-        </Alert>
-      </div>
-      <h3>Backlog</h3>
+        {draftSprint?.tickets.length === 0 && (
+          <Alert variant="info">
+            <IconInfoCircle /> Es sind noch keine Tickets eingeplant für das
+            nächste Sprint eingeplant. Tickets können per Drag&Drop in diesen
+            Abschnitt gezogen werden.
+          </Alert>
+        )}
 
-      {tickets.map((ticket, index) => (
-        <div key={`row-${ticket.id}`}>
-          {index === 0 && (
-            <DroppableSlot
-              onDrop={(e) =>
-                changeOrderOfTickets(e.dataTransfer.getData("text"), index)
-              }
-            />
-          )}
-          <Card body bg="light" border="dark" className={styles.card}>
-            <div className="d-flex">
-              <div className="d-flex align-items-center">
-                <Draggable
-                  className={styles.draggableControl}
-                  itemIdentifier={ticket.id}
-                  onDragEnd={(e) => {
-                    const card = (e.target as HTMLElement).closest(".card");
-                    card?.classList.remove(styles.draggingElement as string);
-                  }}
-                  onDragStart={(e) => {
-                    const card = (e.target as HTMLDivElement).closest(".card");
-                    card?.classList.add(styles.draggingElement as string);
-                  }}
-                  dragImageBuilder={(draggableElement: HTMLElement) => {
-                    const card = draggableElement.closest(".card");
-
-                    const ticketTitleIcon =
-                      card?.querySelector(".ticket-title svg");
-
-                    if (ticketTitleIcon) {
-                      const dragImg = document.createElement("div");
-                      dragImg.classList.add(
-                        "border",
-                        "border-dark",
-                        "p-2",
-                        "d-flex",
-                        "gap-2",
-                        "bg-white"
-                      );
-
-                      dragImg.appendChild(ticketTitleIcon.cloneNode(true));
-
-                      const ticketTitleEl = document.createElement("span");
-                      ticketTitleEl.innerText = ticket.title;
-                      dragImg.appendChild(ticketTitleEl);
-
-                      return dragImg;
-                    }
-                  }}
-                >
-                  <IconGripVertical />
-                </Draggable>
-                <div
-                  className={styles.draggableControl}
-                  draggable
-                  onDragEnd={(e) => {
-                    const card = (e.target as HTMLElement).closest(".card");
-                    card?.classList.remove(styles.draggingElement as string);
-                  }}
-                  onDragStart={(e) => {
-                    e.dataTransfer.setData("text", ticket.id);
-                  }}
-                ></div>
-              </div>
-              <div className={"d-flex gap-2 flex-fill " + styles.cardContent}>
-                <div className="flex-fill ticket-title">
-                  <TicketTitleWithLink ticket={ticket} />
-                </div>
-                <Button size="sm" variant="outline-primary">
-                  Schätzen
-                </Button>
-                <UserImage />
-                <MoreMenu button={<IconThreeDots />}>
-                  <MoreMenuItem
-                    onClick={() => router.push(`/tickets/${ticket.id}`)}
-                  >
-                    Öffnen
-                  </MoreMenuItem>
-                  <MoreMenuItem href={`/tickets/${ticket.id}`} target="_blank">
-                    Öffne im neuen Tab
-                  </MoreMenuItem>
-                  <MoreMenuItemDivider />
-                  <MoreMenuItem
-                    onClick={() =>
-                      handleCopyLinkToClipboard(
-                        `${window.location.origin}/tickets/${ticket.id}`
-                      )
-                    }
-                  >
-                    Link kopieren
-                  </MoreMenuItem>
-                  <MoreMenuItemDivider />
-                  <MoreMenuItem onClick={() => deleteTicket(ticket)}>
-                    Löschen
-                  </MoreMenuItem>
-                </MoreMenu>
-              </div>
-            </div>
-          </Card>
-          <DroppableSlot
-            onDrop={(e) =>
-              changeOrderOfTickets(e.dataTransfer.getData("text"), index + 1)
+        <div>
+          <TicketListSortable
+            tickets={draftSprint?.tickets ?? []}
+            onDrop={(e, index) =>
+              changeOrderOfTicketsInSprint(
+                e.dataTransfer.getData("text"),
+                index,
+              )
             }
           />
         </div>
-      ))}
+      </div>
+      <h3>Backlog</h3>
+
+      <TicketListSortable
+        tickets={tickets}
+        onDrop={(e, index) =>
+          changeOrderOfTicketsInBacklog(e.dataTransfer.getData("text"), index)
+        }
+      />
     </>
   );
 };

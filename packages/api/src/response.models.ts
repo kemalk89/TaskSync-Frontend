@@ -71,5 +71,22 @@ export interface PagedResult<T> {
   items: T[];
 }
 
+export interface SprintResponse {
+  id: string;
+  name: string;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
+  tickets: TicketResponse[];
+}
+
+export interface ResultResponse<T> {
+  value: T;
+  success: boolean;
+  error: string;
+  errorDetails: string[];
+  errorPayload: unknown;
+}
+
 export const ResultCodeResourceNotFound = "RESOURCE_NOT_FOUND";
 export const ResultCodeNoPermissions = "NO_PERMISSIONS_FOR_THE_OPERATION";

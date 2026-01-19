@@ -8,6 +8,8 @@ import {
 import {
   PagedResult,
   ProjectResponse,
+  ResultResponse,
+  SprintResponse,
   TicketCommentResponse,
   TicketResponse,
   TicketStatusModel,
@@ -17,7 +19,7 @@ import {
 const patch = async (
   url: string,
   body: any,
-  headers: Record<string, string> = {}
+  headers: Record<string, string> = {},
 ) => {
   const res = await fetch(url, {
     body: JSON.stringify(body),
@@ -52,7 +54,7 @@ const patch = async (
 const post = async <T>(
   url: string,
   body: any = {},
-  headers: Record<string, string> = {}
+  headers: Record<string, string> = {},
 ): Promise<ApiResponse<T>> => {
   const res = await fetch(url, {
     body: JSON.stringify(body),
@@ -83,7 +85,7 @@ const post = async <T>(
 
 const get = async <T>(
   url: string,
-  headers: Record<string, string> = {}
+  headers: Record<string, string> = {},
 ): Promise<ApiResponse<T>> => {
   const res = await fetch(url, {
     method: "GET",
@@ -181,16 +183,16 @@ export const getAPI = () => {
       return this;
     },
     fetchTicket: async (
-      ticketId: string | number
+      ticketId: string | number,
     ): Promise<ApiResponse<TicketResponse>> => {
       return get(`${getBaseUrl()}${getContext()}/ticket/${ticketId}`, headers);
     },
     fetchTicketComments: async (
       ticketId: string,
-      { pageNumber, pageSize }: Page
+      { pageNumber, pageSize }: Page,
     ): Promise<ApiResponse<PagedResult<TicketCommentResponse>>> => {
       return get(
-        `${getBaseUrl()}${getContext()}/ticket/${ticketId}/comment?pageNumber=${pageNumber}&pageSize=${pageSize}`
+        `${getBaseUrl()}${getContext()}/ticket/${ticketId}/comment?pageNumber=${pageNumber}&pageSize=${pageSize}`,
       );
     },
     fetchTickets: async (
@@ -205,7 +207,7 @@ export const getAPI = () => {
         statusIds?: string;
         projectIds?: string;
         assigneeIds?: string;
-      } = {}
+      } = {},
     ): Promise<ApiResponse<PagedResult<TicketResponse>>> => {
       let url = `${getBaseUrl()}${getContext()}/ticket?pageNumber=${pageNumber}&pageSize=${pageSize}`;
       if (searchText && searchText.trim().length > 0) {
@@ -233,7 +235,7 @@ export const getAPI = () => {
       return get(url);
     },
     saveTicket: async (
-      ticket: CreateTicketCommand
+      ticket: CreateTicketCommand,
     ): Promise<ApiResponse<TicketResponse>> => {
       const cleaned: CreateTicketCommand = {
         ...ticket,
@@ -249,28 +251,35 @@ export const getAPI = () => {
     },
     deleteTicketComment: async (ticketId: string, commentId: string) => {
       return remove(
-        `${getBaseUrl()}${getContext()}/ticket/${ticketId}/comment/${commentId}`
+        `${getBaseUrl()}${getContext()}/ticket/${ticketId}/comment/${commentId}`,
       );
     },
     fetchProject: async (
-      projectId: string | number
+      projectId: string | number,
     ): Promise<ApiResponse<ProjectResponse>> => {
       return get(
         `${getBaseUrl()}${getContext()}/project/${projectId}`,
-        headers
+        headers,
+      );
+    },
+    fetchDraftSprint: async (
+      projectId: number,
+    ): Promise<ApiResponse<ResultResponse<SprintResponse>>> => {
+      return get(
+        `${getBaseUrl()}${getContext()}/Project/${projectId}/sprint/draft`,
       );
     },
     fetchBacklogTickets: async (
-      projectId: number
+      projectId: number,
     ): Promise<ApiResponse<Array<TicketResponse>>> => {
       return get(`${getBaseUrl()}${getContext()}/Project/${projectId}/backlog`);
     },
     fetchProjectTickets: async (
       projectId: number,
-      { pageNumber, pageSize }: Page
+      { pageNumber, pageSize }: Page,
     ): Promise<ApiResponse<PagedResult<TicketResponse>>> => {
       return get(
-        `${getBaseUrl()}${getContext()}/Project/${projectId}/tickets?pageNumber=${pageNumber}&pageSize=${pageSize}`
+        `${getBaseUrl()}${getContext()}/Project/${projectId}/tickets?pageNumber=${pageNumber}&pageSize=${pageSize}`,
       );
     },
     fetchProjects: async ({
@@ -278,54 +287,67 @@ export const getAPI = () => {
       pageSize,
     }: Page): Promise<ApiResponse<PagedResult<ProjectResponse>>> => {
       return get(
-        `${getBaseUrl()}${getContext()}/Project?pageNumber=${pageNumber}&pageSize=${pageSize}`
+        `${getBaseUrl()}${getContext()}/Project?pageNumber=${pageNumber}&pageSize=${pageSize}`,
       );
     },
     saveProject: async (project: CreateProjectRequest) => {
       return post<ProjectResponse>(
         `${getBaseUrl()}${getContext()}/project`,
-        project
+        project,
       );
     },
     post: {
+      assignTicketToSprint: async (
+        projectId: number,
+        sprintId: number,
+        ticketId: number,
+        newPosition: number,
+      ) => {
+        if (!projectId) {
+          throw "No projectId defined";
+        }
+        return post(
+          `${getBaseUrl()}${getContext()}/project/${projectId}/sprint/${sprintId}/ticket/${ticketId}?newPosition=${newPosition}`,
+        );
+      },
       reorderBacklogTickets: async (
         projectId: number,
-        command: ReorderBacklogTicketsCommand
+        command: ReorderBacklogTicketsCommand,
       ): Promise<ApiResponse<TicketCommentResponse>> => {
         if (!projectId) {
           throw "No projectId defined";
         }
         return post(
           `${getBaseUrl()}${getContext()}/project/${projectId}/backlog/reorder`,
-          command
+          command,
         );
       },
       saveTicketComment: async (
         ticketId: string,
-        comment: object
+        comment: object,
       ): Promise<ApiResponse<TicketCommentResponse>> => {
         return post(
           `${getBaseUrl()}${getContext()}/ticket/${ticketId}/comment`,
           {
             comment: JSON.stringify(comment),
-          }
+          },
         );
       },
     },
     patch: {
       updateTicket: async (
         ticketId: number,
-        body: UpdateTicketCommand
+        body: UpdateTicketCommand,
       ): Promise<ApiResponse<boolean>> => {
         return patch(`${getBaseUrl()}${getContext()}/ticket/${ticketId}`, body);
       },
       updateProject: async (
         projectId: string | number,
-        body: UpdateProjectCommand
+        body: UpdateProjectCommand,
       ): Promise<ApiResponse<Result<boolean>>> => {
         return patch(
           `${getBaseUrl()}${getContext()}/project/${projectId}`,
-          body
+          body,
         );
       },
     },
@@ -343,21 +365,21 @@ export const getAPI = () => {
       pageSize,
     }: Page): Promise<ApiResponse<PagedResult<UserResponse>>> => {
       return get(
-        `${getBaseUrl()}${getContext()}/user?pageNumber=${pageNumber}&pageSize=${pageSize}`
+        `${getBaseUrl()}${getContext()}/user?pageNumber=${pageNumber}&pageSize=${pageSize}`,
       );
     },
     /**
      * Should be called from server-side only after first login with external IDP
      */
     syncExternalUser: async (
-      externalUserId: string
+      externalUserId: string,
     ): Promise<ApiResponse<void>> => {
       return post(
         `${getBaseUrl()}/api/user/external`,
         {
           externalUserId,
         },
-        headers
+        headers,
       );
     },
   };

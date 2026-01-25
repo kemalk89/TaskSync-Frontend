@@ -259,14 +259,13 @@ export const ProjectBacklog = ({ project }: Props) => {
       </div>
       <div className="mb-4">
         <h3>Nächster Sprint</h3>
-        {!draftBoard ||
-          (draftBoard?.tickets.length === 0 && (
-            <Alert variant="info">
-              <IconInfoCircle /> Es sind noch keine Tickets eingeplant für das
-              nächste Sprint eingeplant. Tickets können per Drag&Drop in diesen
-              Abschnitt gezogen werden.
-            </Alert>
-          ))}
+        {(!draftBoard || draftBoard?.tickets.length === 0) && (
+          <Alert variant="info">
+            <IconInfoCircle /> Es sind noch keine Tickets eingeplant für das
+            nächste Sprint eingeplant. Tickets können per Drag&Drop in diesen
+            Abschnitt gezogen werden.
+          </Alert>
+        )}
 
         <div>
           <TicketListSortable

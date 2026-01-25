@@ -35,7 +35,14 @@ export const NewTicketDialog = ({ buttonProps = {} }: Props) => {
     }
 
     const data = await getAPI().saveTicket(cmd);
-    newToast({ type: "success", msg: "Ticket erfolgreich angelegt" });
+    if (data.status === "error") {
+      newToast({
+        type: "error",
+        msg: `Ticket konnte nicht angelegt werden. Fehlercode: ${data.statusCode}`,
+      });
+    } else {
+      newToast({ type: "success", msg: "Ticket erfolgreich angelegt" });
+    }
     setDialogOpen(false);
 
     queryClient?.invalidateQueries({

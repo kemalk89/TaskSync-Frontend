@@ -71,12 +71,12 @@ export interface PagedResult<T> {
   items: T[];
 }
 
-export interface SprintResponse {
-  id: string;
+export interface BoardResponse {
+  id?: number;
   name: string;
   startDate: string;
   endDate: string;
-  isActive: boolean;
+  isActive?: boolean;
   tickets: TicketResponse[];
 }
 

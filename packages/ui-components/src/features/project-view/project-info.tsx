@@ -8,16 +8,17 @@ type Props = {
 };
 
 export const ProjectInfo = ({ project }: Props) => {
-  const { mutation, queryById } = useProjectApi({
-    enabledQueryById: true,
+  const { updateProject, fetchProjectById } = useProjectApi();
+
+  const { isPending, isSuccess, mutate } = updateProject({
     projectId: project?.id,
-    onUpdateProjectSuccess: () => {
-      reloadProject();
-    },
+    onSuccessHandler: () => reloadProject(),
   });
 
-  const { mutate: updateProject, isPending, isSuccess } = mutation;
-  const { data: projectResult, refetch: reloadProject } = queryById;
+  const { data: projectResult, refetch: reloadProject } = fetchProjectById(
+    true,
+    project?.id,
+  );
 
   return projectResult?.data ? (
     <>
@@ -30,7 +31,7 @@ export const ProjectInfo = ({ project }: Props) => {
         placeholder="Noch keine Beschreibung vorhanden. Hier klicken, um eine Beschreibung zu schreiben."
         content={projectResult.data.description}
         onSubmit={(newContent) =>
-          updateProject({
+          mutate({
             description: JSON.stringify(newContent),
           })
         }

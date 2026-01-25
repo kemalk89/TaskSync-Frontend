@@ -6,11 +6,11 @@ export const TabContentActiveSprint = () => {
   return (
     <Alert variant="info">
       <p>
-        <IconInfoCircle /> Zur Zeit läuft kein aktiver Sprint.
+        <IconInfoCircle /> Zur Zeit gibt es kein aktives Board.
       </p>
       <p>
         Bitte zum Reiter <Link href="?tab=backlog">Backlog</Link> wechseln, um
-        einen Sprint zu planen und zu starten.
+        einen Board zu planen und zu aktivieren.
       </p>
     </Alert>
   );

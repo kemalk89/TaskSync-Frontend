@@ -19,9 +19,11 @@ import {
 } from "../../components/drag-and-drop/drag-and-drop";
 
 export const TicketListSortable = ({
+  listKey,
   tickets,
   onDrop,
 }: {
+  listKey: string;
   tickets: TicketResponse[];
   onDrop: (e: DragEvent<HTMLDivElement>, index: number) => void;
 }) => {
@@ -35,10 +37,14 @@ export const TicketListSortable = ({
     }
   };
 
+  if (tickets.length === 0) {
+    return <DroppableSlot onDrop={(e) => onDrop(e, 0)} />;
+  }
+
   return (
     <>
       {tickets.map((ticket, index) => (
-        <div key={`row-${ticket.id}`}>
+        <div key={`${listKey}-row-${ticket.id}`}>
           {index === 0 && <DroppableSlot onDrop={(e) => onDrop(e, index)} />}
           <Card body bg="light" border="dark" className={styles.card}>
             <div className="d-flex">

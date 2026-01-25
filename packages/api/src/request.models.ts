@@ -19,7 +19,7 @@ export type UpdateTicketCommand = Partial<CreateTicketCommand> & {
   statusId?: number;
 };
 
-export type ReorderBacklogTicketsCommand = Array<{
+export type ReorderTicketsCommand = Array<{
   ticketId: number;
   position: number;
 }>;

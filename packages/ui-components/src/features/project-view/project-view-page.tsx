@@ -24,16 +24,16 @@ export const ProjectViewPage = ({ projectId }: Props) => {
   const searchParams = useSearchParams();
   const activeTab = searchParams.get("tab") || TAB_BOARD;
 
-  const { mutation, queryById } = useProjectApi({
-    enabledQueryById: true,
-    projectId,
-    onUpdateProjectSuccess: () => {
-      reloadProject();
-    },
-  });
+  const { updateProject, fetchProjectById } = useProjectApi();
 
-  const { mutate: updateProject, isPending, isSuccess } = mutation;
-  const { data: projectResult, refetch: reloadProject } = queryById;
+  const { mutate, isPending, isSuccess } = updateProject({
+    projectId,
+    onSuccessHandler: () => reloadProject(),
+  });
+  const { data: projectResult, refetch: reloadProject } = fetchProjectById(
+    true,
+    projectId,
+  );
 
   return (
     <>
@@ -43,7 +43,7 @@ export const ProjectViewPage = ({ projectId }: Props) => {
         validationMessage="Geben Sie bitte ein Titel ein."
         isSubmitting={isPending}
         isSuccess={isSuccess}
-        onSubmit={(newTitle) => updateProject({ title: newTitle })}
+        onSubmit={(newTitle) => mutate({ title: newTitle })}
       />
       <ul className="nav nav-underline mb-4">
         <li className="nav-item">
@@ -59,7 +59,7 @@ export const ProjectViewPage = ({ projectId }: Props) => {
             className={`nav-link ${activeTab === TAB_BOARD ? "active" : ""}`}
             href={`?tab=${TAB_BOARD}`}
           >
-            Aktiver Sprint
+            Aktives Board
           </Link>
         </li>
         <li className="nav-item">

@@ -1,7 +1,7 @@
 import {
   CreateProjectRequest,
   CreateTicketCommand,
-  ReorderBacklogTicketsCommand,
+  ReorderTicketsCommand,
   UpdateProjectCommand,
   UpdateTicketCommand,
 } from "./request.models";
@@ -9,7 +9,7 @@ import {
   PagedResult,
   ProjectResponse,
   ResultResponse,
-  SprintResponse,
+  BoardResponse,
   TicketCommentResponse,
   TicketResponse,
   TicketStatusModel,
@@ -264,7 +264,7 @@ export const getAPI = () => {
     },
     fetchDraftSprint: async (
       projectId: number,
-    ): Promise<ApiResponse<ResultResponse<SprintResponse>>> => {
+    ): Promise<ApiResponse<ResultResponse<BoardResponse>>> => {
       return get(
         `${getBaseUrl()}${getContext()}/Project/${projectId}/sprint/draft`,
       );
@@ -302,7 +302,7 @@ export const getAPI = () => {
         sprintId: number,
         ticketId: number,
         newPosition: number,
-      ) => {
+      ): Promise<ApiResponse<Result<void>>> => {
         if (!projectId) {
           throw "No projectId defined";
         }
@@ -310,15 +310,16 @@ export const getAPI = () => {
           `${getBaseUrl()}${getContext()}/project/${projectId}/sprint/${sprintId}/ticket/${ticketId}?newPosition=${newPosition}`,
         );
       },
-      reorderBacklogTickets: async (
+      reorderBoardTickets: async (
         projectId: number,
-        command: ReorderBacklogTicketsCommand,
+        boardId: number,
+        command: ReorderTicketsCommand,
       ): Promise<ApiResponse<TicketCommentResponse>> => {
         if (!projectId) {
           throw "No projectId defined";
         }
         return post(
-          `${getBaseUrl()}${getContext()}/project/${projectId}/backlog/reorder`,
+          `${getBaseUrl()}${getContext()}/project/${projectId}/board/${boardId}/reorder`,
           command,
         );
       },

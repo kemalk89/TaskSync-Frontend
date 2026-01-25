@@ -1,20 +1,13 @@
-import {
-  getAPI,
-  ProjectResponse,
-  SprintResponse,
-  TicketResponse,
-} from "@app/api";
+import { ProjectResponse, BoardResponse, TicketResponse } from "@app/api";
 import { useSearchParams } from "next/navigation";
 import { Alert } from "react-bootstrap";
 import { NewTicketDialog } from "../tickets/new-ticket-dialog";
 import { TicketsSearchBar } from "../tickets-search-bar/tickets-search-bar";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { QUERY_KEY_PREFIX_FETCH_TICKETS } from "../constants";
 import { IconInfoCircle } from "../../icons/icons";
 
 import { useState } from "react";
-import { ReorderBacklogTicketsCommand } from "../../../../api/src/request.models";
 import { TicketListSortable } from "./ticketlist-sortable";
+import { useProjectApi } from "../project-hooks/useProjectApi";
 
 type Props = {
   project?: ProjectResponse;
@@ -24,62 +17,35 @@ export const ProjectBacklog = ({ project }: Props) => {
   const searchParams = useSearchParams();
   const pageSize = 1000;
   const pageNumber = (searchParams.get("pageNumber") || 1) as number;
-  const [tickets, setTickets] = useState<TicketResponse[]>([]);
-  const [draftSprint, setDraftSprint] = useState<SprintResponse>();
+  const [backlogTickets, setBacklogTickets] = useState<TicketResponse[]>([]);
+  const [draftBoard, setDraftBoard] = useState<BoardResponse>();
+
+  const {
+    fetchBacklogTickets,
+    fetchDraftBoard,
+    getReorderBoardTicketsMutation,
+    getAssignTicketToDraftBoardMutation,
+  } = useProjectApi();
 
   // Queries
-  useQuery({
+  fetchBacklogTickets({
     enabled: !!project,
-    queryKey: [QUERY_KEY_PREFIX_FETCH_TICKETS, { pageSize, pageNumber }],
-    queryFn: async () => {
-      const response = await getAPI().fetchBacklogTickets(project!.id);
-
-      setTickets(response.data ?? []);
-      return response.data;
-    },
+    projectId: project?.id,
+    page: { pageSize, pageNumber },
+    onSuccess: (data) => setBacklogTickets(data ?? []),
   });
 
-  useQuery({
+  fetchDraftBoard({
     enabled: !!project,
-    queryKey: [QUERY_KEY_PREFIX_FETCH_TICKETS, "fetchDraftSprint"],
-    queryFn: async () => {
-      const response = await getAPI().fetchDraftSprint(project!.id);
-
-      setDraftSprint(response.data?.value);
-      return response.data;
-    },
+    projectId: project?.id,
+    onSuccess: (sprint?: BoardResponse) => setDraftBoard(sprint),
   });
 
   // Mutations
-  const reorderBacklogTickets = useMutation({
-    mutationFn: (command: {
-      projectId: number;
-      ticketOrder: ReorderBacklogTicketsCommand;
-    }) => {
-      return getAPI().post.reorderBacklogTickets(
-        command.projectId,
-        command.ticketOrder,
-      );
-    },
-  });
+  const assignTicketToDraftBoard = getAssignTicketToDraftBoardMutation();
+  const reorderBoardTickets = getReorderBoardTicketsMutation();
 
-  const assignTicketToDraftSprint = useMutation({
-    mutationFn: (command: {
-      projectId: number;
-      sprintId?: number;
-      ticketId: number;
-      newPosition?: number;
-    }) => {
-      return getAPI().post.assignTicketToSprint(
-        command.projectId,
-        command.sprintId ?? 0,
-        command.ticketId,
-        command.newPosition ?? 1,
-      );
-    },
-  });
-
-  if (!tickets) {
+  if (!backlogTickets) {
     return (
       <div
         style={{
@@ -94,54 +60,107 @@ export const ProjectBacklog = ({ project }: Props) => {
     );
   }
 
-  const changeOrderOfTicketsInSprint = (
-    ticketId: string,
+  const moveTicket = (
+    ticketId: number,
     newPosition: number,
+    targetBoard: "backlog" | "draftBoard",
   ) => {
-    console.log("Added ticket to sprint", ticketId, newPosition);
-    assignTicketToDraftSprint.mutate({
-      projectId: project!.id,
-      ticketId: Number(ticketId),
-    });
-  };
-
-  const changeOrderOfTicketsInBacklog = (
-    ticketId: string,
-    newPosition: number,
-  ) => {
-    const currentTicketIndex = tickets.findIndex(
-      (t) => parseInt(t.id) === parseInt(ticketId),
+    let sourceBoard: "draftBoard" | "backlog" | undefined;
+    // is ticket in backlog tickets or draft board?
+    const ticketPositionInBacklog = backlogTickets.findIndex(
+      (t) => Number(t.id) === ticketId,
     );
-    // no ticket found by id -> exit
-    if (currentTicketIndex === -1) {
+
+    let ticketPositionInDraftBoard = draftBoard?.tickets.findIndex(
+      (t) => Number(t.id) === ticketId,
+    );
+    ticketPositionInDraftBoard = ticketPositionInDraftBoard ?? -1;
+
+    // Validation: no ticket found by id -> exit
+    if (ticketPositionInBacklog === -1 && ticketPositionInDraftBoard === -1) {
       return;
     }
 
-    // position of the ticket not changed at all -> exit
-    if (currentTicketIndex === newPosition) {
+    // Get source board
+    if (ticketPositionInBacklog > -1) {
+      sourceBoard = "backlog";
+    } else if (ticketPositionInDraftBoard > -1) {
+      sourceBoard = "draftBoard";
+    }
+
+    // Validation: ticket position has not changed at all -> exit
+    if (
+      sourceBoard === targetBoard &&
+      ticketPositionInBacklog > -1 &&
+      ticketPositionInBacklog === newPosition
+    ) {
+      return;
+    }
+    if (
+      sourceBoard === targetBoard &&
+      ticketPositionInDraftBoard > -1 &&
+      ticketPositionInDraftBoard === newPosition
+    ) {
       return;
     }
 
     // edge case
-    const moveDown = currentTicketIndex < newPosition;
-    if (moveDown && currentTicketIndex + 1 === newPosition) {
+    let moveDown =
+      sourceBoard === targetBoard &&
+      ticketPositionInDraftBoard !== -1 &&
+      ticketPositionInDraftBoard < newPosition;
+    if (moveDown && ticketPositionInDraftBoard + 1 === newPosition) {
       return;
     }
 
-    const targetTicket = tickets.at(currentTicketIndex);
+    moveDown =
+      sourceBoard === targetBoard &&
+      ticketPositionInBacklog !== -1 &&
+      ticketPositionInBacklog < newPosition;
+    if (moveDown && ticketPositionInBacklog + 1 === newPosition) {
+      return;
+    }
+
+    // Get ticket
+    let targetTicket: TicketResponse | undefined;
+
+    if (ticketPositionInBacklog > -1) {
+      targetTicket = backlogTickets.at(ticketPositionInBacklog);
+    } else if (ticketPositionInDraftBoard > -1) {
+      targetTicket = draftBoard?.tickets.at(ticketPositionInDraftBoard);
+    }
+
     if (!targetTicket) {
       return;
     }
 
+    let currentTicketIndex = -1;
+    let sourceList: TicketResponse[] = [];
+    if (sourceBoard === "backlog") {
+      sourceList = backlogTickets;
+      currentTicketIndex = ticketPositionInBacklog;
+    } else if (sourceBoard === "draftBoard") {
+      sourceList = draftBoard?.tickets ?? [];
+      currentTicketIndex = ticketPositionInDraftBoard;
+    }
+
+    let targetList: TicketResponse[] = [];
+    if (targetBoard === "backlog") {
+      targetList = backlogTickets;
+    } else if (targetBoard === "draftBoard") {
+      targetList = draftBoard?.tickets ?? [];
+    }
+
+    // Put ticket in target board
     let newList: TicketResponse[] = [];
-    const movedToBottomOfList = newPosition === tickets.length;
+    const movedToBottomOfList = newPosition === targetList.length;
     if (movedToBottomOfList) {
-      newList = [...tickets];
+      newList = [...targetList];
       newList.splice(currentTicketIndex, 1);
       newList.push(targetTicket);
     } else {
-      for (let i = 0; i < tickets.length; i++) {
-        if (tickets.at(i)?.id === targetTicket.id) {
+      for (let i = 0; i < targetList.length; i++) {
+        if (targetList.at(i)?.id === targetTicket.id) {
           continue;
         }
 
@@ -149,15 +168,73 @@ export const ProjectBacklog = ({ project }: Props) => {
           newList.push(targetTicket);
         }
 
-        newList.push(tickets[i] as TicketResponse);
+        newList.push(targetList[i] as TicketResponse);
       }
     }
 
-    setTickets(newList);
+    // Remove ticket from source board
+    sourceList = sourceList.filter((ticket) => Number(ticket.id) !== ticketId);
 
-    reorderBacklogTickets.mutate({
+    return {
+      sourceList,
+      targetList: newList,
+    };
+  };
+
+  const changeOrderOfTicketsInDraftBoard = (
+    ticketId: string,
+    newPosition: number,
+  ) => {
+    const newList = moveTicket(Number(ticketId), newPosition, "draftBoard");
+    if (!newList) {
+      return;
+    }
+
+    // update list of tickets in draftSprint
+    const newDraftBoard: BoardResponse | undefined = draftBoard
+      ? { ...draftBoard, tickets: newList?.targetList ?? [] }
+      : { name: "", startDate: "", endDate: "", tickets: [] };
+    setDraftBoard(newDraftBoard);
+
+    // update list of tickets in backlog
+    setBacklogTickets(newList?.sourceList ?? []);
+
+    assignTicketToDraftBoard.mutate({
       projectId: project!.id,
-      ticketOrder: newList.map((ticket, index) => ({
+      ticketId: Number(ticketId),
+    });
+
+    reorderBoardTickets.mutate({
+      projectId: project!.id,
+      boardId: draftBoard?.id,
+      ticketOrder: (newList?.targetList ?? []).map((ticket, index) => ({
+        ticketId: parseInt(ticket.id),
+        position: index,
+      })),
+    });
+  };
+
+  const changeOrderOfTicketsInBacklog = (
+    ticketId: string,
+    newPosition: number,
+  ) => {
+    const newList = moveTicket(Number(ticketId), newPosition, "backlog");
+    if (!newList) {
+      return;
+    }
+
+    // update list of tickets in backlog
+    setBacklogTickets(newList?.targetList ?? []);
+
+    // update list of tickets in draftSprint
+    const newDraftBoard: BoardResponse | undefined = draftBoard
+      ? { ...draftBoard, tickets: newList?.sourceList ?? [] }
+      : { name: "", startDate: "", endDate: "", tickets: [] };
+    setDraftBoard(newDraftBoard);
+
+    reorderBoardTickets.mutate({
+      projectId: project!.id,
+      ticketOrder: (newList?.targetList ?? []).map((ticket, index) => ({
         ticketId: parseInt(ticket.id),
         position: index,
       })),
@@ -182,19 +259,21 @@ export const ProjectBacklog = ({ project }: Props) => {
       </div>
       <div className="mb-4">
         <h3>Nächster Sprint</h3>
-        {draftSprint?.tickets.length === 0 && (
-          <Alert variant="info">
-            <IconInfoCircle /> Es sind noch keine Tickets eingeplant für das
-            nächste Sprint eingeplant. Tickets können per Drag&Drop in diesen
-            Abschnitt gezogen werden.
-          </Alert>
-        )}
+        {!draftBoard ||
+          (draftBoard?.tickets.length === 0 && (
+            <Alert variant="info">
+              <IconInfoCircle /> Es sind noch keine Tickets eingeplant für das
+              nächste Sprint eingeplant. Tickets können per Drag&Drop in diesen
+              Abschnitt gezogen werden.
+            </Alert>
+          ))}
 
         <div>
           <TicketListSortable
-            tickets={draftSprint?.tickets ?? []}
+            listKey="draftBoard"
+            tickets={(draftBoard && draftBoard.tickets) ?? []}
             onDrop={(e, index) =>
-              changeOrderOfTicketsInSprint(
+              changeOrderOfTicketsInDraftBoard(
                 e.dataTransfer.getData("text"),
                 index,
               )
@@ -205,7 +284,8 @@ export const ProjectBacklog = ({ project }: Props) => {
       <h3>Backlog</h3>
 
       <TicketListSortable
-        tickets={tickets}
+        listKey="backlog"
+        tickets={backlogTickets}
         onDrop={(e, index) =>
           changeOrderOfTicketsInBacklog(e.dataTransfer.getData("text"), index)
         }

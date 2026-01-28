@@ -50,6 +50,7 @@ export const TicketListSortable = ({
             <div className="d-flex">
               <div className="d-flex align-items-center">
                 <Draggable
+                  testId={`draggable-ticket-${index}`}
                   className={styles.draggableControl}
                   itemIdentifier={ticket.id}
                   onDragEnd={(e) => {

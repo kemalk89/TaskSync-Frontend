@@ -1,6 +1,7 @@
 import { DragEvent, DragEventHandler, PropsWithChildren } from "react";
 
 type DraggableProps = {
+  testId?: string;
   className?: string;
   itemIdentifier: string;
   dragImageBuilder: (draggableEl: HTMLElement) => HTMLElement | undefined;
@@ -10,6 +11,7 @@ type DraggableProps = {
 
 export function Draggable(props: DraggableProps) {
   const {
+    testId,
     className,
     children,
     itemIdentifier,
@@ -19,6 +21,7 @@ export function Draggable(props: DraggableProps) {
   } = props;
   return (
     <div
+      {...(testId ? { "data-testid": testId } : {})}
       className={className}
       draggable
       onDragEnd={(e) => {
@@ -61,7 +64,7 @@ export const DroppableSlot = (props: {
 }) => {
   return (
     <div
-      className="rounded-2"
+      className="droppable rounded-2"
       style={{ height: "8px" }}
       onDrop={(e) => {
         const element = e.target as HTMLElement;

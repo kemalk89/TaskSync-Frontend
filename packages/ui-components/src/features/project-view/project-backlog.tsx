@@ -282,6 +282,19 @@ export const ProjectBacklog = ({ project }: Props) => {
       </div>
       <h3>Backlog</h3>
 
+      {backlogTickets.length === 0 && (
+        <Alert variant="info">
+          <div className="d-flex gap-2 align-items-center">
+            <div>
+              <IconInfoCircle /> Das Backlog ist leer. Gleich Ticket anlegen:
+            </div>
+            <div>
+              <NewTicketDialog buttonProps={{ size: "sm" }} />
+            </div>
+          </div>
+        </Alert>
+      )}
+
       <TicketListSortable
         listKey="backlog"
         tickets={backlogTickets}

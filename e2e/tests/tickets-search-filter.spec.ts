@@ -4,8 +4,6 @@ import { loginCommand, selectDropdownOption } from "./commands/commands";
 test("Create tickets and filter tickets by assignees", async ({ page }) => {
   await page.goto("http://localhost:3000");
 
-  await loginCommand(page);
-
   await page.getByRole("link", { name: "Tickets" }).click();
   // Create new ticket for Deniz
   await page.getByRole("button", { name: "Ticket anlegen" }).click();

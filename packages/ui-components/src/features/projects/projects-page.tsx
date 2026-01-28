@@ -66,7 +66,7 @@ export const ProjectsPage = () => {
             onSubmitFinished={(result) => {
               setIsSubmitting(false);
               if (result.data?.id) {
-                router.push(`/projects/${result.data.id}?tab=info`);
+                router.push(`/projects/${result.data.id}?tab=projectInfo`);
                 newToast({
                   msg: "Projekt erfolgreich angelegt",
                   type: "success",

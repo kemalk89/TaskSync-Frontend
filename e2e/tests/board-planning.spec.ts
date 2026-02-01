@@ -59,28 +59,28 @@ test("create new project and plan a board", async ({ page, request }) => {
     // Drag 1st ticket to 1st dropable -> order should not change
     await page
       .getByTestId("draggable-ticket-0")
-      .dragTo(page.locator(".droppable").first());
+      .dragTo(page.locator("div[id='backlog'] .droppable").first());
 
     await ensureOrder([ticket1, ticket2, ticket3]);
 
     // Drag last ticket to last dropable -> order should not change
     await page
       .getByTestId("draggable-ticket-2")
-      .dragTo(page.locator(".droppable").last());
+      .dragTo(page.locator("div[id='backlog'] .droppable").last());
 
     await ensureOrder([ticket1, ticket2, ticket3]);
 
     // Drag 1st ticket to last dropable
     await page
       .getByTestId("draggable-ticket-0")
-      .dragTo(page.locator(".droppable").last());
+      .dragTo(page.locator("div[id='backlog'] .droppable").last());
 
     await ensureOrder([ticket2, ticket3, ticket1]);
 
     // Drag #2 ticket to first dropable
     await page
       .getByTestId("draggable-ticket-1")
-      .dragTo(page.locator(".droppable").first());
+      .dragTo(page.locator("div[id='backlog'] .droppable").first());
 
     await ensureOrder([ticket3, ticket2, ticket1]);
   });

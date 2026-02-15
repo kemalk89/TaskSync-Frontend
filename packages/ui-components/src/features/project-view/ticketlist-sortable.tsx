@@ -42,9 +42,9 @@ export const TicketListSortable = ({
   }
 
   return (
-    <>
+    <div id={listKey}>
       {tickets.map((ticket, index) => (
-        <div key={`${listKey}-row-${ticket.id}`} id={listKey}>
+        <div key={`${listKey}-row-${ticket.id}`}>
           {index === 0 && <DroppableSlot onDrop={(e) => onDrop(e, index)} />}
           <Card body bg="light" border="dark" className={styles.card}>
             <div className="d-flex">
@@ -140,6 +140,6 @@ export const TicketListSortable = ({
           <DroppableSlot onDrop={(e) => onDrop(e, index + 1)} />
         </div>
       ))}
-    </>
+    </div>
   );
 };

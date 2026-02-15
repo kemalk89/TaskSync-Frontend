@@ -1,21 +1,9 @@
-import { Button } from "react-bootstrap";
-import { signIn } from "../auth";
+import Link from "next/link";
 
-type Props = {
-  provider: "auth0";
-};
-
-export function SignIn({ provider }: Props) {
+export function SignIn() {
   return (
-    <form
-      action={async () => {
-        "use server";
-        await signIn(provider);
-      }}
-    >
-      {provider === "auth0" ? (
-        <Button type="submit">Signin with Auth0</Button>
-      ) : null}
-    </form>
+    <Link className="btn btn-primary" href="/api/auth/signin">
+      Sign In
+    </Link>
   );
 }

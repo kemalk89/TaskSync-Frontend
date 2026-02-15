@@ -24,7 +24,7 @@ export async function NavMenu() {
         <Link href="/" passHref legacyBehavior>
           <NavbarBrand>TaskSync</NavbarBrand>
         </Link>
-        {!session?.user && <SignIn provider="auth0" />}
+        {!session?.user && <SignIn />}
         {session?.user && (
           <>
             <NavbarToggle aria-controls="basic-navbar-nav" />

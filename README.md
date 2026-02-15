@@ -2,26 +2,39 @@
 
 [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=kemalk89_TaskSync-Frontend)](https://sonarcloud.io/summary/new_code?id=kemalk89_TaskSync-Frontend)
 
+# TaskSync
+
+A lightweight task management solution for software development teams. This repository contains the frontend part of the application. For the backend services, refer to the companion repository: https://github.com/kemalk89/TaskSync.
+
+---
+
 # Development
-1. Start the application ```npm run dev```
+
+1. Start the application `npm run dev`
 2. Open the application: http://localhost:3000/
 
-# Build
+## Build
+
 Always run a build before pushing code.
+
 ```sh
 npm run build
 ```
 
-# E2E Testing
-## Prerequisites
+## E2E Testing
+
+### Prerequisites
+
 Prepare the environment variables in your .env.local.
 
 Ensure, the API is running:
+
 ```sh
 sh e2e/start_backend.sh
 ```
 
-## Run tests
+### Run tests
+
 ```sh
 npm run test:e2e
 # with UI

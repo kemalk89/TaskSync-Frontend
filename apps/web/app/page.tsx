@@ -18,7 +18,7 @@ export default async function Home() {
               </ul>
             </div>
           ) : (
-            <SignIn provider="auth0" />
+            <SignIn />
           )}
         </div>
       </main>

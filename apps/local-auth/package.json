@@ -1,0 +1,13 @@
+{
+  "name": "@app/local-auth",
+  "scripts": {
+    "dev": "node --env-file=./.env src/app.js",
+    "build": ""
+  },
+  "dependencies": {
+    "express": "5.2.1",
+    "express-rate-limit": "8.2.1",
+    "pg": "8.18.0",
+    "jsonwebtoken": "9.0.3"
+  }
+}

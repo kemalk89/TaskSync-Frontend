@@ -10,6 +10,7 @@
   "scripts": {
     "build": "turbo build",
     "dev": "npm run -w @app/app dev",
+    "dev:local-auth": "npm run -w @app/local-auth dev",
     "dev:fake-auth": "npm run -w @app/fake-auth dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",

@@ -7,7 +7,7 @@ test.use({ storageState: { cookies: [], origins: [] } });
 test("accessing projects should be not possible", async ({ page }) => {
   await page.goto("http://localhost:3000/projects");
   await expect(
-    page.getByRole("main").getByRole("button", { name: "Signin with Auth0" }),
+    page.getByRole("main").getByRole("link", { name: "Sign In" }),
   ).toBeVisible();
 });
 

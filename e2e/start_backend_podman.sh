@@ -19,6 +19,7 @@ podman run -d --name tasksync-backend \
     -e Auth__MachineToMachineApplication__Domain=http://host.docker.internal:3002 \
     -e Auth__MachineToMachineApplication__ClientId=tasksync_e2e \
     -e Auth__MachineToMachineApplication__ClientSecret=any \
+    -e LocalAuth__JwtSecret=any \
     -e ASPNETCORE_ENVIRONMENT=Development \
     -e ConnectionStrings__db="Host=host.docker.internal;Port=5432;Database=postgres;Username=postgres;Password=postgres" \
     -p 8080:8080 \

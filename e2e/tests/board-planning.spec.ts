@@ -15,8 +15,6 @@ test("create new project and plan a board", async ({ page, request }) => {
   });
 
   await test.step("Goto test project and select tab Backlog", async () => {
-    await page.getByRole("heading", { name: "E2E Test Projekt" }).click();
-
     await page.getByRole("link", { name: "Backlog" }).click();
 
     await expect(

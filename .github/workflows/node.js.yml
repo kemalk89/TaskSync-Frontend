@@ -54,7 +54,7 @@ jobs:
         docker run -d --name ${{ env.BACKEND_CONTAINER }} \
           -e Auth__MetadataAddress=http://host.docker.internal:3002/.well-known/openid-configuration \
           -e Auth__Authority=http://host.docker.internal:3002 \
-          -e Auth__Audience=https://tasksync.api.de/api \
+          -e Auth__ValidIssuer=http://localhost:3002/ \
           -e Auth__MachineToMachineApplication__Domain=http://host.docker.internal:3002 \
           -e Auth__MachineToMachineApplication__ClientId=tasksync_e2e \
           -e Auth__MachineToMachineApplication__ClientSecret=any \

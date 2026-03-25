@@ -93,7 +93,6 @@ jobs:
     - name: Generate AUTH_SECRET
       run: |
         echo "AUTH_SECRET=$(openssl rand -base64 32)" >> ./apps/web/.env.test
-      working-directory: apps/web
 
     - name: Run Playwright tests
       run: npx playwright test

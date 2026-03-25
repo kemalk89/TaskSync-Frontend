@@ -23,14 +23,19 @@ npm run build
 
 ## E2E Testing
 
+In the context of E2E testing, we use apps/fake-auth, which is a fake OAuth server. 
+The idea is that Playwright starts both the web application and the fake-auth service, 
+with both running on the host machine. 
+To quickly spin up the backend, use Docker or Podman.
+
 ### Prerequisites
 
-Prepare the environment variables in your .env.local.
+Prepare the environment variables in your apps/web/.env.test.
 
-Ensure, the API is running:
+Ensure, the backend API is running:
 
 ```sh
-sh e2e/start_backend.sh
+sh e2e/start_backend_docker.sh # or sh e2e/start_backend_podman.sh
 ```
 
 ### Run tests

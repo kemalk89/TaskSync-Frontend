@@ -98,13 +98,21 @@ const nextAuthResult = NextAuth({
 
         if (profile?.sub) {
           console.debug("Sync external user");
-          await getAPI()
-            .enableServerMode()
-            .setBaseUrl(process.env.SERVICE_TASKSYNC as string)
-            .setHeaders({
-              Authorization: `Bearer ${account.access_token}`,
-            })
-            .syncExternalUser(profile.sub);
+          try {
+            await getAPI()
+              .enableServerMode()
+              .setBaseUrl(process.env.SERVICE_TASKSYNC as string)
+              .setHeaders({
+                Authorization: `Bearer ${account.access_token}`,
+              })
+              .syncExternalUser(profile.sub);
+          } catch (err) {
+            console.error(
+              "Sync external user failed. Authentication failed.",
+              err,
+            );
+            throw "Sync external user failed. Authentication failed";
+          }
         } else {
           throw "Login with external Identity Provider successful, but no profile given!";
         }

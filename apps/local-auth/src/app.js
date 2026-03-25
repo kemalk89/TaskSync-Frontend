@@ -18,7 +18,7 @@ db.init().then(() => {
   app.use("/", signinRouter);
   app.use("/", signupRouter);
 
-  const port = 3002;
+  const port = process.env.PORT ?? 3003;
   app.set("port", port);
 
   var server = http.createServer(app);

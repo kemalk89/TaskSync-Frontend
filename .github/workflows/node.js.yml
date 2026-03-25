@@ -77,22 +77,11 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
-    - name: Generate .env.test
-      run: |
-        mv ./apps/web/.env.test.template ./apps/web/.env.test
-
-        sed -i "s|SERVICE_TASKSYNC='http://localhost:7190'|SERVICE_TASKSYNC='http://localhost:8080'|" ./apps/web/.env.test
-        echo "Updated SERVICE_TASKSYNC port to 8080 in .env.test:"
-        grep "SERVICE_TASKSYNC" ./apps/web/.env.test
-
-        if grep -q "^AUTH_SECRET" ./apps/web/.env.test; then
-          sed -i '/^AUTH_SECRET/d' ./apps/web/.env.test
-          echo "Removed AUTH_SECRET line from .env.test"
-        fi
-
     - name: Generate AUTH_SECRET
       run: |
-        echo "AUTH_SECRET=$(openssl rand -base64 32)" >> ./apps/web/.env.test
+        echo "AUTH_SECRET=$(openssl rand -base64 32)" > ./apps/web/.env.test
+        echo "Added AUTH_SECRET in .env.test:"
+        grep "AUTH_SECRET" ./apps/web/.env.test
 
     - name: Run Playwright tests
       run: npx playwright test

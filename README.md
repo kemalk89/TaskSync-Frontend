@@ -30,7 +30,7 @@ To quickly spin up the backend, use Docker or Podman.
 
 ### Prerequisites
 
-Prepare the environment variables in your apps/web/.env.test.
+Prepare the environment variables in your `apps/web/.env.test`.
 
 Ensure, the backend API is running:
 

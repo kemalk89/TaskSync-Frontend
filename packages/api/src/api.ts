@@ -57,33 +57,41 @@ const post = async <T>(
   headers: Record<string, string> = {},
 ): Promise<ApiResponse<T>> => {
   console.error("> > > Debug", url);
-  const res = await fetch(url, {
-    body: JSON.stringify(body),
-    method: "POST",
-    headers: {
-      ...headers,
-      "content-type": "application/json",
-    },
-  });
+  try {
+    const res = await fetch(url, {
+      body: JSON.stringify(body),
+      method: "POST",
+      headers: {
+        ...headers,
+        "content-type": "application/json",
+      },
+    });
 
-  console.error("> > > Debug");
+    console.error("> > > Debug");
 
-  if (!res.ok) {
+    if (!res.ok) {
+      return {
+        status: "error",
+        statusCode: res.status,
+        message: `Network error on URL ${url}: ${res.status}.`,
+      };
+    }
+
+    // Check if response contains data before parsing
+    const responseText = await res.text();
+    const data = responseText ? JSON.parse(responseText) : null;
+    return {
+      status: "success",
+      statusCode: res.status,
+      data,
+    };
+  } catch (err) {
+    console.log("> > > Error", err);
     return {
       status: "error",
-      statusCode: res.status,
-      message: `Network error on URL ${url}: ${res.status}.`,
+      statusCode: 500,
     };
   }
-
-  // Check if response contains data before parsing
-  const responseText = await res.text();
-  const data = responseText ? JSON.parse(responseText) : null;
-  return {
-    status: "success",
-    statusCode: res.status,
-    data,
-  };
 };
 
 const get = async <T>(

@@ -49,6 +49,10 @@ jobs:
       run: docker build -t ${{ env.BACKEND_IMAGE }} -f Dockerfile .
       working-directory: dotnet-backend
 
+    - name: Debug Show Files
+      run: ls -la
+      working-directory: dotnet-backend
+
     - name: Start .NET Backend with Docker
       run: |
         docker run -d --name ${{ env.BACKEND_CONTAINER }} \

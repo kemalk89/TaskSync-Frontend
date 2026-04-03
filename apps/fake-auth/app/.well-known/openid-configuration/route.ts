@@ -13,5 +13,12 @@ export async function GET(request: Request) {
       "http://host.containers.internal:3002/.well-known/jwks.json";
   }
 
+  if (process.env.RESOURCE_SERVER_RUNTIME_ENGINE === "local") {
+    console.log(
+      "The resource server is running on hosts machine: Updating the jwks_uri.",
+    );
+    data["jwks_uri"] = "http://localhost:3002/.well-known/jwks.json";
+  }
+
   return Response.json(data);
 }

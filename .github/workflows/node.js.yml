@@ -49,10 +49,6 @@ jobs:
       run: docker build -t ${{ env.BACKEND_IMAGE }} -f Dockerfile .
       working-directory: dotnet-backend
 
-    - name: Debug Show Files
-      run: ls -la
-      working-directory: dotnet-backend
-
     - name: Start .NET Backend with Docker
       run: |
         docker run -d --name ${{ env.BACKEND_CONTAINER }} \
@@ -84,7 +80,6 @@ jobs:
       run: |
         echo "AUTH_SECRET=$(openssl rand -base64 32)" > ./apps/web/.env.test
         echo "Added AUTH_SECRET in .env.test:"
-        grep "AUTH_SECRET" ./apps/web/.env.test
 
     - name: Run Playwright tests
       run: npx playwright test

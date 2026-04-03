@@ -106,11 +106,21 @@ const nextAuthResult = NextAuth({
                 Authorization: `Bearer ${account.access_token}`,
               })
               .syncExternalUser(profile.sub);
-          } catch (err) {
-            console.error(
-              "Sync external user failed. Authentication failed.",
-              err,
-            );
+          } catch (err: unknown) {
+            if (typeof err === "object" && err !== null && "response" in err) {
+              console.error(
+                "Sync external user failed. Authentication failed. Status:",
+                err?.response,
+                "Error:",
+                err,
+              );
+            } else {
+              console.error(
+                "Sync external user failed. Authentication failed.",
+                err,
+              );
+            }
+
             throw "Sync external user failed. Authentication failed";
           }
         } else {

@@ -86,7 +86,7 @@ jobs:
     - name: Run Playwright tests
       run: npx playwright test
       env:
-        AUTH_USERNAME_PASSWORD_URL=http://localhost:3002/
+        AUTH_USERNAME_PASSWORD_URL: http://localhost:3002/
         AUTH_AUTH0_ISSUER: http://localhost:3002/
         AUTH_AUTH0_TOKEN_ENDPOINT: http://localhost:3002/oauth/token
         AUTH_AUTH0_ID: ${{ secrets.AUTH_AUTH0_ID }}

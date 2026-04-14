@@ -83,7 +83,7 @@ jobs:
         echo "Added AUTH_SECRET in .env.test:"
 
     - name: Wait for backend to be ready
-      run: sleep 10
+      run: sleep 30
 
     - name: Run Playwright tests
       run: npx playwright test

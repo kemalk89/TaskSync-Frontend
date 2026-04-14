@@ -82,6 +82,9 @@ jobs:
         echo "AUTH_SECRET=$(openssl rand -base64 32)" > ./apps/web/.env.test
         echo "Added AUTH_SECRET in .env.test:"
 
+    - name: Wait for backend to be ready
+      run: sleep 10
+
     - name: Run Playwright tests
       run: npx playwright test
       env:

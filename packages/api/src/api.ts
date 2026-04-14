@@ -56,7 +56,6 @@ const post = async <T>(
   body: any = {},
   headers: Record<string, string> = {},
 ): Promise<ApiResponse<T>> => {
-  console.error("> > > Debug", url);
   try {
     const res = await fetch(url, {
       body: JSON.stringify(body),
@@ -66,8 +65,6 @@ const post = async <T>(
         "content-type": "application/json",
       },
     });
-
-    console.error("> > > Debug");
 
     if (!res.ok) {
       return {
@@ -86,7 +83,6 @@ const post = async <T>(
       data,
     };
   } catch (err) {
-    console.log("> > > Error", err);
     return {
       status: "error",
       statusCode: 500,

@@ -96,6 +96,12 @@ jobs:
         AUTH_AUDIENCE: https://tasksync.api.de/api
         NODE_TLS_REJECT_UNAUTHORIZED: 0
         NODE_ENV: development
+
+    - name: Print backend logs
+      if: ${{ always() }}
+      run: |
+        docker logs ${{ env.BACKEND_CONTAINER }} 2>&1 || echo "Container not found"
+
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:

@@ -18,6 +18,9 @@ async function handleResponse(res: Response) {
     .get("content-type")
     ?.includes("application/json");
 
+  const msg = isJsonResponse ? await res.json() : await res.text();
+  console.log("> > > Debug: ", res.status, res.statusText, msg);
+
   // Handle success
   if (isSuccess && res.status === 204) {
     return res;
@@ -41,7 +44,7 @@ async function handleResponse(res: Response) {
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   const session = await auth();
   if (!session?.accessToken) {
@@ -69,7 +72,7 @@ export async function POST(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   const session = await auth();
   if (!session?.accessToken) {
@@ -97,7 +100,7 @@ export async function PATCH(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   const session = await auth();
   if (!session?.accessToken) {
@@ -123,7 +126,7 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   const session = await auth();
   if (!session?.accessToken) {

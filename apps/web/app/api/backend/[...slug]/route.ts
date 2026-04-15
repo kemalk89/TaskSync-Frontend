@@ -18,8 +18,7 @@ async function handleResponse(res: Response) {
     .get("content-type")
     ?.includes("application/json");
 
-  const msg = isJsonResponse ? await res.json() : await res.text();
-  console.log("> > > Debug: ", res.status, res.statusText, msg);
+  console.error("> > > Debug: ", res.status, res.statusText);
 
   // Handle success
   if (isSuccess && res.status === 204) {

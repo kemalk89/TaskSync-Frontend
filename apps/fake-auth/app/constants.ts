@@ -1,11 +1,13 @@
 export const USERS = [
   {
     id: "test-user-id",
+    user_id: "test-user-id",
     name: "Test User",
     email: "test-user-id.e2e@tasksync.test",
   },
   {
     id: "test-user-admin-id",
+    user_id: "test-user-admin-id",
     name: "Test User Admin",
     email: "test-user-admin.e2e@tasksync.test",
   },

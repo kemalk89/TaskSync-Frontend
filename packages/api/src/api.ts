@@ -83,6 +83,7 @@ const post = async <T>(
       data,
     };
   } catch (err) {
+    console.log("> > > Error", err);
     return {
       status: "error",
       statusCode: 500,

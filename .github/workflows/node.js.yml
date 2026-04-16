@@ -82,8 +82,8 @@ jobs:
         echo "AUTH_SECRET=$(openssl rand -base64 32)" > ./apps/web/.env.test
         echo "Added AUTH_SECRET in .env.test:"
 
-    - name: Wait for backend to be ready
-      run: sleep 30
+    # - name: Wait for backend to be ready
+    #  run: sleep 10
 
     - name: Run Playwright tests
       run: npx playwright test
@@ -97,10 +97,10 @@ jobs:
         NODE_TLS_REJECT_UNAUTHORIZED: 0
         NODE_ENV: development
 
-    - name: Print backend logs
-      if: ${{ always() }}
-      run: |
-        docker logs ${{ env.BACKEND_CONTAINER }} 2>&1 || echo "Container not found"
+    # - name: Debugging - Print backend logs
+    #  if: ${{ always() }}
+    #  run: |
+    #    docker logs ${{ env.BACKEND_CONTAINER }} 2>&1 || echo "Container not found"
 
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}

@@ -18,8 +18,6 @@ async function handleResponse(res: Response) {
     .get("content-type")
     ?.includes("application/json");
 
-  console.error("> > > Debug: ", res.status, res.statusText);
-
   // Handle success
   if (isSuccess && res.status === 204) {
     return res;

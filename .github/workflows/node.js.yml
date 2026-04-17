@@ -11,7 +11,7 @@ on:
 
 env:
   # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-  NODE_VERSION: 22.x
+  NODE_VERSION: 24.x
   TURBO_TELEMETRY_DISABLED: 1
   BACKEND_CONTAINER: tasksync-backend
   BACKEND_IMAGE: tasksync-backend
@@ -20,11 +20,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Use Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v5
       with:
         node-version: ${{ env.NODE_VERSION }}
+        package-manager-cache: false
         cache: 'npm'
     - run: npm ci
     - run: npm run build --if-present
@@ -36,7 +37,7 @@ jobs:
     needs: build
     steps:
     - name: Checkout .NET Backend
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: kemalk89/TaskSync
         path: dotnet-backend
@@ -66,11 +67,12 @@ jobs:
           ${{ env.BACKEND_IMAGE }} 
       working-directory: dotnet-backend
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Use Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v5
       with:
-        node-version: ${{ env.node-NODE_VERSION }}
+        node-version: ${{ env.NODE_VERSION }}
+        package-manager-cache: false
         cache: 'npm'
     - name: Install dependencies
       run: npm ci
@@ -102,7 +104,7 @@ jobs:
     #  run: |
     #    docker logs ${{ env.BACKEND_CONTAINER }} 2>&1 || echo "Container not found"
 
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v6
       if: ${{ !cancelled() }}
       with:
         name: playwright-report
@@ -112,7 +114,7 @@ jobs:
     # Cleanup running docker services
     # Checkout .NET Backend again, because files are no longer available
     - name: Again, Checkout .NET Backend
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         repository: kemalk89/TaskSync
         path: dotnet-backend

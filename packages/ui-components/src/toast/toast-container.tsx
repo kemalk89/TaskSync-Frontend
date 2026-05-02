@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { ToastContext } from "./toast-context";
 import Toast from "react-bootstrap/Toast";
 import BsToastContainer from "react-bootstrap/ToastContainer";
@@ -8,6 +8,19 @@ import { IconExclamationCircleFill } from "../icons/icons";
 
 export const ToastContainer = () => {
   const { toastMessages, removeToast } = useContext(ToastContext);
+
+  useEffect(() => {
+    toastMessages.forEach((msg) => {
+      let durationInSeconds = msg.duration ?? 5000;
+      if (durationInSeconds && durationInSeconds > 0) {
+        const timeout = setTimeout(() => {
+          removeToast(msg);
+        }, durationInSeconds);
+
+        return () => clearTimeout(timeout);
+      }
+    });
+  }, [removeToast, toastMessages]);
 
   return (
     <BsToastContainer

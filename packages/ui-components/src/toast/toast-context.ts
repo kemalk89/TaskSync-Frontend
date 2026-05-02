@@ -6,6 +6,7 @@ export type ToastMessage = {
   id?: string;
   msg: string;
   type: "error" | "success";
+  duration?: number;
 };
 
 type ToastContextType = {

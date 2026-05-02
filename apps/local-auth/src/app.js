@@ -7,6 +7,10 @@ var db = require("./db");
 var signupRouter = require("./controllers/signup");
 var signinRouter = require("./controllers/signin");
 
+if (!process.env.API_KEY) {
+  throw new Error("API_KEY is missing");
+}
+
 db.init().then(() => {
   var app = express();
 

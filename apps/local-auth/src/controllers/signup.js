@@ -1,7 +1,11 @@
 var crypto = require("crypto");
 var express = require("express");
 var db = require("./../db");
-const { isNullOrWhiteSpace, hashPassword } = require("./../utils");
+const {
+  isNullOrWhiteSpace,
+  hashPassword,
+  fetchUserByEmail,
+} = require("./../utils");
 
 var router = express.Router();
 
@@ -10,22 +14,32 @@ var router = express.Router();
  */
 router.post("/signup", async (req, res) => {
   console.log("Try to signup new user...");
-  const { username, password } = req.body;
 
-  if (isNullOrWhiteSpace(username) || isNullOrWhiteSpace(password)) {
-    return res
-      .status(400)
-      .send({ error: "Username or password cannot be empty" });
+  if (!req.body) {
+    console.log("No signup data provided");
+    return res.status(400).send({ error: "No signup data provided" });
+  }
+
+  const { email, password } = req.body;
+
+  if (isNullOrWhiteSpace(email) || isNullOrWhiteSpace(password)) {
+    return res.status(400).send({ error: "Email or password cannot be empty" });
   }
 
   const hashedPasswordResult = await hashPassword(crypto, password);
   if (!hashedPasswordResult.success) {
-    console.log("Signup failed #1.", hashedPasswordResult.error);
-    return res.status(400).send();
+    return res.status(400).send({ error: "Unknown" });
+  }
+
+  const foundUser = await fetchUserByEmail(db, email);
+  const userExists = foundUser.success;
+  if (userExists) {
+    console.log("Signup failed because user already exists.");
+    return res.status(400).send({ error: "Signup failed" });
   }
 
   const insertedUserResult = await insertUser(
-    username,
+    email,
     hashedPasswordResult.hashedPassword,
     hashedPasswordResult.salt,
   );

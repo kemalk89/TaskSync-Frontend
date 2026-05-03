@@ -30,7 +30,6 @@ router.post("/signup", async (req, res) => {
   if (!hashedPasswordResult.success) {
     return res.status(400).send({ error: "Unknown" });
   }
-
   const foundUser = await fetchUserByEmail(db, email);
   const userExists = foundUser.success;
   if (userExists) {
@@ -57,8 +56,8 @@ async function insertUser(email, hashedPassword, salt) {
     const result = await db
       .getPool()
       .query(
-        'INSERT INTO "Users" ("Email", "HashedPassword", "Salt", "CreatedBy", "CreatedDate") VALUES ($1, $2, $3, $4, $5) RETURNING "Id"',
-        [email, hashedPassword, salt, 0, new Date()],
+        'INSERT INTO "Users" ("Username", "Email", "HashedPassword", "Salt", "CreatedBy", "CreatedDate") VALUES ($1, $2, $3, $4, $5) RETURNING "Id"',
+        [email, email, hashedPassword, salt, 0, new Date()],
       );
 
     var user = {
@@ -72,6 +71,7 @@ async function insertUser(email, hashedPassword, salt) {
       data: user,
     };
   } catch (err) {
+    console.error("Unable to insert user. Error: " + err);
     return {
       success: false,
       error: err,

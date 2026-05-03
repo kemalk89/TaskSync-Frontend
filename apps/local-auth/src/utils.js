@@ -53,8 +53,8 @@ export const fetchUserByEmail = (db, email) => {
         }
 
         if (!rowObj || rowObj.rows.length === 0) {
-          console.warn("Incorrect username or password.");
-          return reject({
+          console.warn("No user found for given email.");
+          return resolve({
             success: false,
             error: "Incorrect username or password.",
           });

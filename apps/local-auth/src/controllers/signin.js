@@ -14,7 +14,7 @@ var router = express.Router();
 router.post("/login/password", async (req, res) => {
   console.log("Attempt to login...");
 
-  const userResult = await fetchUserByEmail(db, req.body.username);
+  const userResult = await fetchUserByEmail(db, req.body.email);
   if (!userResult.success) {
     return res.status(401).send("Wrong credentials");
   }
@@ -32,7 +32,7 @@ router.post("/login/password", async (req, res) => {
   // Synchronous Sign with default (HMAC SHA256)
   const accessToken = jwt.sign(
     {
-      iss: "http://localhost:3002",
+      iss: process.env.TOKEN_ISSUER,
       id: userResult.data.Id,
       username: userResult.data.Username,
       email: userResult.data.Email,

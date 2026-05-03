@@ -46,7 +46,10 @@ export async function NavMenu() {
                 <NewTicketDialog />
               </Nav>
               <Nav>
-                <NavDropdown title={session.user.name} id="basic-nav-dropdown">
+                <NavDropdown
+                  title={session.user.name ?? session.user.email}
+                  id="basic-nav-dropdown"
+                >
                   <Link href="/my-profile" passHref legacyBehavior>
                     <DropdownItem>Mein Profil</DropdownItem>
                   </Link>

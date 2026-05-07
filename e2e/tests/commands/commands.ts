@@ -1,8 +1,7 @@
 import { Page } from "@playwright/test";
 
 export async function loginCommand(page: Page) {
-  await page.getByRole("main").getByRole("link", { name: "Sign In" }).click();
-  await page.getByRole("button", { name: "Sign in with Auth0" }).click();
+  await page.getByRole("button", { name: "Login mit Auth0" }).click();
 }
 
 export async function selectDropdownOption(

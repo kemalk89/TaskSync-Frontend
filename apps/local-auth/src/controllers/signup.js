@@ -56,7 +56,7 @@ async function insertUser(email, hashedPassword, salt) {
     const result = await db
       .getPool()
       .query(
-        'INSERT INTO "Users" ("Username", "Email", "HashedPassword", "Salt", "CreatedBy", "CreatedDate") VALUES ($1, $2, $3, $4, $5) RETURNING "Id"',
+        'INSERT INTO "Users" ("Username", "Email", "HashedPassword", "Salt", "CreatedBy", "CreatedDate") VALUES ($1, $2, $3, $4, $5, $6) RETURNING "Id"',
         [email, email, hashedPassword, salt, 0, new Date()],
       );
 

@@ -4,8 +4,11 @@ var http = require("http");
 
 var db = require("./db");
 
+var apiKeyMiddleware = require("./middleware/api-key-middleware");
 var signupRouter = require("./controllers/signup");
 var signinRouter = require("./controllers/signin");
+
+const port = process.env.PORT ?? 3003;
 
 if (!process.env.API_KEY) {
   throw new Error("API_KEY is missing");
@@ -19,10 +22,9 @@ db.init().then(() => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
 
-  app.use("/", signinRouter);
-  app.use("/", signupRouter);
+  app.use("/", apiKeyMiddleware, signinRouter);
+  app.use("/", apiKeyMiddleware, signupRouter);
 
-  const port = process.env.PORT ?? 3003;
   app.set("port", port);
 
   var server = http.createServer(app);

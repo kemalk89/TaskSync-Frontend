@@ -5,3 +5,4 @@ export const envClientId = process.env.AUTH_AUTH0_ID;
 export const envClientSecret = process.env.AUTH_AUTH0_SECRET;
 export const envAuthUsernamePasswordUrl =
   process.env.AUTH_USERNAME_PASSWORD_URL;
+export const envLocalAuthApiKey = process.env.LOCAL_AUTH_API_KEY;

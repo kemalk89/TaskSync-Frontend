@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { auth } from "../auth";
 import { SignOut } from "./sign-out";
-import { SignIn } from "./sign-in";
 import {
   Container,
   Nav,
@@ -24,7 +23,6 @@ export async function NavMenu() {
         <Link href="/" passHref legacyBehavior>
           <NavbarBrand>TaskSync</NavbarBrand>
         </Link>
-        {!session?.user && <SignIn />}
         {session?.user && (
           <>
             <NavbarToggle aria-controls="basic-navbar-nav" />

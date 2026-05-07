@@ -11,7 +11,8 @@ A lightweight task management solution for software development teams. This repo
 # Development
 
 1. Start the application `npm run dev`
-2. Open the application: http://localhost:3000/
+2. Start the backend  `sh e2e/start_backend_docker.sh` or `sh e2e/start_backend_podman.sh`
+3. Open the application: http://localhost:3000/
 
 ## Build
 

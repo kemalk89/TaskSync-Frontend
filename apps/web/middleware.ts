@@ -1,13 +1,6 @@
-import type { NextRequest } from "next/server";
 import { auth } from "./app/auth";
 
-export async function middleware(request: NextRequest) {
-  const session = await auth();
-  if (!session && request.nextUrl.pathname !== "/") {
-    const newUrl = new URL("/", request.nextUrl.origin);
-    return Response.redirect(newUrl);
-  }
-}
+export default auth;
 
 export const config = {
   /*

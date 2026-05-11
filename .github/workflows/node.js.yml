@@ -87,6 +87,18 @@ jobs:
     # - name: Wait for backend to be ready
     #  run: sleep 10
 
+    - name: Debugging; Start local-auth
+      run: npm run dev:local-auth
+      env:
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_USER: postgres
+        DB_PW: postgres
+        DB_NAME: postgres
+        TOKEN_ISSUER: http://localhost:3003
+        JWT_SECRET: 0123456789abcdefghijklmnopqrstuv
+        API_KEY: any-api-key
+
     - name: Run Playwright tests
       run: npx playwright test
       env:

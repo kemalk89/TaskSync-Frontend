@@ -117,6 +117,10 @@ jobs:
     #  run: |
     #    docker logs ${{ env.BACKEND_CONTAINER }} 2>&1 || echo "Container not found"
 
+    - name: Debug, show server.log
+      run: |
+        cat ./apps/web/server.log
+
     - uses: actions/upload-artifact@v6
       if: ${{ !cancelled() }}
       with:

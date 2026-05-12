@@ -1,21 +1,4 @@
 import { defineConfig, devices } from "@playwright/test";
-import fs from "fs";
-
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-import dotenv from "dotenv";
-import path from "path";
-
-const envPathTest = path.resolve(__dirname, "apps/web/.env.test");
-if (!fs.existsSync(envPathTest)) {
-  throw new Error(
-    `Missing .env.test at ${envPathTest}. Please generate it before running Playwright tests.`,
-  );
-}
-
-dotenv.config({ path: envPathTest });
 
 /**
  * See https://playwright.dev/docs/test-configuration.

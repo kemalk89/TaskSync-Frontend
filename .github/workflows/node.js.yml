@@ -91,6 +91,7 @@ jobs:
         echo "AUTH_AUDIENCE=https://tasksync.api.de/api"                    >> ./apps/web/.env
         echo "SERVICE_TASKSYNC=http://localhost:8080"                       >> ./apps/web/.env
         echo "LOCAL_AUTH_API_KEY=any-api-key"                               >> ./apps/web/.env
+        cat ./apps/web/.env
 
     # - name: Wait for backend to be ready
     #  run: sleep 10

@@ -1,4 +1,4 @@
-import { test, expect, Locator } from "@playwright/test";
+import { test, expect, Locator, Page } from "@playwright/test";
 
 test("create new project and plan a board", async ({ page, request }) => {
   await page.goto("http://localhost:3000/projects");
@@ -54,38 +54,62 @@ test("create new project and plan a board", async ({ page, request }) => {
     // ensure initial order
     await ensureOrder([ticket1, ticket2, ticket3]);
 
-    // Drag 1st ticket to 1st dropable -> order should not change
-    await page
-      .getByTestId("draggable-ticket-0")
-      .dragTo(page.locator("div[id='backlog'] .droppable").first());
+    const testIdTicketNr1 = "draggable-ticket-0";
+    const testIdTicketNr2 = "draggable-ticket-1";
+    const testIdTicketNr3 = "draggable-ticket-2";
 
-    await ensureOrder([ticket1, ticket2, ticket3]);
+    await test.step("Drag 1st ticket to 1st dropable -> order should not change", async () => {
+      const firstDroppable = await getFirstDroppable(page);
+      await page.getByTestId(testIdTicketNr1).dragTo(firstDroppable);
 
-    // Drag last ticket to last dropable -> order should not change
-    await page
-      .getByTestId("draggable-ticket-2")
-      .dragTo(page.locator("div[id='backlog'] .droppable").last());
+      await ensureOrder([ticket1, ticket2, ticket3]);
+    });
 
-    await ensureOrder([ticket1, ticket2, ticket3]);
+    await test.step("Drag last ticket to last dropable -> order should not change", async () => {
+      const lastDroppable = await getLastDroppable(page);
+      await page.getByTestId(testIdTicketNr3).dragTo(lastDroppable);
 
-    // Drag 1st ticket to last dropable
-    await page
-      .getByTestId("draggable-ticket-0")
-      .dragTo(page.locator("div[id='backlog'] .droppable").last());
+      await ensureOrder([ticket1, ticket2, ticket3]);
+    });
 
-    await ensureOrder([ticket2, ticket3, ticket1]);
+    await test.step("Drag ticket #1 to last dropable", async () => {
+      const lastDroppable = await getLastDroppable(page);
+      await page.getByTestId(testIdTicketNr1).dragTo(lastDroppable);
 
-    // Drag #2 ticket to first dropable
-    await page
-      .getByTestId("draggable-ticket-1")
-      .dragTo(page.locator("div[id='backlog'] .droppable").first());
+      await ensureOrder([ticket2, ticket3, ticket1]);
+    });
 
-    await ensureOrder([ticket3, ticket2, ticket1]);
+    await test.step("Drag ticket #2 to first dropable", async () => {
+      // Slow down test execution
+      await page.waitForTimeout(1000);
+
+      const firstDroppable = await getFirstDroppable(page);
+
+      await page.getByTestId(testIdTicketNr2).hover();
+      await page.mouse.down();
+      await firstDroppable.hover();
+      await page.mouse.up();
+
+      await ensureOrder([ticket3, ticket2, ticket1]);
+    });
   });
+
   await test.step("Move tickets from backlog to draft board", async () => {});
   await test.step("Reorder tickets in draft board", async () => {});
   await test.step("Move tickets from draft board to backlog", async () => {});
 });
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Helpers
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+async function getFirstDroppable(page: Page) {
+  return page.locator("div[id='backlog'] .droppable").first();
+}
+
+async function getLastDroppable(page: Page) {
+  return page.locator("div[id='backlog'] .droppable").last();
+}
 
 async function ensureOrder(locators: Locator[]) {
   if (locators.length <= 1) {

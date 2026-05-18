@@ -29,17 +29,17 @@
   "devDependencies": {
     "@app/eslint-config": "*",
     "@app/typescript-config": "*",
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.3.0",
-    "@turbo/gen": "^1.13.4",
-    "@types/jest": "^29.5.14",
+    "@testing-library/dom": "10.4.1",
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "16.3.2",
+    "@turbo/gen": "1.13.4",
+    "@types/jest": "29.5.14",
     "@types/node": "24.12.3",
     "@types/react": "19.0.8",
     "@types/react-dom": "19.0.3",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^30.4.1",
-    "ts-jest": "^29.3.4",
+    "jest": "29.7.0",
+    "jest-environment-jsdom": "30.4.1",
+    "ts-jest": "29.4.9",
     "typescript": "5.9.3"
   }
 }

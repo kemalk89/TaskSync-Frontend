@@ -90,7 +90,7 @@ export const authConfig = {
         return {
           ...token,
           authProvider: "credentials",
-          accessToken: (user as any).access_token,
+          accessToken: (user as Record<string, unknown>).access_token as string,
         };
       } else if (account?.provider === "auth0") {
         // First-time login with Auth0

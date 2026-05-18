@@ -6,7 +6,7 @@ export const tryJson = async (response: Response) => {
   try {
     const json = await response.json();
     return json;
-  } catch (err) {
+  } catch {
     console.info("Could not parse response body text as JSON");
     return {};
   }

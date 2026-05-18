@@ -7,7 +7,12 @@ import { IconInfoCircle } from "../../icons/icons";
 
 import { useState } from "react";
 import { TicketListSortable } from "./ticketlist-sortable";
-import { useProjectApi } from "../project-hooks/useProjectApi";
+import {
+  useAssignTicketToDraftBoard,
+  useFetchBacklogTickets,
+  useFetchDraftBoard,
+  useReorderBoardTickets,
+} from "../project-hooks";
 
 type Props = {
   project?: ProjectResponse;
@@ -20,30 +25,23 @@ export const ProjectBacklog = ({ project }: Props) => {
   const [backlogTickets, setBacklogTickets] = useState<TicketResponse[]>([]);
   const [draftBoard, setDraftBoard] = useState<BoardResponse>();
 
-  const {
-    fetchBacklogTickets,
-    fetchDraftBoard,
-    getReorderBoardTicketsMutation,
-    getAssignTicketToDraftBoardMutation,
-  } = useProjectApi();
-
   // Queries
-  fetchBacklogTickets({
+  useFetchBacklogTickets({
     enabled: !!project,
     projectId: project?.id,
     page: { pageSize, pageNumber },
     onSuccess: (data) => setBacklogTickets(data ?? []),
   });
 
-  fetchDraftBoard({
+  useFetchDraftBoard({
     enabled: !!project,
     projectId: project?.id,
     onSuccess: (sprint?: BoardResponse) => setDraftBoard(sprint),
   });
 
   // Mutations
-  const assignTicketToDraftBoard = getAssignTicketToDraftBoardMutation();
-  const reorderBoardTickets = getReorderBoardTicketsMutation();
+  const assignTicketToDraftBoard = useAssignTicketToDraftBoard();
+  const reorderBoardTickets = useReorderBoardTickets();
 
   if (!backlogTickets) {
     return (

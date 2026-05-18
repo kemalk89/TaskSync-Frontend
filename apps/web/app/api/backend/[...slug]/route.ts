@@ -41,7 +41,7 @@ async function handleResponse(res: Response) {
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> },
+  { params }: { params: Promise<{ slug: string[] }> },
 ) {
   const session = await auth();
   if (!session?.accessToken) {
@@ -69,7 +69,7 @@ export async function POST(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> },
+  { params }: { params: Promise<{ slug: string[] }> },
 ) {
   const session = await auth();
   if (!session?.accessToken) {
@@ -97,7 +97,7 @@ export async function PATCH(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> },
+  { params }: { params: Promise<{ slug: string[] }> },
 ) {
   const session = await auth();
   if (!session?.accessToken) {
@@ -106,7 +106,7 @@ export async function GET(
     });
   }
 
-  const parts = (await params).slug as unknown as string[];
+  const parts = (await params).slug;
   const slug = parts.join("/");
   const searchParams = request.nextUrl.searchParams.toString();
   const endpoint = buildEndpoint(searchParams, slug);
@@ -123,7 +123,7 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> },
+  { params }: { params: Promise<{ slug: string[] }> },
 ) {
   const session = await auth();
   if (!session?.accessToken) {
@@ -132,7 +132,7 @@ export async function DELETE(
     });
   }
 
-  const parts = (await params).slug as unknown as string[];
+  const parts = (await params).slug;
   const slug = parts.join("/");
   const searchParams = request.nextUrl.searchParams.toString();
   const endpoint = buildEndpoint(searchParams, slug);

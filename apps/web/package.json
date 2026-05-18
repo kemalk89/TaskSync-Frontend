@@ -14,22 +14,22 @@
     "@app/api": "*",
     "@app/ui-components": "*",
     "@app/utils": "*",
-    "@auth0/auth0-react": "^2.3.0",
-    "@tanstack/react-query": "^5.82.0",
-    "bootstrap": "^5.3.3",
-    "next": "^15.1.6",
-    "next-auth": "^5.0.0-beta.28",
-    "react": "^19.0.0",
-    "react-bootstrap": "^2.10.8",
-    "react-dom": "^19.0.0"
+    "@auth0/auth0-react": "2.16.2",
+    "@tanstack/react-query": "5.82.0",
+    "bootstrap": "5.3.8",
+    "next": "15.5.18",
+    "next-auth": "5.0.0-beta.31",
+    "react": "19.2.6",
+    "react-bootstrap": "2.10.10",
+    "react-dom": "19.2.6"
   },
   "devDependencies": {
     "@app/eslint-config": "*",
     "@app/typescript-config": "*",
-    "@types/node": "^22.10.10",
+    "@types/node": "24.12.3",
     "@types/react": "19.0.8",
     "@types/react-dom": "19.0.3",
     "sass": "1.77.6",
-    "typescript": "5.7.3"
+    "typescript": "5.9.3"
   }
 }

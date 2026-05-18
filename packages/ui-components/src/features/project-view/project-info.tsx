@@ -1,6 +1,6 @@
 import { ProjectResponse } from "@app/api";
 import { TextEditorReadonly } from "../../texteditor/texteditor-readonly";
-import { useProjectApi } from "../project-hooks/useProjectApi";
+import { useFetchProjectById, useUpdateProject } from "../project-hooks";
 import { TextDate } from "../../text-date";
 
 type Props = {
@@ -8,14 +8,12 @@ type Props = {
 };
 
 export const ProjectInfo = ({ project }: Props) => {
-  const { updateProject, fetchProjectById } = useProjectApi();
-
-  const { isPending, isSuccess, mutate } = updateProject({
+  const { isPending, isSuccess, mutate } = useUpdateProject({
     projectId: project?.id,
     onSuccessHandler: () => reloadProject(),
   });
 
-  const { data: projectResult, refetch: reloadProject } = fetchProjectById(
+  const { data: projectResult, refetch: reloadProject } = useFetchProjectById(
     true,
     project?.id,
   );

@@ -1,4 +1,4 @@
-import { Button, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { TicketResponse } from "@app/api";
 import { useRouter } from "next/navigation";
 import { TicketTitleWithLink } from "./ticket-title-with-link";
@@ -67,7 +67,7 @@ export const TicketsTable = ({ isLoading, tickets, onDeleteTicket }: Props) => {
                     <MoreMenuItem
                       onClick={() =>
                         handleCopyLinkToClipboard(
-                          `${window.location.origin}/tickets/${ticket.id}`
+                          `${window.location.origin}/tickets/${ticket.id}`,
                         )
                       }
                     >

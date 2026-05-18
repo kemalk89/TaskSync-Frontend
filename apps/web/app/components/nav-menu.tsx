@@ -20,26 +20,26 @@ export async function NavMenu() {
   return (
     <Navbar expand="sm">
       <Container fluid="xl">
-        <Link href="/" passHref legacyBehavior>
-          <NavbarBrand>TaskSync</NavbarBrand>
-        </Link>
+        <NavbarBrand as={Link} href="/">
+          TaskSync
+        </NavbarBrand>
         {session?.user && (
           <>
             <NavbarToggle aria-controls="basic-navbar-nav" />
 
             <NavbarCollapse id="basic-navbar-nav">
               <Nav className="me-auto">
-                <Link href="/projects" passHref legacyBehavior>
-                  <NavLink>Projekte</NavLink>
-                </Link>
+                <NavLink as={Link} href="/projects">
+                  Projekte
+                </NavLink>
 
-                <Link href="/tickets" passHref legacyBehavior>
-                  <NavLink>Tickets</NavLink>
-                </Link>
+                <NavLink as={Link} href="/tickets">
+                  Tickets
+                </NavLink>
 
-                <Link href="/users" passHref legacyBehavior>
-                  <NavLink>Users</NavLink>
-                </Link>
+                <NavLink as={Link} href="/users">
+                  Users
+                </NavLink>
                 <div className="px-3"></div>
                 <NewTicketDialog />
               </Nav>
@@ -48,12 +48,12 @@ export async function NavMenu() {
                   title={session.user.name ?? session.user.email}
                   id="basic-nav-dropdown"
                 >
-                  <Link href="/my-profile" passHref legacyBehavior>
-                    <DropdownItem>Mein Profil</DropdownItem>
-                  </Link>
-                  <Link href="/settings" passHref legacyBehavior>
-                    <DropdownItem>Einstellungen</DropdownItem>
-                  </Link>
+                  <DropdownItem as={Link} href="/my-profile">
+                    Mein Profil
+                  </DropdownItem>
+                  <DropdownItem as={Link} href="/settings">
+                    Einstellungen
+                  </DropdownItem>
                   <SignOut />
                 </NavDropdown>
               </Nav>

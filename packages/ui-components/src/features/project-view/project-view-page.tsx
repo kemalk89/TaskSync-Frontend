@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ProjectBacklog } from "./project-backlog";
 import { EditableLine } from "../../editable-content/editable-content";
-import { useProjectApi } from "../project-hooks/useProjectApi";
+import { useFetchProjectById, useUpdateProject } from "../project-hooks";
 import { ProjectInfo } from "./project-info";
 import { TabContentActiveSprint } from "./tab-content-active-sprint";
 
@@ -24,13 +24,11 @@ export const ProjectViewPage = ({ projectId }: Props) => {
   const searchParams = useSearchParams();
   const activeTab = searchParams.get("tab") || TAB_BOARD;
 
-  const { updateProject, fetchProjectById } = useProjectApi();
-
-  const { mutate, isPending, isSuccess } = updateProject({
+  const { mutate, isPending, isSuccess } = useUpdateProject({
     projectId,
     onSuccessHandler: () => reloadProject(),
   });
-  const { data: projectResult, refetch: reloadProject } = fetchProjectById(
+  const { data: projectResult, refetch: reloadProject } = useFetchProjectById(
     true,
     projectId,
   );

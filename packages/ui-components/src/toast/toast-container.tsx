@@ -11,7 +11,7 @@ export const ToastContainer = () => {
 
   useEffect(() => {
     toastMessages.forEach((msg) => {
-      let durationInSeconds = msg.duration ?? 5000;
+      const durationInSeconds = msg.duration ?? 5000;
       if (durationInSeconds && durationInSeconds > 0) {
         const timeout = setTimeout(() => {
           removeToast(msg);

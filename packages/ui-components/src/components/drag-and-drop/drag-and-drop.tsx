@@ -26,7 +26,7 @@ export function Draggable(props: DraggableProps) {
       draggable
       onDragEnd={(e) => {
         const elements = document.body.querySelectorAll(".dragImgWrapper");
-        for (let e of elements) {
+        for (const e of elements) {
           e.remove();
         }
 

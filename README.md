@@ -2,16 +2,29 @@
 
 [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=kemalk89_TaskSync-Frontend)](https://sonarcloud.io/summary/new_code?id=kemalk89_TaskSync-Frontend)
 
-# TaskSync
+---
+
+<h1 align="center">
+    <img src="./apps/web/public/images/logo.svg" width="84" height="84" /> 
+    <br> 
+    TaskSync
+</h1>
 
 A lightweight task management solution for software development teams. This repository contains the frontend part of the application. For the backend services, refer to the companion repository: https://github.com/kemalk89/TaskSync.
 
 ---
 
-# Development
+# ✅ Features
+
+- Manage projects and work items
+- Manage your documents ⏳
+- Organize work in sprints
+- Fast and responsive UI
+
+# 💻 Development
 
 1. Start the application `npm run dev`
-2. Start the backend  `sh e2e/start_backend_docker.sh` or `sh e2e/start_backend_podman.sh`
+2. Start the backend `sh e2e/start_backend_docker.sh` or `sh e2e/start_backend_podman.sh`
 3. Open the application: http://localhost:3000/
 
 ## Build
@@ -24,9 +37,9 @@ npm run build
 
 ## E2E Testing
 
-In the context of E2E testing, we use apps/fake-auth, which is a fake OAuth server. 
-The idea is that Playwright starts both the web application and the fake-auth service, 
-with both running on the host machine. 
+In the context of E2E testing, we use apps/fake-auth, which is a fake OAuth server.
+The idea is that Playwright starts both the web application and the fake-auth service,
+with both running on the host machine.
 To quickly spin up the backend, use Docker or Podman.
 
 ### Prerequisites

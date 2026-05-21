@@ -12,6 +12,6 @@ export const config = {
    * - any svg files
    */
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.svg).*)",
+    "/((?!api|_next/static|_next/image|images/|images|favicon.ico|sitemap.xml|robots.txt|.*\\.svg).*)",
   ],
 };

@@ -30,13 +30,7 @@ export async function NavMenu() {
             gap: 4,
           }}
         >
-          <Image
-            src={"/images/logo.svg"}
-            width={30}
-            height={30}
-            quality={100}
-            alt="Logo"
-          />
+          <Image src={"/images/logo.svg"} width={30} height={30} alt="Logo" />
           TaskSync
         </NavbarBrand>
         {session?.user && (

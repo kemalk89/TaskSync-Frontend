@@ -7,7 +7,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --max-warnings 0",
+    "lint": "eslint --max-warnings 0",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
@@ -30,6 +30,7 @@
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "sass": "1.77.6",
+    "eslint": "9.39.4",
     "typescript": "5.9.3"
   }
 }

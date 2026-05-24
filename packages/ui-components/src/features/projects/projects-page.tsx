@@ -9,6 +9,7 @@ import { NewFormModal } from "../../NewFormModal";
 import { ProjectsTable } from "./projects-table";
 import { useQuery } from "@tanstack/react-query";
 import { ToastContext } from "../../toast";
+import { PAGED_RESULT_EMPTY } from "../constants";
 
 export const ProjectsPage = () => {
   const { newToast } = useContext(ToastContext);
@@ -44,7 +45,15 @@ export const ProjectsPage = () => {
         pageNumber: (searchParams.get("pageNumber") || 1) as number,
       };
       const response = await getAPI().fetchProjects(page);
-      return response.data;
+      if (response.status === "error") {
+        newToast({
+          type: "error",
+          msg: `Ein Fehler ist aufgetreten. Status Code: ${response.statusCode}`,
+        });
+      }
+
+      const data = response.data;
+      return data ?? PAGED_RESULT_EMPTY;
     },
   });
 
@@ -84,7 +93,7 @@ export const ProjectsPage = () => {
           paged={data}
           onPageSelected={(pageNumber) =>
             router.replace(
-              `${pathname}?${createQueryString("pageNumber", pageNumber.toString())}`
+              `${pathname}?${createQueryString("pageNumber", pageNumber.toString())}`,
             )
           }
         />

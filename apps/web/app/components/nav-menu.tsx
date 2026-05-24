@@ -5,7 +5,6 @@ import {
   Container,
   Nav,
   Navbar,
-  NavbarBrand,
   NavbarCollapse,
   NavbarToggle,
   NavDropdown,
@@ -13,7 +12,7 @@ import {
   DropdownItem,
 } from "react-bootstrap";
 import { NewTicketDialog } from "@app/ui-components";
-import Image from "next/image";
+import { NavbarBrand } from "./navbar-brand";
 
 export async function NavMenu() {
   const session = await auth();
@@ -21,18 +20,7 @@ export async function NavMenu() {
   return (
     <Navbar expand="sm">
       <Container fluid="xl">
-        <NavbarBrand
-          as={Link}
-          href="/"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 4,
-          }}
-        >
-          <Image src={"/images/logo.svg"} width={30} height={30} alt="Logo" />
-          TaskSync
-        </NavbarBrand>
+        <NavbarBrand />
         {session?.user && (
           <>
             <NavbarToggle aria-controls="basic-navbar-nav" />

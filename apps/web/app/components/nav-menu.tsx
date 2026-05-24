@@ -1,19 +1,6 @@
-import Link from "next/link";
 import { auth } from "../auth";
-import { SignOut } from "./sign-out";
-import {
-  Container,
-  Nav,
-  Navbar,
-  NavbarBrand,
-  NavbarCollapse,
-  NavbarToggle,
-  NavDropdown,
-  NavLink,
-  DropdownItem,
-} from "react-bootstrap";
-import { NewTicketDialog } from "@app/ui-components";
-import Image from "next/image";
+import { Container, Navbar } from "react-bootstrap";
+import { NavbarContent } from "./navbar-content";
 
 export async function NavMenu() {
   const session = await auth();
@@ -21,55 +8,7 @@ export async function NavMenu() {
   return (
     <Navbar expand="sm">
       <Container fluid="xl">
-        <NavbarBrand
-          as={Link}
-          href="/"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 4,
-          }}
-        >
-          <Image src={"/images/logo.svg"} width={30} height={30} alt="Logo" />
-          TaskSync
-        </NavbarBrand>
-        {session?.user && (
-          <>
-            <NavbarToggle aria-controls="basic-navbar-nav" />
-
-            <NavbarCollapse id="basic-navbar-nav">
-              <Nav className="me-auto">
-                <NavLink as={Link} href="/projects">
-                  Projekte
-                </NavLink>
-
-                <NavLink as={Link} href="/tickets">
-                  Tickets
-                </NavLink>
-
-                <NavLink as={Link} href="/users">
-                  Users
-                </NavLink>
-                <div className="px-3"></div>
-                <NewTicketDialog />
-              </Nav>
-              <Nav>
-                <NavDropdown
-                  title={session.user.name ?? session.user.email}
-                  id="basic-nav-dropdown"
-                >
-                  <DropdownItem as={Link} href="/my-profile">
-                    Mein Profil
-                  </DropdownItem>
-                  <DropdownItem as={Link} href="/settings">
-                    Einstellungen
-                  </DropdownItem>
-                  <SignOut />
-                </NavDropdown>
-              </Nav>
-            </NavbarCollapse>
-          </>
-        )}
+        <NavbarContent session={session} />
       </Container>
     </Navbar>
   );

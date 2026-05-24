@@ -19,13 +19,9 @@ export const NavbarContent = ({ session }: { session: Session | null }) => {
   return (
     <>
       <Navbar
+        className="navbar-brand d-flex align-items-center gap-1"
         as={Link}
         href="/"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 4,
-        }}
       >
         <Image src={"/images/logo.svg"} width={30} height={30} alt="Logo" />
         TaskSync

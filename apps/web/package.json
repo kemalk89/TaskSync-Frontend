@@ -27,8 +27,8 @@
     "@app/eslint-config": "*",
     "@app/typescript-config": "*",
     "@types/node": "24.12.3",
-    "@types/react": "19.0.8",
-    "@types/react-dom": "19.0.3",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
     "sass": "1.77.6",
     "typescript": "5.9.3"
   }

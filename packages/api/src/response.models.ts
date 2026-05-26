@@ -4,6 +4,7 @@ export interface UserResponse {
   email: string;
   picture: string;
   externalSource?: string;
+  selectedLanguage?: string;
   createdDate: string;
   modifiedDate?: string;
 }

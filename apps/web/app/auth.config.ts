@@ -11,6 +11,13 @@ import {
   envTokenendpoint,
 } from "./environment-variables";
 import { getAPI } from "@app/api";
+import { headers } from "next/headers";
+import {
+  defaultLanguage,
+  i18n,
+  Locale,
+  supportedLanguages,
+} from "./dictionaries";
 
 export const authConfig = {
   debug: false,
@@ -87,6 +94,9 @@ export const authConfig = {
     async jwt({ token, account, profile, user }) {
       if (account?.provider === "credentials") {
         // First-time login with credentials
+        const lng = await initUsersSelectedLanguage(account.access_token!);
+        i18n.currentLanguage = lng;
+
         return {
           ...token,
           authProvider: "credentials",
@@ -127,6 +137,9 @@ export const authConfig = {
 
             throw "Sync external user failed. Authentication failed";
           }
+
+          const lng = await initUsersSelectedLanguage(account.access_token!);
+          i18n.currentLanguage = lng;
         } else {
           throw "Login with external Identity Provider successful, but no profile given!";
         }
@@ -254,4 +267,70 @@ async function refreshAccessToken(token: JWT) {
     token.error = "RefreshTokenError";
     return token;
   }
+}
+
+/**
+ * This method should be called after login to init current users selected language.
+ */
+async function initUsersSelectedLanguage(accessToken: string): Promise<Locale> {
+  const clientLanguage = (await headers()).get("Accept-Language"); // example: "en;q=0.9"
+  if (!clientLanguage) {
+    return defaultLanguage;
+  }
+
+  const language = clientLanguage.substring(0, 2);
+  if (!supportedLanguages.includes(language)) {
+    return defaultLanguage;
+  }
+
+  const currentUsersSelectedLanguage =
+    await getCurrentUsersSelectedLanguage(accessToken);
+
+  if (currentUsersSelectedLanguage) {
+    return currentUsersSelectedLanguage;
+  } else {
+    console.log(`Current user has no selected language yet`);
+    console.log(`Init current users selected language: ${language}`);
+
+    const result = await getAPI()
+      .enableServerMode()
+      .setBaseUrl(process.env.SERVICE_TASKSYNC as string)
+      .setHeaders({
+        Authorization: `Bearer ${accessToken}`,
+      })
+      .patch.changeCurrentUsersLanguage(language);
+
+    if (result.status === "error") {
+      console.warn(
+        "Could not init current users language. Status Code: " +
+          result.statusCode,
+      );
+
+      return defaultLanguage;
+    }
+
+    return language as Locale;
+  }
+}
+
+async function getCurrentUsersSelectedLanguage(
+  accessToken: string,
+): Promise<Locale | null> {
+  const currentUser = await getAPI()
+    .enableServerMode()
+    .setBaseUrl(process.env.SERVICE_TASKSYNC as string)
+    .setHeaders({
+      Authorization: `Bearer ${accessToken}`,
+    })
+    .fetchCurrentUser();
+
+  if (currentUser.status === "error") {
+    return null;
+  }
+
+  if (currentUser.data && currentUser.data.value.selectedLanguage) {
+    return currentUser.data.value.selectedLanguage as Locale;
+  }
+
+  return null;
 }

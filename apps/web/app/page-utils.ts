@@ -7,9 +7,10 @@ import { auth } from "./auth";
  * This function cannot be used by client side components.
  */
 export async function fetchDataById<T>(
-  fetchFn: (api: Api) => Promise<ApiResponse<T>>
+  fetchFn: (api: Api) => Promise<ApiResponse<T>>,
 ): Promise<{
   status: "unauthorized" | "backend_problem" | "no_data_available" | "success";
+  statusCode?: number;
   data?: T;
 }> {
   const session = await auth();
@@ -26,19 +27,24 @@ export async function fetchDataById<T>(
     .enableServerMode()
     .setBaseUrl(process.env.SERVICE_TASKSYNC as string)
     .setHeaders({
+      "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     });
 
   const response = await fetchFn(apiConfig);
 
   if (response.status !== "success") {
-    return { status: "backend_problem" };
+    return { status: "backend_problem", statusCode: response.statusCode };
   }
 
   const data = response.data;
   if (!data) {
-    return { status: "no_data_available" };
+    return { status: "no_data_available", statusCode: response.statusCode };
   }
 
-  return { status: "success", data: data as T };
+  return {
+    status: "success",
+    data: data as T,
+    statusCode: response.statusCode,
+  };
 }

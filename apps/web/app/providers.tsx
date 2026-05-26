@@ -4,14 +4,23 @@ import {
   ToastContext,
   ToastMessage,
   ConfirmationModalProvider,
+  TranslationProvider,
 } from "@app/ui-components";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { PropsWithChildren, useCallback, useState } from "react";
 import { getQueryClient } from "./get-query-client";
+import { Locale } from "./dictionaries";
 
 let TOAST_ID_COUNTER = 0;
 
-export const Providers = ({ children }: PropsWithChildren) => {
+export const Providers = ({
+  children,
+  dictionary,
+  currentLng,
+}: PropsWithChildren & {
+  dictionary: Record<string, unknown>;
+  currentLng: Locale;
+}) => {
   const [toastMessages, setToastMessages] = useState<ToastMessage[]>([]);
 
   const queryClient = getQueryClient();
@@ -28,16 +37,18 @@ export const Providers = ({ children }: PropsWithChildren) => {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ToastContext
-        value={{
-          toastMessages,
-          newToast,
-          removeToast,
-        }}
-      >
-        <ConfirmationModalProvider>{children}</ConfirmationModalProvider>
-      </ToastContext>
-    </QueryClientProvider>
+    <TranslationProvider currentLng={currentLng} initialDictionary={dictionary}>
+      <QueryClientProvider client={queryClient}>
+        <ToastContext
+          value={{
+            toastMessages,
+            newToast,
+            removeToast,
+          }}
+        >
+          <ConfirmationModalProvider>{children}</ConfirmationModalProvider>
+        </ToastContext>
+      </QueryClientProvider>
+    </TranslationProvider>
   );
 };

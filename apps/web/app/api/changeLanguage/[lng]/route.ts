@@ -8,19 +8,21 @@ import {
 
 export async function POST(
   _: NextRequest,
-  { params }: { params: Promise<{ lng: Locale }> },
+  { params }: { params: Promise<{ lng: string }> },
 ) {
   const { lng } = await params;
+  
+  // Validate that the language is one of our supported languages
   const supportedLanguages = await getSupportedLanguages();
-  if (!supportedLanguages.includes(lng)) {
+  if (!supportedLanguages.includes(lng as Locale)) {
     return NextResponse.json(
       { error: "Unsupported language" },
       { status: 400 },
     );
   }
 
-  await storeLanguageInCookie(lng);
-  const dictionary = await getDictionary(lng);
+  await storeLanguageInCookie(lng as Locale);
+  const dictionary = await getDictionary(lng as Locale);
 
   return NextResponse.json({ dictionary }, { status: 200 });
 }

@@ -62,6 +62,7 @@ export const Select = ({
           className={[
             "d-inline-block",
             isDisplayingPlaceholder() ? styles.placeholderText : "",
+            styles.contentWidth,
           ].join(" ")}
         >
           {getSelectBtnLabel()}

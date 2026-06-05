@@ -17,7 +17,7 @@ test.describe(() => {
   test("load projects should work", async ({ page }) => {
     await page.goto("http://localhost:3000");
 
-    await page.getByRole("link", { name: "Projekte" }).click();
+    await page.getByRole("link", { name: "Projects" }).click();
 
     await expect(
       page.getByRole("button", { name: "Neues Projekt anlegen" }),

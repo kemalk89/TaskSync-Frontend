@@ -2,7 +2,7 @@ import { test, expect, Locator, Page } from "@playwright/test";
 
 test("create new project and plan a board", async ({ page, request }) => {
   await page.goto("http://localhost:3000/projects");
-  await page.getByRole("link", { name: "Projekte" }).click();
+  await page.getByRole("link", { name: "Projects" }).click();
 
   await test.step("Create a test project", async () => {
     await page.getByRole("button", { name: "Neues Projekt anlegen" }).click();

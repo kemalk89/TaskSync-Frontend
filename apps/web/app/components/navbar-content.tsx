@@ -11,11 +11,12 @@ import {
   DropdownItem,
 } from "react-bootstrap";
 import Image from "next/image";
-import { NewTicketDialog } from "@app/ui-components";
+import { NewTicketDialog, useTranslation } from "@app/ui-components";
 import { SignOut } from "./sign-out";
 import { Session } from "next-auth";
 
 export const NavbarContent = ({ session }: { session: Session | null }) => {
+  const { t } = useTranslation();
   return (
     <>
       <Navbar
@@ -33,15 +34,15 @@ export const NavbarContent = ({ session }: { session: Session | null }) => {
           <NavbarCollapse id="basic-navbar-nav">
             <Nav className="me-auto">
               <NavLink as={Link} href="/projects">
-                Projekte
+                {t("navbar.projects")}
               </NavLink>
 
               <NavLink as={Link} href="/tickets">
-                Tickets
+                {t("navbar.tickets")}
               </NavLink>
 
               <NavLink as={Link} href="/users">
-                Users
+                {t("navbar.users")}
               </NavLink>
               <div className="px-3"></div>
               <NewTicketDialog />
@@ -52,10 +53,10 @@ export const NavbarContent = ({ session }: { session: Session | null }) => {
                 id="basic-nav-dropdown"
               >
                 <DropdownItem as={Link} href="/my-profile">
-                  Mein Profil
+                  {t("navbar.my_profile")}
                 </DropdownItem>
                 <DropdownItem as={Link} href="/settings">
-                  Einstellungen
+                  {t("navbar.settings")}
                 </DropdownItem>
                 <SignOut />
               </NavDropdown>

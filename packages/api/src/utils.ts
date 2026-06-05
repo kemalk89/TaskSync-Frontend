@@ -3,11 +3,12 @@
  * when the response body is not valid JSON.
  */
 export const tryJson = async (response: Response) => {
+  const text = await response.text();
   try {
     const json = await response.json();
     return json;
   } catch {
     console.info("Could not parse response body text as JSON");
-    return {};
+    return text;
   }
 };

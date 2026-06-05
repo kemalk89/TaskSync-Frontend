@@ -35,5 +35,8 @@ button.dropdownToggleBtn {
 
 .placeholderText {
   color: rgb(105, 105, 105);
+}
+
+.contentWidth {
   width: calc(100% - 16px);
 }

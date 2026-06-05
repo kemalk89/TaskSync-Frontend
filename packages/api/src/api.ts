@@ -15,12 +15,13 @@ import {
   TicketStatusModel,
   UserResponse,
 } from "./response.models";
+import { tryJson } from "./utils";
 
-const patch = async (
+const patch = async <T>(
   url: string,
   body: any,
   headers: Record<string, string> = {},
-) => {
+): Promise<ApiResponse<T>> => {
   const res = await fetch(url, {
     body: JSON.stringify(body),
     method: "PATCH",
@@ -31,24 +32,19 @@ const patch = async (
   });
 
   if (!res.ok) {
-    const errorResponse: ApiResponse<void> = {
+    return {
       status: "error",
       statusCode: res.status,
       message: `Network error on URL ${url}: ${res.status}.`,
     };
-    return errorResponse;
   }
 
-  // Check if response contains data before parsing
-  const data = await res.json();
+  const data = await tryJson(res);
   return {
     status: "success",
     statusCode: res.status,
-    data,
+    data: data,
   };
-
-  const result = await res.json();
-  return result;
 };
 
 const post = async <T>(
@@ -359,6 +355,15 @@ export const getAPI = () => {
           body,
         );
       },
+      changeCurrentUsersLanguage: async (
+        newLanguage: string,
+      ): Promise<ApiResponse<string>> => {
+        return patch(
+          `${getBaseUrl()}${getContext()}/user/changeLanguage/${newLanguage}`,
+          {},
+          headers,
+        );
+      },
     },
 
     deleteProject: async (project: ProjectResponse) => {
@@ -376,6 +381,11 @@ export const getAPI = () => {
       return get(
         `${getBaseUrl()}${getContext()}/user?pageNumber=${pageNumber}&pageSize=${pageSize}`,
       );
+    },
+    fetchCurrentUser: async (): Promise<
+      ApiResponse<ResultResponse<UserResponse>>
+    > => {
+      return get(`${getBaseUrl()}${getContext()}/user/current-user`, headers);
     },
     /**
      * Should be called from server-side only after first login with external IDP

@@ -1,8 +1,8 @@
+import { tryJson } from "@app/api";
 import {
   envAuthUsernamePasswordUrl,
   envLocalAuthApiKey,
 } from "../../../environment-variables";
-import { tryJson } from "../../../utils";
 
 export async function POST(request: Request) {
   const url = envAuthUsernamePasswordUrl + "signup";

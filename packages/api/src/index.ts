@@ -3,3 +3,4 @@
  */
 export * from "./api";
 export * from "./response.models";
+export * from "./utils";

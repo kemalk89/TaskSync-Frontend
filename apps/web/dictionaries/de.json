@@ -1,0 +1,12 @@
+{
+  "settings": {
+    "title": "Einstellungen"
+  },
+  "navbar": {
+    "projects": "Projekte",
+    "tickets": "Tickets",
+    "users": "Benutzer",
+    "my_profile": "Mein Profil",
+    "settings": "Einstellungen"
+  }
+}

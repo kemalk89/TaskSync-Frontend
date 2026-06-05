@@ -5,8 +5,7 @@ import { createContext, ReactNode, useContext, useState } from "react";
 export const TranslationContext = createContext<{
   dictionary: Record<string, unknown>;
   currentLng: string;
-  changeLanguage: (newLng: string) => void;
-  setDictionary: (dictionary: Record<string, unknown>) => void;
+  changeLanguage: (newLng: string, dictionary: Record<string, unknown>) => void;
 } | null>(null);
 
 export const TranslationProvider = (props: {
@@ -15,13 +14,18 @@ export const TranslationProvider = (props: {
   children: ReactNode;
 }) => {
   const [dictionary, setDictionary] = useState(props.initialDictionary);
+  const [currentLanguage, setCurrentLanguage] = useState(props.currentLng);
   return (
     <TranslationContext
       value={{
-        currentLng: props.currentLng,
+        currentLng: currentLanguage,
         dictionary,
-        changeLanguage: (newLng) => console.log(newLng),
-        setDictionary,
+        changeLanguage: (newLng, dictionary) => {
+          // Update the <html lang> attribute
+          document.documentElement.lang = newLng;
+          setDictionary(dictionary);
+          setCurrentLanguage(newLng);
+        },
       }}
     >
       {props.children}
@@ -31,6 +35,10 @@ export const TranslationProvider = (props: {
 
 export const useTranslation = () => {
   const context = useContext(TranslationContext);
+
+  if (!context) {
+    throw "No TranslationContext";
+  }
 
   return {
     t: (path: string): string => {
@@ -67,9 +75,10 @@ export const useTranslation = () => {
 
       return path;
     },
-    setDictionary: (dictionary: Record<string, unknown>) => {
+    currentLanguage: context.currentLng,
+    changeLanguage: (newLng: string, dictionary: Record<string, unknown>) => {
       if (context) {
-        context.setDictionary(dictionary);
+        context.changeLanguage(newLng, dictionary);
       }
     },
   };

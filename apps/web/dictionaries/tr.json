@@ -1,5 +1,12 @@
 {
   "settings": {
     "title": "Ayarlar"
+  },
+  "navbar": {
+    "projects": "Projeler",
+    "tickets": "Biletler",
+    "users": "Kullanıcılar",
+    "my_profile": "Profilim",
+    "settings": "Ayarlar"
   }
 }

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   getDictionary,
-  i18n,
   Locale,
-  supportedLanguages,
+  storeLanguageInCookie,
+  getSupportedLanguages,
 } from "../../../dictionaries";
 
 export async function POST(
@@ -11,6 +11,7 @@ export async function POST(
   { params }: { params: Promise<{ lng: Locale }> },
 ) {
   const { lng } = await params;
+  const supportedLanguages = await getSupportedLanguages();
   if (!supportedLanguages.includes(lng)) {
     return NextResponse.json(
       { error: "Unsupported language" },
@@ -18,7 +19,7 @@ export async function POST(
     );
   }
 
-  i18n.currentLanguage = lng;
+  await storeLanguageInCookie(lng);
   const dictionary = await getDictionary(lng);
 
   return NextResponse.json({ dictionary }, { status: 200 });

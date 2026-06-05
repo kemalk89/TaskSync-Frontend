@@ -35,4 +35,4 @@ export type {
   ConfirmationModalContentData,
   ConfirmationModalCallbacks,
 } from "./components/confirmation-modal";
-export { TranslationProvider } from "./i18n";
+export { TranslationProvider, useTranslation } from "./i18n";

@@ -2,19 +2,16 @@
 
 import { FormControl, FormGroup, FormLabel } from "react-bootstrap";
 import { Select } from "../../select";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { getAPI } from "@app/api";
 import { ToastContext } from "../../toast";
 import { useTranslation } from "../../i18n";
 
-export const SettingsPage = ({ language }: { language?: string }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState(language || "en");
+export const SettingsPage = () => {
   const { mutate } = useChangeCurrentUsersLanguage();
-  const { t } = useTranslation();
-
+  const { t, currentLanguage } = useTranslation();
   const handleChangeLanguage = (newLanguage: string) => {
-    setSelectedLanguage(newLanguage);
     mutate(newLanguage);
   };
 
@@ -24,7 +21,7 @@ export const SettingsPage = ({ language }: { language?: string }) => {
       <FormGroup>
         <FormLabel>Sprache</FormLabel>
         <Select
-          value={selectedLanguage}
+          value={currentLanguage}
           options={[
             { value: "de", label: "Deutsch" },
             { value: "en", label: "English" },
@@ -45,7 +42,7 @@ export const SettingsPage = ({ language }: { language?: string }) => {
 
 const useChangeCurrentUsersLanguage = () => {
   const { newToast } = useContext(ToastContext);
-  const { setDictionary } = useTranslation();
+  const { changeLanguage } = useTranslation();
 
   return useMutation({
     mutationFn: async (newLanguage: string) => {
@@ -57,7 +54,7 @@ const useChangeCurrentUsersLanguage = () => {
         },
       );
       const newDictionary = await newDictionaryResponse.json();
-      setDictionary(newDictionary.dictionary);
+      changeLanguage(lng.data!, newDictionary.dictionary);
     },
     onSuccess: () => {
       newToast({

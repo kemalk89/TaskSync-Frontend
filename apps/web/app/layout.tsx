@@ -6,7 +6,7 @@ import { Container } from "react-bootstrap";
 import "./globals.scss";
 import { Providers } from "./providers";
 import { ToastContainer } from "@app/ui-components";
-import { getDictionary, i18n } from "./dictionaries";
+import { getDictionary, getCurrentLanguage } from "./dictionaries";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,12 +27,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const dictionary = await getDictionary(i18n.currentLanguage);
+  const currentLanguage = await getCurrentLanguage();
+  const dictionary = await getDictionary(currentLanguage);
 
   return (
-    <html lang={i18n.currentLanguage}>
+    <html lang={currentLanguage}>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Providers dictionary={dictionary} currentLng={i18n.currentLanguage}>
+        <Providers dictionary={dictionary} currentLng={currentLanguage}>
           <ToastContainer />
           <NavMenu />
           <Container fluid="xl" style={{ paddingTop: 8 }}>

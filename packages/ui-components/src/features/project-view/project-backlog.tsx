@@ -1,6 +1,6 @@
 import { ProjectResponse, BoardResponse, TicketResponse } from "@app/api";
 import { useSearchParams } from "next/navigation";
-import { Alert } from "react-bootstrap";
+import { Alert, Button } from "react-bootstrap";
 import { NewTicketDialog } from "../tickets/new-ticket-dialog";
 import { TicketsSearchBar } from "../tickets-search-bar/tickets-search-bar";
 import { IconInfoCircle } from "../../icons/icons";
@@ -125,6 +125,13 @@ export const ProjectBacklog = ({ project }: Props) => {
     });
   };
 
+  // Event Handlers
+  const handleStartSprint = () => {
+    if (draftBoard?.tickets.length) {
+    } else {
+    }
+  };
+
   return (
     <>
       <div className="mb-4">
@@ -142,7 +149,11 @@ export const ProjectBacklog = ({ project }: Props) => {
         />
       </div>
       <div className="mb-4">
-        <h3>Nächster Sprint</h3>
+        <div className="d-flex justify-content-between mb-3">
+          <h3>Nächster Sprint</h3>
+          <Button onClick={handleStartSprint}>Sprint starten</Button>
+        </div>
+
         {(!draftBoard || draftBoard?.tickets.length === 0) && (
           <Alert variant="info">
             <IconInfoCircle /> Es sind noch keine Tickets eingeplant für das

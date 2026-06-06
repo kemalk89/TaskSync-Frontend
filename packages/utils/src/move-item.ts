@@ -11,7 +11,7 @@ export function moveItem<T extends TypeWithId>(options: {
   // find container including the item
   let itemPositionInSourceBoard = -1;
 
-  for (let container of options.containers) {
+  for (const container of options.containers) {
     itemPositionInSourceBoard = container.items.findIndex(
       (item) => item.id.toString() === itemId.toString(),
     );
@@ -42,7 +42,7 @@ export function moveItem<T extends TypeWithId>(options: {
   }
 
   // edge case
-  let moveDown =
+  const moveDown =
     sourceContainer.id === targetContainerId &&
     itemPositionInSourceBoard !== -1 &&
     itemPositionInSourceBoard < newPosition;
@@ -61,7 +61,7 @@ export function moveItem<T extends TypeWithId>(options: {
   }
 
   let targetContainer: Container<T> | undefined;
-  for (let container of options.containers) {
+  for (const container of options.containers) {
     if (targetContainerId === container.id) {
       targetContainer = container;
       break;
@@ -73,7 +73,7 @@ export function moveItem<T extends TypeWithId>(options: {
     return;
   }
 
-  let targetList: T[] = targetContainer.items;
+  const targetList: T[] = targetContainer.items;
 
   // Put ticket in target container
   let newList: T[] = [];

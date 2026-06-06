@@ -106,9 +106,6 @@ export const TicketListSortable = ({
                 <div className="flex-fill ticket-title">
                   <TicketTitleWithLink ticket={ticket} />
                 </div>
-                <Button size="sm" variant="outline-primary">
-                  Schätzen
-                </Button>
                 <UserImage />
                 <MoreMenu button={<IconThreeDots />}>
                   <MoreMenuItem

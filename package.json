@@ -13,6 +13,7 @@
     "dev:local-auth": "npm run -w @app/local-auth dev",
     "dev:fake-auth": "npm run -w @app/fake-auth dev",
     "lint": "turbo lint",
+    "lint:fix": "turbo lint -- --fix",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "test:e2e": "playwright test",
     "test": "npm run -w @app/ui-components test"

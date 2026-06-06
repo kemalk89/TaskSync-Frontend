@@ -43,12 +43,15 @@ export const TicketIcon = ({ ticket }: { ticket: TicketResponse }) => {
   }
   const { type } = ticket;
 
-  switch (type) {
+  switch (type.toString()) {
     case "bug":
+    case "0":
       return <TicketIconBug withLabel={false} />;
     case "task":
+    case "1":
       return <TicketIconTask withLabel={false} />;
     case "story":
+    case "2":
       return <TicketIconStory withLabel={false} />;
     default:
       return null;

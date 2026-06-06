@@ -1,6 +1,6 @@
 "use client";
 
-import { FormControl, FormGroup, FormLabel } from "react-bootstrap";
+import { FormGroup, FormLabel } from "react-bootstrap";
 import { Select } from "../../select";
 import { useContext } from "react";
 import { useMutation } from "@tanstack/react-query";
@@ -29,7 +29,6 @@ export const SettingsPage = () => {
           ]}
           onChange={(lng) => handleChangeLanguage(lng as string)}
         />
-        <FormControl.Feedback type="invalid">Hallo</FormControl.Feedback>
       </FormGroup>
 
       <h1>Further ideas</h1>

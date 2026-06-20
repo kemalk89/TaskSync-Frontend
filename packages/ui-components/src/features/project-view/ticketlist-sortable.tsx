@@ -8,7 +8,7 @@ import {
 import { copyTextToClipboard } from "@app/utils";
 import { useDeleteTicketModal } from "../ticket-hooks/use-delete-ticket-modal";
 import { useRouter } from "next/navigation";
-import { Button, Card } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import { TicketTitleWithLink } from "../tickets/ticket-title-with-link";
 import { UserImage } from "../../user-name/user-img";
 import { IconGripVertical, IconThreeDots } from "../../icons/icons";

@@ -128,7 +128,9 @@ export const ProjectBacklog = ({ project }: Props) => {
   // Event Handlers
   const handleStartSprint = () => {
     if (draftBoard?.tickets.length) {
+      console.log("Not yet implemented");
     } else {
+      console.log("Not yet implemented");
     }
   };
 

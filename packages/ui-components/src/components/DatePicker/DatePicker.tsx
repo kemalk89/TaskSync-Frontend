@@ -11,6 +11,8 @@ export const DatePicker = ({
   onSelect,
   locale,
   className = "",
+  startOfWeek = "monday",
+  showCalendarWeeks = false,
   day,
   month = new Date().getMonth(),
   year = new Date().getFullYear(),
@@ -86,6 +88,8 @@ export const DatePicker = ({
           onSelect={handleSelect}
           dictionaryMonths={dictionaryMonths}
           onClose={() => setOpen(false)}
+          startOfWeek={startOfWeek}
+          showCalendarWeeks={showCalendarWeeks}
         />
       )}
       <input
@@ -116,4 +120,7 @@ type Props = {
   month?: number;
   year?: number;
   day?: number;
+
+  startOfWeek?: "monday" | "sunday";
+  showCalendarWeeks?: boolean;
 };

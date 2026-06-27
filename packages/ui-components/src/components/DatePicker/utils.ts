@@ -1,3 +1,5 @@
+import { StartOfWeek } from "./types";
+
 /**
  * Example: At May 2026, the first day of month is Friday, which means this
  * method will return 5.
@@ -34,4 +36,8 @@ export const isValidDate = (date: number | Date) => {
   }
 
   return false;
+};
+
+export const getOffset = (startOfWeek: StartOfWeek) => {
+  return startOfWeek === "monday" ? 0 : 1;
 };

@@ -1,8 +1,10 @@
 import styles from "./styles.module.css";
+import { StartOfWeek } from "./types";
 import {
   getDaysOfLastMonth,
   getDaysOfMonth,
   getFirstDayOfMonth,
+  getOffset,
 } from "./utils";
 
 // Calendar will always display 6 rows
@@ -18,6 +20,9 @@ type Props = {
   year?: number;
   day?: number;
   onClose: () => void;
+
+  startOfWeek?: StartOfWeek;
+  showCalendarWeeks?: boolean;
 };
 
 /**
@@ -30,6 +35,8 @@ export const DatePickerDialog = ({
   day = new Date().getDate(),
   month = new Date().getMonth(),
   year = new Date().getFullYear(),
+  startOfWeek = "monday",
+  showCalendarWeeks = false,
 }: Props) => {
   const handleClick = (
     _: React.MouseEvent,
@@ -47,13 +54,43 @@ export const DatePickerDialog = ({
     }
   };
 
+  const renderDayHeader = () => {
+    if (startOfWeek === "monday") {
+      return (
+        <>
+          <div data-testid="day-header">Mo</div>
+          <div data-testid="day-header">Tu</div>
+          <div data-testid="day-header">We</div>
+          <div data-testid="day-header">Th</div>
+          <div data-testid="day-header">Fr</div>
+          <div data-testid="day-header">Sa</div>
+          <div data-testid="day-header">Su</div>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <div data-testid="day-header">Su</div>
+          <div data-testid="day-header">Mo</div>
+          <div data-testid="day-header">Tu</div>
+          <div data-testid="day-header">We</div>
+          <div data-testid="day-header">Th</div>
+          <div data-testid="day-header">Fr</div>
+          <div data-testid="day-header">Sa</div>
+        </>
+      );
+    }
+  };
+
   const renderFirstRowOfMonth = () => {
     const firstDayOfMonth = getFirstDayOfMonth(year, month);
 
+    const offset = getOffset(startOfWeek);
+
     const days = [];
-    for (let weekDay = 1; weekDay <= 7; weekDay++) {
+    for (let weekDay = 1 - offset; weekDay <= 7 - offset; weekDay++) {
       if (weekDay < firstDayOfMonth) {
-        // fill days of prev month
+         // fill days of prev month
         const daysOfLastMonth = getDaysOfLastMonth(year, month);
         const dayOfLastMonth =
           daysOfLastMonth - (firstDayOfMonth - weekDay) + 1;
@@ -133,15 +170,7 @@ export const DatePickerDialog = ({
           onClick={onClose}
         ></button>
       </div>
-      <div className={styles.monthViewHeader}>
-        <div>Mo</div>
-        <div>Tu</div>
-        <div>We</div>
-        <div>Th</div>
-        <div>Fr</div>
-        <div>Sa</div>
-        <div>Su</div>
-      </div>
+      <div className={styles.monthViewHeader}>{renderDayHeader()}</div>
       <div>
         {Array(NUM_ROWS)
           .fill(0)
@@ -151,9 +180,11 @@ export const DatePickerDialog = ({
               return renderFirstRowOfMonth();
             }
 
+            const offset = getOffset(startOfWeek);
+
             const days = [];
             const daysOfMonth = getDaysOfMonth(year, month);
-            for (let weekDay = 1; weekDay <= 7; weekDay++) {
+            for (let weekDay = 1 - offset; weekDay <= 7 - offset; weekDay++) {
               let dayCounter =
                 7 * index + weekDay - getFirstDayOfMonth(year, month) + 1;
               const isNextMonth = dayCounter > daysOfMonth;

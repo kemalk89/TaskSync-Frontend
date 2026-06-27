@@ -65,6 +65,24 @@ describe("DatePicker", () => {
     expect(screen.getByText("Su")).toBeInTheDocument();
   });
 
+  it("should render day headers in the order Mon, Tue, Wed, Thu, Fri, Sat, Sun", () => {
+    render(
+      <DatePicker
+        placeholder="Select Date"
+        dictionaryMonths={mockDictionaryMonths}
+        month={4}
+        year={2026}
+      />,
+    );
+
+    fireEvent.click(screen.getByPlaceholderText("Select Date"));
+
+    const dayHeaders = screen.getAllByTestId("day-header");
+    const headerTexts = dayHeaders.map((el) => el.textContent);
+
+    expect(headerTexts).toEqual(["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]);
+  });
+
   it("should close the calendar when the close button is clicked", () => {
     render(
       <DatePicker
@@ -286,5 +304,46 @@ describe("DatePicker", () => {
     expect(mockOnSelect).toHaveBeenCalledWith(
       new Date(2026, 5, Number(nextMonthDay!.textContent)),
     );
+  });
+
+  describe("Start of week is sunday", () => {
+    it("should render day headers in the order Sun, Mon, Tue, Wed, Thu, Fri, Sat", () => {
+      render(
+        <DatePicker
+          placeholder="Select Date"
+          startOfWeek="sunday"
+          dictionaryMonths={mockDictionaryMonths}
+          month={5}
+          year={2026}
+        />,
+      );
+
+      fireEvent.click(screen.getByPlaceholderText("Select Date"));
+
+      const dayHeaders = screen.getAllByTestId("day-header");
+      const headerTexts = dayHeaders.map((el) => el.textContent);
+
+      expect(headerTexts).toEqual(["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]);
+
+      // Now verify first, second and last row
+      const rows = screen.getAllByTestId("calendar-row");
+      const firstRow = rows[0];
+      const secondRow = rows[1];
+      const lastRow = rows[rows.length - 1];
+
+      const firstRowTexts = Array.from(firstRow!.children).map(
+        (el) => el.textContent,
+      );
+      const secondRowTexts = Array.from(secondRow!.children).map(
+        (el) => el.textContent,
+      );
+      const lastRowTexts = Array.from(lastRow!.children).map(
+        (el) => el.textContent,
+      );
+
+      expect(firstRowTexts).toEqual(["31", "1", "2", "3", "4", "5", "6"]);
+      expect(secondRowTexts).toEqual(["7", "8", "9", "10", "11", "12", "13"]);
+      expect(lastRowTexts).toEqual(["5", "6", "7", "8", "9", "10", "11"]);
+    });
   });
 });

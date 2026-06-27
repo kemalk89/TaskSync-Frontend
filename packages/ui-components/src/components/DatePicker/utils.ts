@@ -19,3 +19,19 @@ export const getDaysOfMonth = (year: number, month: number) => {
 export const getDaysOfLastMonth = (year: number, month: number) => {
   return new Date(year, month, 0).getDate();
 };
+
+/**
+ * Checks if given input is a valid date.
+ *
+ * @param dateInMs Date object or date in milliseconds
+ */
+export const isValidDate = (date: number | Date) => {
+  if (typeof date === "number") {
+    return !isNaN(date);
+  }
+  if (date instanceof Date) {
+    return !isNaN(date.getTime());
+  }
+
+  return false;
+};

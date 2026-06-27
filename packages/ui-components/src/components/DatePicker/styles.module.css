@@ -1,10 +1,15 @@
 .monthYearSelectionContainer {
   margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .monthViewContainer {
-  padding: 8px 12px;
   position: absolute;
+  top: 42px;
+  z-index: 1;
+
+  padding: 8px 12px;
   border: 1px solid black;
   background-color: #fff;
 }
@@ -29,4 +34,8 @@
 
 .dayOutsideOfMonth {
   color: #8f8e8e;
+}
+
+.daySelected {
+  background-color: red;
 }

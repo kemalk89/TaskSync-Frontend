@@ -1,9 +1,19 @@
 import { ProjectResponse, BoardResponse, TicketResponse } from "@app/api";
 import { useSearchParams } from "next/navigation";
-import { Alert, Button } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Form,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  ModalTitle,
+} from "react-bootstrap";
 import { NewTicketDialog } from "../tickets/new-ticket-dialog";
 import { TicketsSearchBar } from "../tickets-search-bar/tickets-search-bar";
 import { IconInfoCircle } from "../../icons/icons";
+import { useTranslation } from "../../i18n";
 
 import { useState } from "react";
 import { TicketListSortable } from "./ticketlist-sortable";
@@ -14,15 +24,35 @@ import {
   useReorderBoardTickets,
 } from "../project-hooks";
 import { moveItem } from "@app/utils";
+import { DatePicker } from "../../components/DatePicker/DatePicker";
 
 type Props = {
   project?: ProjectResponse;
 };
 
 export const ProjectBacklog = ({ project }: Props) => {
+  const { t } = useTranslation();
   const searchParams = useSearchParams();
   const pageSize = 1000;
   const pageNumber = (searchParams.get("pageNumber") || 1) as number;
+
+  const [showStartSprintModal, setShowStartSprintModal] = useState(false);
+  const [sprintEndDate, setSprintEndDate] = useState<Date | null>(null);
+
+  const months = [
+    t("months.january"),
+    t("months.february"),
+    t("months.march"),
+    t("months.april"),
+    t("months.may"),
+    t("months.june"),
+    t("months.july"),
+    t("months.august"),
+    t("months.september"),
+    t("months.october"),
+    t("months.november"),
+    t("months.december"),
+  ];
 
   // Queries
   const { data: initialBacklogTickets } = useFetchBacklogTickets({
@@ -127,11 +157,17 @@ export const ProjectBacklog = ({ project }: Props) => {
 
   // Event Handlers
   const handleStartSprint = () => {
-    if (draftBoard?.tickets.length) {
-      console.log("Not yet implemented");
-    } else {
-      console.log("Not yet implemented");
-    }
+    setShowStartSprintModal(true);
+  };
+
+  const handleStartSprintSubmit = async () => {
+    if (!sprintEndDate || !project) return;
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    setShowStartSprintModal(false);
+    setSprintEndDate(null);
+    alert(t("sprint.started"));
   };
 
   return (
@@ -152,15 +188,13 @@ export const ProjectBacklog = ({ project }: Props) => {
       </div>
       <div className="mb-4">
         <div className="d-flex justify-content-between mb-3">
-          <h3>Nächster Sprint</h3>
-          <Button onClick={handleStartSprint}>Sprint starten</Button>
+          <h3>{t("sprint.next")}</h3>
+          <Button onClick={handleStartSprint}>{t("sprint.start")}</Button>
         </div>
 
         {(!draftBoard || draftBoard?.tickets.length === 0) && (
           <Alert variant="info">
-            <IconInfoCircle /> Es sind noch keine Tickets eingeplant für das
-            nächste Sprint eingeplant. Tickets können per Drag&Drop in diesen
-            Abschnitt gezogen werden.
+            <IconInfoCircle /> {t("sprint.noTickets")}
           </Alert>
         )}
 
@@ -199,6 +233,41 @@ export const ProjectBacklog = ({ project }: Props) => {
           changeOrderOfTicketsInBacklog(e.dataTransfer.getData("text"), index)
         }
       />
+
+      <Modal
+        show={showStartSprintModal}
+        onHide={() => setShowStartSprintModal(false)}
+      >
+        <ModalHeader closeButton>
+          <ModalTitle>{t("sprint.modal.title")}</ModalTitle>
+        </ModalHeader>
+        <ModalBody>
+          <Form.Group className="mb-3">
+            <Form.Label>{t("sprint.modal.endDate")}</Form.Label>
+            <DatePicker
+              className="form-control"
+              placeholder={t("sprint.modal.selectDate")}
+              dictionaryMonths={months}
+              onSelect={(date) => setSprintEndDate(date)}
+            />
+          </Form.Group>
+        </ModalBody>
+        <ModalFooter>
+          <Button
+            variant="outline-secondary"
+            onClick={() => setShowStartSprintModal(false)}
+          >
+            {t("sprint.modal.cancel")}
+          </Button>
+          <Button
+            variant="primary"
+            disabled={!sprintEndDate}
+            onClick={handleStartSprintSubmit}
+          >
+            {t("sprint.start")}
+          </Button>
+        </ModalFooter>
+      </Modal>
     </>
   );
 };

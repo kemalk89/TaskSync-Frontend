@@ -21,20 +21,20 @@ describe("DatePicker", () => {
   it("should render the label", () => {
     render(
       <DatePicker
-        label="Select Date"
+        placeholder="Select Date"
         dictionaryMonths={mockDictionaryMonths}
         month={4}
         year={2026}
       />,
     );
 
-    expect(screen.getByText("Select Date")).toBeInTheDocument();
+    expect(screen.getByPlaceholderText("Select Date")).toBeInTheDocument();
   });
 
   it("should not render the calendar dialog by default", () => {
     render(
       <DatePicker
-        label="Select Date"
+        placeholder="Select Date"
         dictionaryMonths={mockDictionaryMonths}
         month={4}
         year={2026}
@@ -47,14 +47,14 @@ describe("DatePicker", () => {
   it("should open the calendar when the label button is clicked", () => {
     render(
       <DatePicker
-        label="Select Date"
+        placeholder="Select Date"
         dictionaryMonths={mockDictionaryMonths}
         month={4}
         year={2026}
       />,
     );
 
-    fireEvent.click(screen.getByText("Select Date"));
+    fireEvent.click(screen.getByPlaceholderText("Select Date"));
 
     expect(screen.getByText("Mo")).toBeInTheDocument();
     expect(screen.getByText("Tu")).toBeInTheDocument();
@@ -68,14 +68,14 @@ describe("DatePicker", () => {
   it("should close the calendar when the close button is clicked", () => {
     render(
       <DatePicker
-        label="Select Date"
+        placeholder="Select Date"
         dictionaryMonths={mockDictionaryMonths}
         month={4}
         year={2026}
       />,
     );
 
-    fireEvent.click(screen.getByText("Select Date"));
+    fireEvent.click(screen.getByPlaceholderText("Select Date"));
     expect(screen.getByText("Mo")).toBeInTheDocument();
 
     const closeBtn = screen.getByRole("button", { name: "" });
@@ -86,35 +86,35 @@ describe("DatePicker", () => {
   it("should re-open the calendar after closing", () => {
     render(
       <DatePicker
-        label="Select Date"
+        placeholder="Select Date"
         dictionaryMonths={mockDictionaryMonths}
         month={4}
         year={2026}
       />,
     );
 
-    fireEvent.click(screen.getByText("Select Date"));
+    fireEvent.click(screen.getByPlaceholderText("Select Date"));
     expect(screen.getByText("Mo")).toBeInTheDocument();
 
     const closeBtn = screen.getByRole("button", { name: "" });
     fireEvent.click(closeBtn);
     expect(screen.queryByText("Mo")).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByText("Select Date"));
+    fireEvent.click(screen.getByPlaceholderText("Select Date"));
     expect(screen.getByText("Mo")).toBeInTheDocument();
   });
 
   it("should render other month days with a different color style", () => {
     render(
       <DatePicker
-        label="Select Date"
+        placeholder="Select Date"
         dictionaryMonths={mockDictionaryMonths}
         month={4}
         year={2026}
       />,
     );
 
-    fireEvent.click(screen.getByText("Select Date"));
+    fireEvent.click(screen.getByPlaceholderText("Select Date"));
 
     const grayDayElements = screen.getAllByTestId("day-outside-month");
     expect(grayDayElements.length).toBeGreaterThan(0);
@@ -131,14 +131,14 @@ describe("DatePicker", () => {
   it("should render the calendar for June 2026 with correct first row", () => {
     render(
       <DatePicker
-        label="Pick a Day"
+        placeholder="Pick a Day"
         dictionaryMonths={mockDictionaryMonths}
         month={5}
         year={2026}
       />,
     );
 
-    fireEvent.click(screen.getByText("Pick a Day"));
+    fireEvent.click(screen.getByPlaceholderText("Pick a Day"));
 
     // June 1, 2026 is a Monday, so the first row should be:
     // Mo(1), Tu(2), We(3), Th(4), Fr(5), Sa(6), Su(7)
@@ -154,14 +154,14 @@ describe("DatePicker", () => {
   it("should render the calendar for a leap year February 2024", () => {
     render(
       <DatePicker
-        label="Pick a Day"
+        placeholder="Pick a Day"
         dictionaryMonths={mockDictionaryMonths}
         month={1}
         year={2024}
       />,
     );
 
-    fireEvent.click(screen.getByText("Pick a Day"));
+    fireEvent.click(screen.getByPlaceholderText("Pick a Day"));
 
     // February 2024 is a leap year with 29 days
     // Row 1: Jan 29, 30, 31 + Feb 1, 2, 3, 4
@@ -187,14 +187,14 @@ describe("DatePicker", () => {
   it("should update month dropdown selection when onChange is triggered", () => {
     render(
       <DatePicker
-        label="Select Date"
+        placeholder="Select Date"
         dictionaryMonths={mockDictionaryMonths}
         month={0}
         year={2026}
       />,
     );
 
-    fireEvent.click(screen.getByText("Select Date"));
+    fireEvent.click(screen.getByPlaceholderText("Select Date"));
 
     const selects = screen.getAllByRole("combobox");
     const monthSelect = selects[0];
@@ -208,14 +208,14 @@ describe("DatePicker", () => {
 
     render(
       <DatePicker
-        label="Select Date"
+        placeholder="Select Date"
         dictionaryMonths={mockDictionaryMonths}
         month={0}
         year={currentYear}
       />,
     );
 
-    fireEvent.click(screen.getByText("Select Date"));
+    fireEvent.click(screen.getByPlaceholderText("Select Date"));
 
     const selects = screen.getAllByRole("combobox");
     const yearSelect = selects[1];
@@ -231,7 +231,7 @@ describe("DatePicker", () => {
 
     render(
       <DatePicker
-        label="Select Date"
+        placeholder="Select Date"
         dictionaryMonths={mockDictionaryMonths}
         onSelect={mockOnSelect}
         month={4}
@@ -239,7 +239,7 @@ describe("DatePicker", () => {
       />,
     );
 
-    fireEvent.click(screen.getByText("Select Date"));
+    fireEvent.click(screen.getByPlaceholderText("Select Date"));
 
     const dayElement = screen.getByText("15");
     fireEvent.click(dayElement);
@@ -248,11 +248,28 @@ describe("DatePicker", () => {
     expect(mockOnSelect).toHaveBeenCalledWith(new Date(2026, 4, 15));
   });
 
+  it("should close the calendar when ESC key is pressed", () => {
+    render(
+      <DatePicker
+        placeholder="Select Date"
+        dictionaryMonths={mockDictionaryMonths}
+        month={4}
+        year={2026}
+      />,
+    );
+
+    fireEvent.click(screen.getByPlaceholderText("Select Date"));
+    expect(screen.getByText("Mo")).toBeInTheDocument();
+
+    fireEvent.keyDown(document, { key: "Escape", code: "Escape" });
+    expect(screen.queryByText("Mo")).not.toBeInTheDocument();
+  });
+
   it("should call onSelect with the correct date for a next-month day number", () => {
     const mockOnSelect = jest.fn();
     render(
       <DatePicker
-        label="Select Date"
+        placeholder="Select Date"
         dictionaryMonths={mockDictionaryMonths}
         onSelect={mockOnSelect}
         month={4} // May
@@ -260,7 +277,7 @@ describe("DatePicker", () => {
       />,
     );
 
-    fireEvent.click(screen.getByText("Select Date"));
+    fireEvent.click(screen.getByPlaceholderText("Select Date"));
 
     const grayDayElements = screen.getAllByTestId("day-outside-month");
     const nextMonthDay = grayDayElements[grayDayElements.length - 1];

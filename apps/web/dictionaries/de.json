@@ -8,5 +8,31 @@
     "users": "Benutzer",
     "my_profile": "Mein Profil",
     "settings": "Einstellungen"
+  },
+  "sprint": {
+    "next": "Nächster Sprint",
+    "start": "Sprint starten",
+    "noTickets": "Es sind noch keine Tickets eingeplant für den nächsten Sprint. Tickets können per Drag&Drop in diesen Abschnitt gezogen werden.",
+    "started": "Sprint gestartet erfolgreich!",
+    "modal": {
+      "title": "Sprint starten",
+      "endDate": "Enddatum des Sprints",
+      "selectDate": "Datum auswählen",
+      "cancel": "Abbrechen"
+    }
+  },
+  "months": {
+    "january": "Januar",
+    "february": "Februar",
+    "march": "März",
+    "april": "April",
+    "may": "Mai",
+    "june": "Juni",
+    "july": "Juli",
+    "august": "August",
+    "september": "September",
+    "october": "Oktober",
+    "november": "November",
+    "december": "Dezember"
   }
 }

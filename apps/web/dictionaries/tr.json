@@ -8,5 +8,31 @@
     "users": "Kullanıcılar",
     "my_profile": "Profilim",
     "settings": "Ayarlar"
+  },
+  "sprint": {
+    "next": "Sonraki Sprint",
+    "start": "Sprint Başlat",
+    "noTickets": "Henüz sonraki sprint için bilet planlanmadı. Biletler sürükle-bırak ile bu bölüme taşınabilir.",
+    "started": "Sprint başarıyla başlatıldı!",
+    "modal": {
+      "title": "Sprint Başlat",
+      "endDate": "Sprint Bitiş Tarihi",
+      "selectDate": "Tarih seçin",
+      "cancel": "İptal"
+    }
+  },
+  "months": {
+    "january": "Ocak",
+    "february": "Şubat",
+    "march": "Mart",
+    "april": "Nisan",
+    "may": "Mayıs",
+    "june": "Haziran",
+    "july": "Temmuz",
+    "august": "Ağustos",
+    "september": "Eylül",
+    "october": "Ekim",
+    "november": "Kasım",
+    "december": "Aralık"
   }
 }

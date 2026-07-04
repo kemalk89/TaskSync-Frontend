@@ -4,7 +4,7 @@ import { ProjectTeam } from "./project-team";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { ProjectBacklog } from "./project-backlog";
-import { EditableLine } from "../../editable-content/editable-content";
+import { EditableLine } from "../../components/editable-content/editable-content";
 import { useFetchProjectById, useUpdateProject } from "../project-hooks";
 import { ProjectInfo } from "./project-info";
 import { TabContentActiveSprint } from "./tab-content-active-sprint";

@@ -3,7 +3,7 @@
 import { TicketIcon } from "../tickets/ticket-icons";
 import { TicketComments } from "../ticket-comments/ticket-comments";
 import { TextEditorReadonly } from "../../texteditor/texteditor-readonly";
-import { EditableLine } from "../../editable-content/editable-content";
+import { EditableLine } from "../../components/editable-content/editable-content";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getAPI } from "@app/api";
 import { QUERY_KEY_FETCH_TICKET_BY_ID } from "../constants";

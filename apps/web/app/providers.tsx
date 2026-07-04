@@ -10,6 +10,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { PropsWithChildren, useCallback, useState } from "react";
 import { getQueryClient } from "./get-query-client";
 import { Locale } from "./dictionaries";
+import { SessionProvider } from "next-auth/react";
 
 let TOAST_ID_COUNTER = 0;
 
@@ -37,18 +38,23 @@ export const Providers = ({
   }, []);
 
   return (
-    <TranslationProvider currentLng={currentLng} initialDictionary={dictionary}>
-      <QueryClientProvider client={queryClient}>
-        <ToastContext
-          value={{
-            toastMessages,
-            newToast,
-            removeToast,
-          }}
-        >
-          <ConfirmationModalProvider>{children}</ConfirmationModalProvider>
-        </ToastContext>
-      </QueryClientProvider>
-    </TranslationProvider>
+    <SessionProvider>
+      <TranslationProvider
+        currentLng={currentLng}
+        initialDictionary={dictionary}
+      >
+        <QueryClientProvider client={queryClient}>
+          <ToastContext
+            value={{
+              toastMessages,
+              newToast,
+              removeToast,
+            }}
+          >
+            <ConfirmationModalProvider>{children}</ConfirmationModalProvider>
+          </ToastContext>
+        </QueryClientProvider>
+      </TranslationProvider>
+    </SessionProvider>
   );
 };

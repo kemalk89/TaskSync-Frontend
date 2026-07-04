@@ -13,9 +13,11 @@ import {
 import Image from "next/image";
 import { NewTicketDialog, useTranslation } from "@app/ui-components";
 import { SignOut } from "./sign-out";
-import { Session } from "next-auth";
+import { useSession } from "next-auth/react";
 
-export const NavbarContent = ({ session }: { session: Session | null }) => {
+export const NavbarContent = () => {
+  const { data: session } = useSession();
+
   const { t } = useTranslation();
   return (
     <>

@@ -5,6 +5,8 @@ import { isValidDate } from "./utils";
 import { DatePickerDialog } from "./DatePickerDialog";
 import { parseDate } from "./parser";
 
+import styles from "./styles.module.css";
+
 export const DatePicker = ({
   placeholder = "",
   dictionaryMonths,
@@ -85,16 +87,19 @@ export const DatePicker = ({
   return (
     <div style={{ position: "relative" }}>
       {isOpen && (
-        <DatePickerDialog
-          day={selectedDay}
-          month={selectedMonth}
-          year={selectedYear}
-          onSelect={handleSelect}
-          dictionaryMonths={dictionaryMonths}
-          onClose={() => setOpen(false)}
-          startOfWeek={startOfWeek}
-          showCalendarWeeks={showCalendarWeeks}
-        />
+        <>
+          <div className={styles.overlay} onClick={() => setOpen(false)}></div>
+          <DatePickerDialog
+            day={selectedDay}
+            month={selectedMonth}
+            year={selectedYear}
+            onSelect={handleSelect}
+            dictionaryMonths={dictionaryMonths}
+            onClose={() => setOpen(false)}
+            startOfWeek={startOfWeek}
+            showCalendarWeeks={showCalendarWeeks}
+          />
+        </>
       )}
       <input
         type="text"

@@ -137,6 +137,7 @@ export const DatePickerDialog = ({
       <div className={styles.monthYearSelectionContainer}>
         <div>
           <select
+            className={styles.select}
             name="month"
             value={month}
             onChange={(e) => handleSelect(day, Number(e.target.value), year)}
@@ -155,6 +156,7 @@ export const DatePickerDialog = ({
             <option value="11">{dictionaryMonths[11]}</option>
           </select>{" "}
           <select
+            className={styles.select}
             name="year"
             value={year}
             onChange={(e) => handleSelect(day, month, Number(e.target.value))}

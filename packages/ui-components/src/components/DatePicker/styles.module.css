@@ -10,7 +10,8 @@
   z-index: 1;
 
   padding: 8px 12px;
-  border: 1px solid black;
+  border: 1px solid rgb(167, 167, 167);
+  border-radius: 4px;
   background-color: #fff;
 }
 
@@ -20,12 +21,15 @@
 
 .day,
 .monthViewHeader div {
-  width: 32px;
+  width: 48px;
   text-align: center;
+  padding: 12px;
 }
 
 .day:hover {
-  background-color: red;
+  color: var(--date-picker-day-hover-foreground, #000);
+  background-color: var(--date-picker-day-hover-background, rgb(210, 210, 210));
+  cursor: pointer;
 }
 
 .row {
@@ -37,5 +41,9 @@
 }
 
 .daySelected {
-  background-color: red;
+  color: var(--date-picker-day-selected-foreground, #000);
+  background-color: var(
+    --date-picker-day-selected-background,
+    rgb(210, 210, 210)
+  );
 }

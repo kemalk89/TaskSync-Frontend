@@ -1,10 +1,13 @@
 // @import "bootstrap/dist/css/bootstrap.min.css";
 @import "./bootstrap-custom.scss";
-@import "~bootstrap/scss/variables";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --date-picker-day-selected-background: #{$primary};
+  --date-picker-day-selected-foreground: #fff;
+  --date-picker-day-hover-background: #{$primary};
+  --date-picker-day-hover-foreground: #fff;
 }
 
 @media (prefers-color-scheme: dark) {

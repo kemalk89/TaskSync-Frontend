@@ -18,9 +18,7 @@ test("create new project and plan a board", async ({ page, request }) => {
     await page.getByRole("link", { name: "Backlog" }).click();
 
     await expect(
-      page.getByText(
-        "Tickets können per Drag&Drop in diesen Abschnitt gezogen werden",
-      ),
+      page.getByText("Tickets can be dragged and dropped into this section."),
     ).toBeVisible();
   });
 

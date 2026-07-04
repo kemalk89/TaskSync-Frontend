@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { isValidDate } from "./utils";
 import { DatePickerDialog } from "./DatePickerDialog";
 import { parseDate } from "./parser";
@@ -23,23 +23,13 @@ export const DatePicker = ({
   const [selectedYear, setSelectedYear] = useState(year);
   const [selectedDay, setSelectedDay] = useState(day);
 
-  const selectedDate = new Date(year, month, day);
+  const selectedDate = useMemo(
+    () => new Date(year, month, day),
+    [day, month, year],
+  );
   const [value, setValue] = useState(
     isValidDate(selectedDate) ? selectedDate.toLocaleDateString(locale) : "",
   );
-
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown, true);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown, true);
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (isValidDate(selectedDate)) {
-      setValue(selectedDate.toLocaleDateString(locale));
-    }
-  }, [locale]);
 
   // Start: Event handlers
   const handleSelect = (day: number, month: number, year: number) => {
@@ -69,14 +59,28 @@ export const DatePicker = ({
       }
     }
   };
-
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === "Escape" && isOpen) {
-      event.stopPropagation();
-      setOpen(false);
-    }
-  };
   // End: Event handlers
+
+  // Start: Hooks
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && isOpen) {
+        event.stopPropagation();
+        setOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown, true);
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (isValidDate(selectedDate)) {
+      setValue(selectedDate.toLocaleDateString(locale));
+    }
+  }, [locale, selectedDate]);
+  // End: Hooks
 
   return (
     <div style={{ position: "relative" }}>

@@ -36,7 +36,7 @@ export const DatePickerDialog = ({
   month = new Date().getMonth(),
   year = new Date().getFullYear(),
   startOfWeek = "monday",
-  showCalendarWeeks = false,
+  //showCalendarWeeks = false,
 }: Props) => {
   const handleClick = (
     _: React.MouseEvent,
@@ -90,7 +90,7 @@ export const DatePickerDialog = ({
     const days = [];
     for (let weekDay = 1 - offset; weekDay <= 7 - offset; weekDay++) {
       if (weekDay < firstDayOfMonth) {
-         // fill days of prev month
+        // fill days of prev month
         const daysOfLastMonth = getDaysOfLastMonth(year, month);
         const dayOfLastMonth =
           daysOfLastMonth - (firstDayOfMonth - weekDay) + 1;

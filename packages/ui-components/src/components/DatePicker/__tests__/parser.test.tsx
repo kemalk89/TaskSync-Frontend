@@ -2,7 +2,7 @@ import { parseDate } from "../parser";
 
 describe("DatePicker", () => {
   it("should parse for locale 'tr'", () => {
-    let date = parseDate("17.04.2026", "tr");
+    const date = parseDate("17.04.2026", "tr");
     expect(date!.getDate()).toBe(17);
     expect(date!.getMonth()).toBe(3);
     expect(date!.getFullYear()).toBe(2026);

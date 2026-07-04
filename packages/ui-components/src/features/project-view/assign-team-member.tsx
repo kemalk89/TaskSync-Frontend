@@ -15,7 +15,7 @@ import {
   FormLabel,
 } from "react-bootstrap";
 import { Select } from "../../select";
-import { UserName } from "../../user-name/user-name";
+import { UserName } from "../../components/user-name/user-name";
 
 type Props = {
   projectId?: number;

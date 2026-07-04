@@ -6,7 +6,7 @@ import { Ref, useEffect, useState } from "react";
 import { Form, FormControl, FormGroup, FormLabel } from "react-bootstrap";
 import { Select } from "../../select";
 import { TicketIconBug, TicketIconStory, TicketIconTask } from "./ticket-icons";
-import { UserName } from "../../user-name/user-name";
+import { UserName } from "../../components/user-name/user-name";
 import { TextEditor } from "../../texteditor/texteditor";
 import { useTextEditor } from "../../texteditor/use-texteditor";
 import { SelectMulti } from "../../select-multi";
@@ -15,7 +15,7 @@ interface Props {
   formRef: Ref<FormikProps<TicketFormValues>>;
   preselectedProjectId?: string;
   saveHandler: (
-    project: TicketFormValues
+    project: TicketFormValues,
   ) => Promise<ApiResponse<TicketResponse>>;
   onSubmitStart: () => void;
   onSubmitFinished: (result: ApiResponse<TicketResponse>) => void;
@@ -174,7 +174,7 @@ export const TicketForm = ({
               onUnselect={(labelId) => {
                 const currentLabels = formikProps.values.labels;
                 const newLabels = currentLabels.filter(
-                  (label) => label.id !== labelId
+                  (label) => label.id !== labelId,
                 );
                 formikProps.setFieldValue("labels", newLabels);
               }}
@@ -206,7 +206,7 @@ export const TicketForm = ({
                   (projectMember) => ({
                     label: <UserName user={projectMember.user} />,
                     value: projectMember.userId.toString(),
-                  })
+                  }),
                 ) ?? []
               }
             />

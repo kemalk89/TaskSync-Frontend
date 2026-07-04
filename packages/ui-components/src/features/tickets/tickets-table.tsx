@@ -2,7 +2,7 @@ import { Table } from "react-bootstrap";
 import { TicketResponse } from "@app/api";
 import { useRouter } from "next/navigation";
 import { TicketTitleWithLink } from "./ticket-title-with-link";
-import { UserName } from "../../user-name/user-name";
+import { UserName } from "../../components/user-name/user-name";
 import {
   MoreMenu,
   MoreMenuItem,

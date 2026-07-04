@@ -6,7 +6,7 @@ import { Ref } from "react";
 import { Form, FormControl, FormGroup, FormLabel } from "react-bootstrap";
 import { Select } from "../../select";
 import { useQuery } from "@tanstack/react-query";
-import { UserName } from "../../user-name/user-name";
+import { UserName } from "../../components/user-name/user-name";
 import { QUERY_KEY_FETCH_USERS } from "../constants";
 import { TextEditor } from "../../texteditor/texteditor";
 import { useTextEditor } from "../../texteditor/use-texteditor";
@@ -26,7 +26,7 @@ export interface ProjectFormValues {
 interface ProjectFormProps {
   formRef: Ref<FormikProps<ProjectFormValues>>;
   saveHandler: (
-    project: ProjectFormValues
+    project: ProjectFormValues,
   ) => Promise<ApiResponse<ProjectResponse>>;
   onSubmitStart: () => void;
   onSubmitFinished: (result: ApiResponse<ProjectResponse>) => void;

@@ -4,7 +4,7 @@ import { FormEvent, useState } from "react";
 import { Button, Col, Form } from "react-bootstrap";
 import { FilterDropdown } from "../../components/filter/filter-dropdown";
 import { ProjectResponse, TicketStatusModel, UserResponse } from "@app/api";
-import { UserName } from "../../user-name/user-name";
+import { UserName } from "../../components/user-name/user-name";
 
 type Props = {
   initialSearchText?: string | null;
@@ -23,7 +23,7 @@ type Props = {
     searchText: string,
     status: string[],
     projects: string[],
-    users: string[]
+    users: string[],
   ) => void;
 };
 
@@ -44,18 +44,18 @@ export const TicketsSearchBar = ({
 }: Props) => {
   const [searchText, setSearchText] = useState(initialSearchText ?? "");
   const [selectedLabels, setSelectedLabels] = useState(
-    initialSelectedLabels ?? []
+    initialSelectedLabels ?? [],
   );
   const [selectedAssignees, setSelectedAssignees] = useState(
-    initialSelectedAssignees ?? []
+    initialSelectedAssignees ?? [],
   );
 
   const [selectedStatus, setSelectedStatus] = useState(
-    initialSelectedStatus ?? []
+    initialSelectedStatus ?? [],
   );
 
   const [selectedProjects, setSelectedProjects] = useState(
-    initialSelectedProjects ?? []
+    initialSelectedProjects ?? [],
   );
 
   const handleSubmit = (e: FormEvent) => {
@@ -118,7 +118,7 @@ export const TicketsSearchBar = ({
                   searchText,
                   newList,
                   selectedProjects,
-                  selectedAssignees
+                  selectedAssignees,
                 );
               }}
               onUnselect={(id) => {
@@ -128,7 +128,7 @@ export const TicketsSearchBar = ({
                   searchText,
                   newList,
                   selectedProjects,
-                  selectedAssignees
+                  selectedAssignees,
                 );
               }}
             />
@@ -147,7 +147,7 @@ export const TicketsSearchBar = ({
                     searchText,
                     selectedStatus,
                     newList,
-                    selectedAssignees
+                    selectedAssignees,
                   );
                 }}
                 onUnselect={(id) => {
@@ -157,7 +157,7 @@ export const TicketsSearchBar = ({
                     searchText,
                     selectedStatus,
                     newList,
-                    selectedAssignees
+                    selectedAssignees,
                   );
                 }}
               />

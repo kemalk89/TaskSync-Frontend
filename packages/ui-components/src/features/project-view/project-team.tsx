@@ -1,5 +1,5 @@
 import { ProjectResponse } from "@app/api";
-import { UserName } from "../../user-name/user-name";
+import { UserName } from "../../components/user-name/user-name";
 import { Button, Table } from "react-bootstrap";
 import { AssignProjectManager } from "./assign-project-manager";
 import { AssignTeamMember } from "./assign-team-member";
@@ -43,7 +43,7 @@ export const ProjectTeam = ({ project }: Props) => {
           {project?.projectMembers
             .filter(
               (m) =>
-                m.userId !== (project.projectManager?.id as unknown as number)
+                m.userId !== (project.projectManager?.id as unknown as number),
             )
             .map((projectMember) => (
               <tr key={projectMember.userId}>

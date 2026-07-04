@@ -1,7 +1,7 @@
 import { Button, Table } from "react-bootstrap";
 import Link from "next/link";
 import { ProjectResponse } from "@app/api";
-import { UserName } from "../../user-name/user-name";
+import { UserName } from "../../components/user-name/user-name";
 import { useRouter } from "next/navigation";
 
 type Props = {

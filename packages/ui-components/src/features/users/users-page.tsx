@@ -5,7 +5,7 @@ import { getAPI, PagedResult, UserResponse } from "@app/api";
 import { Button, Table } from "react-bootstrap";
 import { Pagination } from "../pagination/pagination";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { UserName } from "../../user-name/user-name";
+import { UserName } from "../../components/user-name/user-name";
 import { TextDate } from "../../text-date";
 
 export const UsersPage = () => {
@@ -80,7 +80,7 @@ export const UsersPage = () => {
           paged={data}
           onPageSelected={(pageNumber) =>
             router.replace(
-              `${pathname}?${createQueryString("pageNumber", pageNumber.toString())}`
+              `${pathname}?${createQueryString("pageNumber", pageNumber.toString())}`,
             )
           }
         />

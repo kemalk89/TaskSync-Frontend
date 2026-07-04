@@ -5,7 +5,7 @@ import { TextEditor } from "../../texteditor/texteditor";
 import { getAPI } from "@app/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { TextEditorReadonly } from "../../texteditor/texteditor-readonly";
-import { UserName } from "../../user-name/user-name";
+import { UserName } from "../../components/user-name/user-name";
 import { TextDate } from "../../text-date";
 import { IconTrash } from "../../icons/icons";
 import { useContext } from "react";
@@ -105,7 +105,7 @@ export const TicketComments = ({ ticketId }: Props) => {
       },
       {
         onConfirm: onConfirmDeleteTicket,
-      }
+      },
     );
   };
 
@@ -130,7 +130,7 @@ export const TicketComments = ({ ticketId }: Props) => {
         <div
           key={comment.id}
           className={["mb-4", comment.isDeleted ? "text-secondary" : ""].join(
-            " "
+            " ",
           )}
         >
           <div className="d-flex align-items-center gap-2 mb-2">

@@ -51,8 +51,8 @@ export const NavbarContent = () => {
             </Nav>
             <Nav>
               <NavDropdown
+                align="end"
                 title={session.user.name ?? session.user.email}
-                id="basic-nav-dropdown"
               >
                 <DropdownItem as={Link} href="/my-profile">
                   {t("navbar.my_profile")}

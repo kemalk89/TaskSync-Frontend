@@ -10,7 +10,7 @@ import { useDeleteTicketModal } from "../ticket-hooks/use-delete-ticket-modal";
 import { useRouter } from "next/navigation";
 import { Card } from "react-bootstrap";
 import { TicketTitleWithLink } from "../tickets/ticket-title-with-link";
-import { UserImage } from "../../user-name/user-img";
+import { UserImage } from "../../components/user-name/user-img";
 import { IconGripVertical, IconThreeDots } from "../../icons/icons";
 import styles from "./styles.module.css";
 import {

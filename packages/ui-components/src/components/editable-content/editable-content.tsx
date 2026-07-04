@@ -1,7 +1,7 @@
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
 
 import { Formik } from "formik";
-import { IconCheck2, IconX } from "../icons/icons";
+import { IconCheck2, IconX } from "../../icons/icons";
 
 import { Button, Col, Form, InputGroup } from "react-bootstrap";
 

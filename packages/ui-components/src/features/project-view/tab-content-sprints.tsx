@@ -8,7 +8,10 @@ export const TabContentSprints = ({ projectId }: { projectId: number }) => {
   const pageNumber = 1;
   const pageSize = 100;
   const { data: sprints } = useQuery({
-    queryKey: getQueryKeyFetchProjectSprints(projectId),
+    queryKey: getQueryKeyFetchProjectSprints(projectId, {
+      pageNumber,
+      pageSize,
+    }),
     queryFn: async () => {
       return await getAPI().get.fetchProjectSprints(projectId, {
         pageNumber,

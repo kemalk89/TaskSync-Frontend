@@ -45,7 +45,7 @@ export interface TicketResponse {
   id: string;
   title: string;
   assignee: any;
-  Status: any;
+  Status?: any;
   type: string;
   description?: string;
   createdDate: string;

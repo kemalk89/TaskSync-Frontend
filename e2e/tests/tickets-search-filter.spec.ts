@@ -25,6 +25,8 @@ test("Create tickets and filter tickets by assignees", async ({ page }) => {
   });
   await page.getByRole("button", { name: "Speichern" }).click();
 
+  await expect(page.getByText("Ticket erfolgreich angelegt")).toBeVisible();
+
   // Create new ticket for Kerem
   await page.getByRole("button", { name: "Ticket anlegen" }).click();
 

@@ -96,7 +96,7 @@ describe("DatePicker", () => {
     fireEvent.click(screen.getByPlaceholderText("Select Date"));
     expect(screen.getByText("Mo")).toBeInTheDocument();
 
-    const closeBtn = screen.getByRole("button", { name: "" });
+    const closeBtn = screen.getByTestId("close-button");
     fireEvent.click(closeBtn);
     expect(screen.queryByText("Mo")).not.toBeInTheDocument();
   });
@@ -114,7 +114,7 @@ describe("DatePicker", () => {
     fireEvent.click(screen.getByPlaceholderText("Select Date"));
     expect(screen.getByText("Mo")).toBeInTheDocument();
 
-    const closeBtn = screen.getByRole("button", { name: "" });
+    const closeBtn = screen.getByTestId("close-button");
     fireEvent.click(closeBtn);
     expect(screen.queryByText("Mo")).not.toBeInTheDocument();
 

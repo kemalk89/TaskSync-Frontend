@@ -170,6 +170,7 @@ export const DatePickerDialog = ({
           type="button"
           className="btn-close btn-sm"
           onClick={onClose}
+          data-testid="close-button"
         ></button>
       </div>
       <div className={styles.monthViewHeader}>{renderDayHeader()}</div>

@@ -98,14 +98,14 @@ export const DatePickerDialog = ({
         const prevYear = month === 0 ? year - 1 : year;
 
         days.push(
-          <div
+          <button
             key={weekDay}
             onClick={(e) => handleClick(e, dayOfLastMonth, prevMonth, prevYear)}
             className={[styles.day, styles.dayOutsideOfMonth].join(" ")}
             data-testid="day-outside-month"
           >
             {dayOfLastMonth}
-          </div>,
+          </button>,
         );
       } else {
         const classNames = [styles.day];
@@ -115,13 +115,13 @@ export const DatePickerDialog = ({
         }
 
         days.push(
-          <div
+          <button
             key={weekDay}
             className={classNames.join(" ")}
             onClick={(e) => handleClick(e, dayCounter, month, year)}
           >
             {dayCounter}
-          </div>,
+          </button>,
         );
       }
     }
@@ -207,7 +207,7 @@ export const DatePickerDialog = ({
               const nextYear = year === 11 ? year + 1 : year;
 
               days.push(
-                <div
+                <button
                   key={index + "-" + dayCounter}
                   className={classNames.join(" ")}
                   data-testid={isNextMonth ? "day-outside-month" : undefined}
@@ -221,7 +221,7 @@ export const DatePickerDialog = ({
                   }
                 >
                   {dayCounter}
-                </div>,
+                </button>,
               );
             }
 

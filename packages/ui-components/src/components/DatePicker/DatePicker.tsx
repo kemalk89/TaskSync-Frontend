@@ -88,7 +88,18 @@ export const DatePicker = ({
     <div style={{ position: "relative" }}>
       {isOpen && (
         <>
-          <div className={styles.overlay} onClick={() => setOpen(false)}></div>
+          <div
+            className={styles.overlay}
+            onClick={() => setOpen(false)}
+            tabIndex={0}
+            role="button"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setOpen(false);
+              }
+            }}
+          ></div>
           <DatePickerDialog
             day={selectedDay}
             month={selectedMonth}

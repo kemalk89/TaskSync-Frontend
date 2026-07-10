@@ -168,7 +168,7 @@ export const ProjectBacklog = ({ project }: Props) => {
   const handleStartSprintSubmit = async () => {
     if (!sprintEndDate || !project) return;
 
-    const response = await getAPI().post.createSprint(project.id, {
+    await getAPI().post.createSprint(project.id, {
       endDate: sprintEndDate,
     });
 

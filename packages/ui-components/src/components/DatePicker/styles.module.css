@@ -19,6 +19,13 @@
   display: flex;
 }
 
+button.day {
+  border: 0;
+}
+button.day:not(.daySelected):not(:hover) {
+  background-color: transparent;
+}
+
 .day,
 .monthViewHeader div {
   width: 48px;

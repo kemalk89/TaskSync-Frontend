@@ -23,3 +23,7 @@ export type ReorderTicketsCommand = Array<{
   ticketId: number;
   position: number;
 }>;
+
+export type CreateSprintCommand = {
+  endDate: Date;
+};

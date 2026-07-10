@@ -10,6 +10,8 @@ import {
 } from "../../components/more-menu/more-menu";
 import { copyTextToClipboard } from "@app/utils";
 import { IconThreeDots } from "../../icons/icons";
+import Link from "next/link";
+import { TicketStatusLabel } from "./ticket-status-label";
 
 type Props = {
   isLoading?: boolean;
@@ -36,7 +38,9 @@ export const TicketsTable = ({ isLoading, tickets, onDeleteTicket }: Props) => {
         <thead>
           <tr>
             <th>Titel</th>
+            <th>Projekt</th>
             <th>Bearbeiter</th>
+            <th>Status</th>
             <th></th>
           </tr>
         </thead>
@@ -47,8 +51,16 @@ export const TicketsTable = ({ isLoading, tickets, onDeleteTicket }: Props) => {
                 <td>
                   <TicketTitleWithLink ticket={ticket} />
                 </td>
+                <td>
+                  <Link href={`/projects/${ticket.project.id}`}>
+                    {ticket.project.title}
+                  </Link>
+                </td>
                 <td width="300">
                   <UserName user={ticket.assignee} />
+                </td>
+                <td>
+                  <TicketStatusLabel ticket={ticket} />
                 </td>
                 <td width="50">
                   <MoreMenu button={<IconThreeDots />}>

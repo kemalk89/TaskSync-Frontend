@@ -24,6 +24,12 @@ export interface ProjectResponse {
   createdDate: string;
 }
 
+export interface SprintResponse {
+  id: number;
+  startDate: string;
+  endDate: string;
+}
+
 interface ProjectMemberResponse {
   userId: number;
   role: string;
@@ -39,7 +45,7 @@ export interface TicketResponse {
   id: string;
   title: string;
   assignee: any;
-  status: any;
+  Status: any;
   type: string;
   description?: string;
   createdDate: string;
@@ -50,6 +56,7 @@ export interface TicketResponse {
     username: string;
     picture: string;
   };
+  project: ProjectResponse;
 }
 
 export interface TicketLabelResponse {

@@ -8,6 +8,7 @@ import { EditableLine } from "../../components/editable-content/editable-content
 import { useFetchProjectById, useUpdateProject } from "../project-hooks";
 import { ProjectInfo } from "./project-info";
 import { TabContentActiveSprint } from "./tab-content-active-sprint";
+import { TabContentSprints } from "./tab-content-sprints";
 
 type Props = {
   projectId: number;
@@ -98,7 +99,7 @@ export const ProjectViewPage = ({ projectId }: Props) => {
       {activeTab === TAB_BACKLOG && (
         <ProjectBacklog project={projectResult?.data} />
       )}
-      {activeTab === TAB_SPRINTS && <div>Sprints</div>}
+      {activeTab === TAB_SPRINTS && <TabContentSprints projectId={projectId} />}
       {activeTab === TAB_HISTORY && <div>History</div>}
       {activeTab === TAB_PROJECT_INFO && (
         <ProjectInfo project={projectResult?.data} />

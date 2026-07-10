@@ -1,4 +1,9 @@
-import { ProjectResponse, BoardResponse, TicketResponse } from "@app/api";
+import {
+  ProjectResponse,
+  BoardResponse,
+  TicketResponse,
+  getAPI,
+} from "@app/api";
 import { useSearchParams } from "next/navigation";
 import {
   Alert,
@@ -163,7 +168,9 @@ export const ProjectBacklog = ({ project }: Props) => {
   const handleStartSprintSubmit = async () => {
     if (!sprintEndDate || !project) return;
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    const response = await getAPI().post.createSprint(project.id, {
+      endDate: sprintEndDate,
+    });
 
     setShowStartSprintModal(false);
     setSprintEndDate(null);

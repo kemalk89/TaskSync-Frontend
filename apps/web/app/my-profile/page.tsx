@@ -20,7 +20,7 @@ export default async function Page() {
   return (
     <div>
       <Image
-        src={session.user.image ?? ""}
+        src={session.user.image ?? "images/default-profile-image.svg"}
         alt="User Avatar"
         width={70}
         height={70}

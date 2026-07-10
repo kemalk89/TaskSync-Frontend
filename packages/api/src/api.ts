@@ -1,5 +1,6 @@
 import {
   CreateProjectRequest,
+  CreateSprintCommand,
   CreateTicketCommand,
   ReorderTicketsCommand,
   UpdateProjectCommand,
@@ -14,8 +15,10 @@ import {
   TicketResponse,
   TicketStatusModel,
   UserResponse,
+  SprintResponse,
 } from "./response.models";
 import { tryJson } from "./utils";
+import { Validator } from "./validator";
 
 const patch = async <T>(
   url: string,
@@ -300,16 +303,35 @@ export const getAPI = () => {
         project,
       );
     },
+    get: {
+      fetchProjectSprints: async (
+        projectId: number,
+        { pageNumber, pageSize }: Page,
+      ): Promise<ApiResponse<PagedResult<SprintResponse>>> => {
+        Validator.notEmpty(projectId, "No projectId defined");
+
+        return get(
+          `${getBaseUrl()}${getContext()}/project/${projectId}/sprints?pageNumber=${pageNumber}&pageSize=${pageSize}`,
+        );
+      },
+    },
     post: {
+      createSprint: async (projectId: number, command: CreateSprintCommand) => {
+        Validator.notEmpty(projectId, "No projectId defined");
+
+        return post(
+          `${getBaseUrl()}${getContext()}/project/${projectId}/sprint`,
+          command,
+        );
+      },
       assignTicketToSprint: async (
         projectId: number,
         sprintId: number,
         ticketId: number,
         newPosition: number,
       ): Promise<ApiResponse<Result<void>>> => {
-        if (!projectId) {
-          throw "No projectId defined";
-        }
+        Validator.notEmpty(projectId, "No projectId defined");
+
         return post(
           `${getBaseUrl()}${getContext()}/project/${projectId}/sprint/${sprintId}/ticket/${ticketId}?newPosition=${newPosition}`,
         );
@@ -319,9 +341,8 @@ export const getAPI = () => {
         boardId: number,
         command: ReorderTicketsCommand,
       ): Promise<ApiResponse<TicketCommentResponse>> => {
-        if (!projectId) {
-          throw "No projectId defined";
-        }
+        Validator.notEmpty(projectId, "No projectId defined");
+
         return post(
           `${getBaseUrl()}${getContext()}/project/${projectId}/board/${boardId}/reorder`,
           command,

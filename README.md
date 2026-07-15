@@ -44,6 +44,8 @@ To quickly spin up the backend, use Docker or Podman.
 ### Prerequisites
 
 Prepare the environment variables in your `apps/web/.env.local` by uncommenting the vars in the section e2e.
+Also, change `RESOURCE_SERVER_RUNTIME_ENGINE` in `apps/fake-auth/.env.local` to podman if using podman. If using
+docker, comment it out.
 
 Ensure, the backend API is running:
 

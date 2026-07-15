@@ -28,6 +28,7 @@ export interface SprintResponse {
   id: number;
   startDate: string;
   endDate: string;
+  tickets: TicketResponse[];
 }
 
 interface ProjectMemberResponse {

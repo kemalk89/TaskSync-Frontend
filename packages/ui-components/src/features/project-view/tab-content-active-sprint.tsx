@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { Alert } from "react-bootstrap";
-import { IconGripVertical, IconInfoCircle } from "../../icons/icons";
+import { IconInfoCircle } from "../../icons/icons";
 import { useQuery } from "@tanstack/react-query";
 import { getQueryKeyFetchActiveSprint } from "../constants";
 import { getAPI, TicketResponse } from "@app/api";
 import { Board } from "../../components/Board/Board";
-import { Draggable } from "../../components/drag-and-drop/drag-and-drop";
 import { WorkItem } from "../../components/Board/types";
+import { TicketCardDraggable } from "../ticket-card/ticket-card";
 
 export const TabContentActiveSprint = ({
   projectId,
@@ -47,7 +47,6 @@ export const TabContentActiveSprint = ({
   };
 
   const renderBoard = (tickets: TicketResponse[]) => {
-    console.log(tickets);
     const workItems: WorkItem[] = tickets.map((t) => ({
       id: t.id,
       title: t.title,
@@ -58,22 +57,13 @@ export const TabContentActiveSprint = ({
       <Board
         columns={columns}
         workItems={workItems}
+        onDrop={() => null}
         renderCard={(workItem) => (
-          <div className="card" key={workItem.id}>
-            <div className="d-flex">
-              <Draggable
-                itemIdentifier={workItem.id}
-                onDragStart={() => null}
-                onDragEnd={() => null}
-                dragImageBuilder={(draggableElement: HTMLElement) => {
-                  return document.createElement("div");
-                }}
-              >
-                <IconGripVertical />
-              </Draggable>
-              {workItem.title}
-            </div>
-          </div>
+          <TicketCardDraggable
+            identifier={workItem.id}
+            ticket={tickets.find((t) => t.id === workItem.id)}
+            onDelete={() => null}
+          />
         )}
       />
     );

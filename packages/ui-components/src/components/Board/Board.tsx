@@ -1,13 +1,15 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, DragEvent } from "react";
 import { WorkItem, BoardColumn } from "./types";
+import { DroppableSlot } from "../drag-and-drop/drag-and-drop";
 
 type Props = {
   columns: Array<BoardColumn>;
   workItems: Array<WorkItem>;
   renderTitle?: (column: BoardColumn) => ReactNode;
-  renderCard: (workItem: WorkItem) => ReactNode;
+  renderCard: (workItem: WorkItem, index: number) => ReactNode;
+  onDrop: (e: DragEvent<HTMLDivElement>, index: number) => void;
 };
 
 export const Board = (props: Props) => {
@@ -30,7 +32,12 @@ export const Board = (props: Props) => {
               )
               .map((workItem) => (
                 <div key={`work-item-${workItem.id}`}>
-                  {props.renderCard(workItem)}
+                  {index === 0 && (
+                    <DroppableSlot onDrop={(e) => props.onDrop(e, index)} />
+                  )}
+
+                  {props.renderCard(workItem, index)}
+                  <DroppableSlot onDrop={(e) => props.onDrop(e, index + 1)} />
                 </div>
               ))}
           </div>

@@ -34,9 +34,12 @@ async function handleResponse(res: Response) {
     serviceResponse = await res.json();
   }
 
-  return new Response(serviceResponse?.message ?? res.statusText, {
-    status: res.status,
-  });
+  return new Response(
+    serviceResponse?.error ?? serviceResponse?.message ?? res.statusText,
+    {
+      status: res.status,
+    },
+  );
 }
 
 export async function POST(

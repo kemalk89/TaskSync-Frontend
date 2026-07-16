@@ -4,7 +4,7 @@ import {
   TicketResponse,
   getAPI,
 } from "@app/api";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Alert,
   Button,
@@ -37,6 +37,8 @@ type Props = {
 
 export const ProjectBacklog = ({ project }: Props) => {
   const { t } = useTranslation();
+  const router = useRouter();
+
   const searchParams = useSearchParams();
   const pageSize = 1000;
   const pageNumber = (searchParams.get("pageNumber") || 1) as number;
@@ -166,15 +168,16 @@ export const ProjectBacklog = ({ project }: Props) => {
   };
 
   const handleStartSprintSubmit = async () => {
-    if (!sprintEndDate || !project) return;
+    if (!sprintEndDate || !project) {
+      return;
+    }
 
     await getAPI().post.createSprint(project.id, {
       endDate: sprintEndDate,
+      ticketIds: draftBoard?.tickets.map((t) => Number(t.id)) ?? [],
     });
 
-    setShowStartSprintModal(false);
-    setSprintEndDate(null);
-    alert(t("sprint.started"));
+    router.push(`/projects/${project.id}?tab=board`);
   };
 
   return (

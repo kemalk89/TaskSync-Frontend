@@ -80,7 +80,6 @@ export function moveItem<T extends TypeWithId>(options: {
   const movedToBottomOfList = newPosition === targetList.length;
   if (movedToBottomOfList) {
     newList = [...targetList];
-    newList.splice(itemPositionInSourceBoard, 1);
     newList.push(targetItem);
   } else {
     for (let i = 0; i < targetList.length; i++) {

@@ -79,7 +79,7 @@ export function moveItem<T extends TypeWithId>(options: {
   let newList: T[] = [];
   const movedToBottomOfList = newPosition === targetList.length;
   if (movedToBottomOfList) {
-    newList = [...targetList];
+    newList = targetList.filter((item) => item.id !== targetItem.id);
     newList.push(targetItem);
   } else {
     for (let i = 0; i < targetList.length; i++) {

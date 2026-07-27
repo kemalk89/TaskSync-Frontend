@@ -36,5 +36,3 @@ export type {
   ConfirmationModalCallbacks,
 } from "./components/confirmation-modal";
 export { TranslationProvider, useTranslation } from "./i18n";
-export * from "./components/DatePicker";
-export * from "./components/Board/Board";

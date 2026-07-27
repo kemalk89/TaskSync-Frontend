@@ -67,6 +67,7 @@ export const DroppableSlot = (props: {
       className="droppable rounded-2"
       style={{ height: "8px" }}
       onDrop={(e) => {
+        e.preventDefault();
         const element = e.target as HTMLElement;
         element.classList.remove("text-bg-info");
         props.onDrop(e);

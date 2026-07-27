@@ -1,5 +1,4 @@
 import { Card } from "react-bootstrap";
-import { Draggable } from "../../components/drag-and-drop/drag-and-drop";
 import { useRouter } from "next/navigation";
 
 import styles from "./styles.module.css";
@@ -13,6 +12,7 @@ import {
 } from "../../components/more-menu/more-menu";
 import { TicketResponse } from "@app/api";
 import { copyTextToClipboard } from "@app/utils";
+import { Draggable } from "@app/ui-lib";
 
 type Props = {
   identifier: string;

@@ -58,6 +58,7 @@ export interface TicketResponse {
     picture: string;
   };
   project: ProjectResponse;
+  position: number;
 }
 
 export interface TicketLabelResponse {

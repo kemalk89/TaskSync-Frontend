@@ -1,14 +1,28 @@
 "use client";
 
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Alert } from "react-bootstrap";
 import { IconInfoCircle } from "../../icons/icons";
 import { useQuery } from "@tanstack/react-query";
 import { getQueryKeyFetchActiveSprint } from "../constants";
 import { getAPI, TicketResponse } from "@app/api";
-import { Board } from "../../components/Board/Board";
-import { WorkItem } from "../../components/Board/types";
 import { TicketCardDraggable } from "../ticket-card/ticket-card";
+import { Board, SortResult } from "@app/ui-lib";
+
+const moveTicketApi = (
+  ticketId: string,
+  targetColumnId: string,
+): Promise<void> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log(
+        `[Fake API] Moved ticket ${ticketId} to column ${targetColumnId}`,
+      );
+      resolve();
+    }, 300);
+  });
+};
 
 export const TabContentActiveSprint = ({
   projectId,
@@ -32,6 +46,32 @@ export const TabContentActiveSprint = ({
     },
   });
 
+  const [workItems, setWorkItems] = useState<TicketResponse[]>([]);
+  const tickets: TicketResponse[] = data?.data?.tickets ?? [];
+
+  useEffect(() => {
+    if (tickets.length > 0) {
+      setWorkItems(tickets);
+    }
+  }, [tickets]);
+
+  const handleSort = (result: SortResult<TicketResponse>) => {
+    // optimistic update of UI
+    for (let wi of workItems) {
+      const newPosition = result.targetListItems.findIndex(
+        (i) => i.id === wi.id,
+      );
+      const found = result.targetListItems.find((i) => i.id === wi.id);
+
+      if (found) {
+        wi.Status = result.targetListId;
+        wi.position = newPosition;
+      }
+    }
+
+    setWorkItems([...workItems.sort((a, b) => a.position - b.position)]);
+  };
+
   const renderEmptyState = () => {
     return (
       <Alert variant="info">
@@ -46,32 +86,31 @@ export const TabContentActiveSprint = ({
     );
   };
 
-  const renderBoard = (tickets: TicketResponse[]) => {
-    const workItems: WorkItem[] = tickets.map((t) => ({
-      id: t.id,
-      title: t.title,
-      columnId: !t.Status ? "todo" : "in-progress",
-    }));
+  if (!data?.data?.tickets) {
+    return renderEmptyState();
+  }
 
-    return (
-      <Board
-        columns={columns}
-        workItems={workItems}
-        onDrop={() => null}
-        renderCard={(workItem) => (
-          <TicketCardDraggable
-            identifier={workItem.id}
-            ticket={tickets.find((t) => t.id === workItem.id)}
-            onDelete={() => null}
-          />
-        )}
-      />
-    );
-  };
-
-  return data?.data?.tickets
-    ? renderBoard(data?.data?.tickets)
-    : renderEmptyState();
+  return (
+    <Board<TicketResponse>
+      columns={columns.map((col) => ({
+        ...col,
+        workItems: workItems
+          .map((wi) => ({
+            ...wi,
+            Status: wi.Status ? wi.Status : "todo",
+          }))
+          .filter((wi) => wi.Status === col.id),
+      }))}
+      onSort={handleSort}
+      renderItem={(workItem) => (
+        <TicketCardDraggable
+          identifier={workItem.id}
+          ticket={tickets.find((t) => t.id === workItem.id)}
+          onDelete={() => null}
+        />
+      )}
+    />
+  );
 };
 
 const columns = [

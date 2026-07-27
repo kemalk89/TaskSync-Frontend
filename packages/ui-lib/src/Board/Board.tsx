@@ -4,23 +4,20 @@ import { ReactNode, useRef } from "react";
 import { BoardColumn } from "./types";
 import { SortableList } from "../SortableList/SortableList";
 import { Lists } from "../SortableList/types";
+import { SortResult } from "../SortableList/move-item";
 
 type Props<T> = {
   columns: Array<BoardColumn<T>>;
   renderTitle?: (column: BoardColumn<T>) => ReactNode;
   renderItem: (workItem: T) => ReactNode;
-  onDrop: (
-    workItemId: string,
-    position: number,
-    targetColumnId: string,
-  ) => void;
+  onSort: (result: SortResult<T>) => void;
 };
 
 export const Board = <T,>({
   columns,
   renderItem,
   renderTitle,
-  onDrop,
+  onSort,
 }: Props<T>) => {
   const lists: Lists<T> = columns.map((col) => ({
     id: col.id,
@@ -37,9 +34,7 @@ export const Board = <T,>({
               listId={column.id}
               lists={lists}
               renderItem={(i) => renderItem(i)}
-              onSort={(result) => {
-                console.log(result);
-              }}
+              onSort={onSort}
             />
           </div>
         );

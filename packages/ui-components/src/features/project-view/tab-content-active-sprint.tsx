@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { Alert } from "react-bootstrap";
 import { IconInfoCircle } from "../../icons/icons";
@@ -8,28 +8,19 @@ import { useQuery } from "@tanstack/react-query";
 import { getQueryKeyFetchActiveSprint } from "../constants";
 import { getAPI, TicketResponse } from "@app/api";
 import { TicketCardDraggable } from "../ticket-card/ticket-card";
-import { Board, SortResult } from "@app/ui-lib";
-
-const moveTicketApi = (
-  ticketId: string,
-  targetColumnId: string,
-): Promise<void> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      console.log(
-        `[Fake API] Moved ticket ${ticketId} to column ${targetColumnId}`,
-      );
-      resolve();
-    }, 300);
-  });
-};
+import { Board, BoardColumn, SortResult } from "@app/ui-lib";
+import { ToastContext } from "../../toast";
+import { useReorderBoardTickets } from "../project-hooks";
 
 export const TabContentActiveSprint = ({
   projectId,
 }: {
   projectId?: number;
 }) => {
-  const { data } = useQuery({
+  const { newToast } = useContext(ToastContext);
+  const reorderBoardTickets = useReorderBoardTickets();
+
+  const { data: activeSprint } = useQuery({
     enabled: !!projectId,
     queryKey: getQueryKeyFetchActiveSprint(projectId),
     queryFn: async () => {
@@ -46,8 +37,44 @@ export const TabContentActiveSprint = ({
     },
   });
 
+  const [columns, setColumns] = useState<BoardColumn<TicketResponse>[]>([]);
+
+  useQuery({
+    queryKey: ["ticketStatusList"],
+    queryFn: async () => {
+      const result = await getAPI().fetchTicketStatusList();
+
+      if (result.status === "error") {
+        newToast({
+          msg: "Beim Laden der Ticket Status Liste ist ein Fehler ist aufgetreten",
+          type: "error",
+        });
+      }
+
+      const mapped: BoardColumn<TicketResponse>[] = (result.data ?? []).map(
+        (col) => {
+          let length = result.data?.length;
+          if (!length) {
+            length = 1;
+          }
+          const width = 100 / length;
+          return {
+            id: col.id.toString(),
+            title: col.name,
+            width: `${width}%`,
+            workItems: [],
+          };
+        },
+      );
+
+      setColumns(mapped ?? []);
+
+      return result.data;
+    },
+  });
+
   const [workItems, setWorkItems] = useState<TicketResponse[]>([]);
-  const tickets: TicketResponse[] = data?.data?.tickets ?? [];
+  const tickets: TicketResponse[] = activeSprint?.data?.tickets ?? [];
 
   useEffect(() => {
     if (tickets.length > 0) {
@@ -64,12 +91,27 @@ export const TabContentActiveSprint = ({
       const found = result.targetListItems.find((i) => i.id === wi.id);
 
       if (found) {
-        wi.Status = result.targetListId;
+        wi.Status!.id = Number(result.targetListId);
         wi.position = newPosition;
       }
     }
 
     setWorkItems([...workItems.sort((a, b) => a.position - b.position)]);
+
+    // call API
+    if (projectId) {
+      reorderBoardTickets.mutate({
+        boardId: activeSprint?.data?.id,
+        projectId,
+        ticketOrder: result.targetListItems.map((ticket, index) => {
+          return {
+            ticketId: Number(ticket.id),
+            position: index,
+            statusId: Number(result.targetListId),
+          };
+        }),
+      });
+    }
   };
 
   const renderEmptyState = () => {
@@ -86,7 +128,7 @@ export const TabContentActiveSprint = ({
     );
   };
 
-  if (!data?.data?.tickets) {
+  if (!activeSprint?.data?.tickets) {
     return renderEmptyState();
   }
 
@@ -97,9 +139,11 @@ export const TabContentActiveSprint = ({
         workItems: workItems
           .map((wi) => ({
             ...wi,
-            Status: wi.Status ? wi.Status : "todo",
+            Status: wi.Status
+              ? wi.Status
+              : { id: Number(columns[0]!.id), title: columns[0]!.title }, // default
           }))
-          .filter((wi) => wi.Status === col.id),
+          .filter((wi) => wi.Status.id === Number(col.id)),
       }))}
       onSort={handleSort}
       renderItem={(workItem) => (
@@ -112,10 +156,3 @@ export const TabContentActiveSprint = ({
     />
   );
 };
-
-const columns = [
-  { id: "todo", title: "TODO", width: "25%" },
-  { id: "in-progress", title: "In progress", width: "25%" },
-  { id: "code-review", title: "Code review", width: "25%" },
-  { id: "done", title: "Done", width: "25%" },
-];

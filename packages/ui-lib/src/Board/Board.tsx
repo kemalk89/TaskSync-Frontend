@@ -33,7 +33,7 @@ export const Board = <T,>({
             <SortableList<T>
               listId={column.id}
               lists={lists}
-              renderItem={(i) => renderItem(i)}
+              renderItem={renderItem}
               onSort={onSort}
             />
           </div>

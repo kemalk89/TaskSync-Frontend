@@ -16,7 +16,7 @@ export interface CreateTicketCommand {
 }
 
 export type UpdateTicketCommand = Partial<CreateTicketCommand> & {
-  id: number;
+  id?: number;
   statusId?: number;
   position?: number;
 };

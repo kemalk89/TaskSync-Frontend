@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useRef } from "react";
+import { ReactNode } from "react";
 import { BoardColumn } from "./types";
 import { SortableList } from "../SortableList/SortableList";
 import { Lists } from "../SortableList/types";

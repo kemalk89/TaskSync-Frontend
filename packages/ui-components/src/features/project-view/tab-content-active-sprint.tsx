@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Alert } from "react-bootstrap";
 import { IconInfoCircle } from "../../icons/icons";
@@ -74,7 +74,10 @@ export const TabContentActiveSprint = ({
   });
 
   const [workItems, setWorkItems] = useState<TicketResponse[]>([]);
-  const tickets: TicketResponse[] = activeSprint?.data?.tickets ?? [];
+  const tickets = useMemo(
+    () => activeSprint?.data?.tickets ?? [],
+    [activeSprint?.data?.tickets],
+  );
 
   useEffect(() => {
     if (tickets.length > 0) {
@@ -84,7 +87,7 @@ export const TabContentActiveSprint = ({
 
   const handleSort = (result: SortResult<TicketResponse>) => {
     // optimistic update of UI
-    for (let wi of workItems) {
+    for (const wi of workItems) {
       const newPosition = result.targetListItems.findIndex(
         (i) => i.id === wi.id,
       );

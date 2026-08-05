@@ -10,7 +10,7 @@ export const TicketStatusLabel = ({ ticket }: { ticket: TicketResponse }) => {
     if (ticket.Status.id === 3) {
       bg = "success";
     }
-    return <Badge bg={bg}>{ticket.Status.title}</Badge>;
+    return <Badge bg={bg}>{ticket.Status.name}</Badge>;
   }
 
   return null;

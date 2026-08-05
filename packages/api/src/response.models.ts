@@ -46,7 +46,7 @@ export interface TicketResponse {
   id: string;
   title: string;
   assignee: any;
-  Status?: { id: number; title: string };
+  Status?: { id: number; name: string };
   type: string;
   description?: string;
   createdDate: string;

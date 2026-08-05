@@ -91,7 +91,12 @@ export const TabContentActiveSprint = ({
       const found = result.targetListItems.find((i) => i.id === wi.id);
 
       if (found) {
-        wi.Status!.id = Number(result.targetListId);
+        if (!wi.Status) {
+          wi.Status = { id: Number(result.targetListId), title: "" };
+        } else {
+          wi.Status.id = Number(result.targetListId);
+        }
+
         wi.position = newPosition;
       }
     }

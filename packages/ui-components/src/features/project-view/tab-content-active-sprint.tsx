@@ -95,7 +95,7 @@ export const TabContentActiveSprint = ({
 
       if (found) {
         if (!wi.Status) {
-          wi.Status = { id: Number(result.targetListId), title: "" };
+          wi.Status = { id: Number(result.targetListId), name: "" };
         } else {
           wi.Status.id = Number(result.targetListId);
         }
@@ -149,7 +149,7 @@ export const TabContentActiveSprint = ({
             ...wi,
             Status: wi.Status
               ? wi.Status
-              : { id: Number(columns[0]!.id), title: columns[0]!.title }, // default
+              : { id: Number(columns[0]!.id), name: columns[0]!.title }, // default
           }))
           .filter((wi) => wi.Status.id === Number(col.id)),
       }))}

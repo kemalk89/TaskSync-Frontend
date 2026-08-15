@@ -22,6 +22,8 @@ test("create new project and plan a board", async ({ page, request }) => {
     ).toBeVisible();
   });
 
+  const ticketIds: number[] = [];
+
   await test.step("Create 3 tickets in backlog via API", async () => {
     // Get projectId from URL
     const projectId = new URL(page.url()).pathname.split("/").pop();
@@ -35,6 +37,8 @@ test("create new project and plan a board", async ({ page, request }) => {
         },
       });
       expect(newTicket.ok()).toBeTruthy();
+      const body = await newTicket.json();
+      ticketIds.push(body.ticketId);
     }
 
     await page.reload();
@@ -52,9 +56,9 @@ test("create new project and plan a board", async ({ page, request }) => {
     // ensure initial order
     await ensureOrder([ticket1, ticket2, ticket3]);
 
-    const testIdTicketNr1 = "draggable-ticket-0";
-    const testIdTicketNr2 = "draggable-ticket-1";
-    const testIdTicketNr3 = "draggable-ticket-2";
+    const testIdTicketNr1 = `draggable-ticket-${ticketIds[0]}`;
+    const testIdTicketNr2 = `draggable-ticket-${ticketIds[1]}`;
+    const testIdTicketNr3 = `draggable-ticket-${ticketIds[2]}`;
 
     await test.step("Drag 1st ticket to 1st dropable -> order should not change", async () => {
       const firstDroppable = await getFirstDroppable(page);
@@ -88,7 +92,7 @@ test("create new project and plan a board", async ({ page, request }) => {
       await firstDroppable.hover();
       await page.mouse.up();
 
-      await ensureOrder([ticket3, ticket2, ticket1]);
+      await ensureOrder([ticket2, ticket3, ticket1]);
     });
   });
 

@@ -1,5 +1,4 @@
 import { test, expect } from "@playwright/test";
-import { loginCommand } from "./commands/commands";
 
 // Reset storage state to avoid being authenticated
 test.use({ storageState: { cookies: [], origins: [] } });

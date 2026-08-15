@@ -8,6 +8,10 @@ export const QUERY_KEY_FETCH_TICKET_BY_ID = ["fetchTicketById"];
 
 export const QUERY_KEY_PREFIX_FETCH_TICKETS = "fetchTickets";
 
+export const getQueryKeyFetchActiveSprint = (projectId?: number) => {
+  return ["fetchActiveSprint", projectId];
+};
+
 export const getQueryKeyFetchProjectSprints = (
   projectId: number,
   page: Page,

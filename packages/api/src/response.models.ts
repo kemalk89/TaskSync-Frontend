@@ -28,6 +28,7 @@ export interface SprintResponse {
   id: number;
   startDate: string;
   endDate: string;
+  tickets: TicketResponse[];
 }
 
 interface ProjectMemberResponse {
@@ -45,7 +46,7 @@ export interface TicketResponse {
   id: string;
   title: string;
   assignee: any;
-  Status?: any;
+  Status?: { id: number; name: string };
   type: string;
   description?: string;
   createdDate: string;
@@ -57,6 +58,7 @@ export interface TicketResponse {
     picture: string;
   };
   project: ProjectResponse;
+  position: number;
 }
 
 export interface TicketLabelResponse {

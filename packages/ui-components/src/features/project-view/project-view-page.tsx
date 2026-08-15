@@ -95,7 +95,9 @@ export const ProjectViewPage = ({ projectId }: Props) => {
         </li>
       </ul>
       {activeTab === TAB_TEAM && <ProjectTeam project={projectResult?.data} />}
-      {activeTab === TAB_BOARD && <TabContentActiveSprint />}
+      {activeTab === TAB_BOARD && (
+        <TabContentActiveSprint projectId={projectResult?.data?.id} />
+      )}
       {activeTab === TAB_BACKLOG && (
         <ProjectBacklog project={projectResult?.data} />
       )}

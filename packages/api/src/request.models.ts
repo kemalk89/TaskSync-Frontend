@@ -16,14 +16,18 @@ export interface CreateTicketCommand {
 }
 
 export type UpdateTicketCommand = Partial<CreateTicketCommand> & {
+  id?: number;
   statusId?: number;
+  position?: number;
 };
 
 export type ReorderTicketsCommand = Array<{
   ticketId: number;
   position: number;
+  statusId?: number;
 }>;
 
 export type CreateSprintCommand = {
   endDate: Date;
+  ticketIds: number[];
 };

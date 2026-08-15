@@ -30,9 +30,6 @@ export const useFetchProjectById = (enabled: boolean, projectId?: number) =>
     enabled,
     queryKey: [QUERY_KEY_FETCH_PROJECT_BY_ID, projectId],
     queryFn: () => {
-      if (!projectId) {
-        throw "No projectId given.";
-      }
       return getAPI().fetchProject(projectId);
     },
   });

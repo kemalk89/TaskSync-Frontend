@@ -100,10 +100,11 @@ const get = async <T>(
   });
 
   if (!res.ok) {
+    const errorText = await res.text();
     return {
       status: "error",
       statusCode: res.status,
-      message: `Network error on URL ${url}: ${res.status}.`,
+      message: errorText ?? `Network error on URL ${url}: ${res.status}.`,
     };
   }
 
@@ -262,8 +263,10 @@ export const getAPI = () => {
       );
     },
     fetchProject: async (
-      projectId: string | number,
+      projectId?: string | number,
     ): Promise<ApiResponse<ProjectResponse>> => {
+      Validator.notEmpty(projectId, "No projectId defined");
+
       return get(
         `${getBaseUrl()}${getContext()}/project/${projectId}`,
         headers,
@@ -304,6 +307,15 @@ export const getAPI = () => {
       );
     },
     get: {
+      fetchActiveSprint: async (
+        projectId?: number,
+      ): Promise<ApiResponse<SprintResponse>> => {
+        Validator.notEmpty(projectId, "No projectId defined");
+
+        return get(
+          `${getBaseUrl()}${getContext()}/project/${projectId}/sprint/active`,
+        );
+      },
       fetchProjectSprints: async (
         projectId: number,
         { pageNumber, pageSize }: Page,

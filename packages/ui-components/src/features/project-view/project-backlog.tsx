@@ -4,7 +4,7 @@ import {
   TicketResponse,
   getAPI,
 } from "@app/api";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Alert,
   Button,
@@ -28,8 +28,7 @@ import {
   useFetchDraftBoard,
   useReorderBoardTickets,
 } from "../project-hooks";
-import { moveItem } from "@app/utils";
-import { DatePicker } from "../../components/DatePicker/DatePicker";
+import { DatePicker, SortResult } from "@app/ui-lib";
 
 type Props = {
   project?: ProjectResponse;
@@ -37,6 +36,8 @@ type Props = {
 
 export const ProjectBacklog = ({ project }: Props) => {
   const { t } = useTranslation();
+  const router = useRouter();
+
   const searchParams = useSearchParams();
   const pageSize = 1000;
   const pageNumber = (searchParams.get("pageNumber") || 1) as number;
@@ -70,94 +71,78 @@ export const ProjectBacklog = ({ project }: Props) => {
   const { data: initialDraftBoard } = useFetchDraftBoard({
     enabled: !!project,
     projectId: project?.id,
-    onSuccess: (sprint?: BoardResponse) => setDraftBoard(sprint),
+    onSuccess: (sprint?: BoardResponse) => sprint && setDraftBoard(sprint),
   });
 
   const [backlogTickets, setBacklogTickets] = useState<TicketResponse[]>(
     initialBacklogTickets ?? [],
   );
-  const [draftBoard, setDraftBoard] = useState<
-    BoardResponse | undefined | null
-  >(initialDraftBoard);
+  const [draftBoard, setDraftBoard] = useState<BoardResponse>(
+    initialDraftBoard ?? { name: "", startDate: "", endDate: "", tickets: [] },
+  );
 
   // Mutations
   const assignTicketToDraftBoard = useAssignTicketToDraftBoard();
   const reorderBoardTickets = useReorderBoardTickets();
 
-  const changeOrderOfTicketsInDraftBoard = (
-    ticketId: string,
-    newPosition: number,
-  ) => {
-    const moveItemResult = moveItem<TicketResponse>({
-      containers: [
-        { id: "backlog", items: backlogTickets },
-        { id: "draftBoard", items: draftBoard?.tickets ?? [] },
-      ],
-      itemId: ticketId,
-      newPosition,
-      targetContainerId: "draftBoard",
-    });
+  const changeOrderOfTickets = (result: SortResult<TicketResponse>) => {
+    // optimistic update of UI
+    const sortedWorkItems = result.targetListItems;
 
-    if (!moveItemResult) {
-      return;
+    if (result.sourceListId === result.targetListId) {
+      if (result.sourceListId === "draftBoard") {
+        const newDraftBoard: BoardResponse = {
+          ...draftBoard,
+          tickets: sortedWorkItems,
+        };
+        setDraftBoard(newDraftBoard);
+      } else {
+        setBacklogTickets(result.targetListItems);
+      }
+    } else {
+      if (result.targetListId === "draftBoard") {
+        const newDraftBoard: BoardResponse = {
+          ...draftBoard,
+          tickets: sortedWorkItems,
+        };
+
+        setDraftBoard(newDraftBoard);
+        setBacklogTickets(result.sourceListItems);
+      } else if (result.targetListId === "backlog") {
+        const newDraftBoard: BoardResponse = {
+          ...draftBoard,
+          tickets: result.sourceListItems,
+        };
+        setDraftBoard(newDraftBoard);
+        setBacklogTickets(result.targetListItems);
+      }
     }
 
-    const newDraftBoard: BoardResponse | undefined = draftBoard
-      ? { ...draftBoard, tickets: moveItemResult?.targetList ?? [] }
-      : { name: "", startDate: "", endDate: "", tickets: [] };
-    setDraftBoard(newDraftBoard);
-    if (moveItemResult.sourceContainerId === "backlog") {
-      setBacklogTickets(moveItemResult.sourceList);
+    // call API to sync backend
+    const ticketId = result.sortedItemIds.at(0);
+    if (result.targetListId === "draftBoard" && ticketId) {
+      assignTicketToDraftBoard.mutate({
+        projectId: project!.id,
+        ticketId: Number(ticketId),
+      });
+
+      reorderBoardTickets.mutate({
+        boardId: draftBoard?.id,
+        projectId: project!.id,
+        ticketOrder: result.targetListItems.map((ticket, index) => ({
+          ticketId: parseInt(ticket.id),
+          position: index,
+        })),
+      });
+    } else if (result.targetListId === "backlog" && ticketId) {
+      reorderBoardTickets.mutate({
+        projectId: project!.id,
+        ticketOrder: result.targetListItems.map((ticket, index) => ({
+          ticketId: parseInt(ticket.id),
+          position: index,
+        })),
+      });
     }
-
-    // update list of tickets in draftSprint
-    assignTicketToDraftBoard.mutate({
-      projectId: project!.id,
-      ticketId: Number(ticketId),
-    });
-    reorderBoardTickets.mutate({
-      projectId: project!.id,
-      boardId: draftBoard?.id,
-      ticketOrder: (moveItemResult?.targetList ?? []).map((ticket, index) => ({
-        ticketId: parseInt(ticket.id),
-        position: index,
-      })),
-    });
-  };
-
-  const changeOrderOfTicketsInBacklog = (
-    ticketId: string,
-    newPosition: number,
-  ) => {
-    const moveItemResult = moveItem<TicketResponse>({
-      containers: [
-        { id: "backlog", items: backlogTickets },
-        { id: "draftBoard", items: draftBoard?.tickets ?? [] },
-      ],
-      itemId: ticketId,
-      newPosition,
-      targetContainerId: "backlog",
-    });
-
-    if (!moveItemResult) {
-      return;
-    }
-
-    // update list of tickets in backlog
-    setBacklogTickets(moveItemResult?.targetList ?? []);
-    if (moveItemResult.sourceContainerId === "draftBoard") {
-      const newDraftBoard: BoardResponse | undefined = draftBoard
-        ? { ...draftBoard, tickets: moveItemResult?.sourceList ?? [] }
-        : { name: "", startDate: "", endDate: "", tickets: [] };
-      setDraftBoard(newDraftBoard);
-    }
-    reorderBoardTickets.mutate({
-      projectId: project!.id,
-      ticketOrder: (moveItemResult?.targetList ?? []).map((ticket, index) => ({
-        ticketId: parseInt(ticket.id),
-        position: index,
-      })),
-    });
   };
 
   // Event Handlers
@@ -166,15 +151,16 @@ export const ProjectBacklog = ({ project }: Props) => {
   };
 
   const handleStartSprintSubmit = async () => {
-    if (!sprintEndDate || !project) return;
+    if (!sprintEndDate || !project) {
+      return;
+    }
 
     await getAPI().post.createSprint(project.id, {
       endDate: sprintEndDate,
+      ticketIds: draftBoard?.tickets.map((t) => Number(t.id)) ?? [],
     });
 
-    setShowStartSprintModal(false);
-    setSprintEndDate(null);
-    alert(t("sprint.started"));
+    router.push(`/projects/${project.id}?tab=board`);
   };
 
   return (
@@ -208,13 +194,11 @@ export const ProjectBacklog = ({ project }: Props) => {
         <div>
           <TicketListSortable
             listKey="draftBoard"
-            tickets={(draftBoard && draftBoard.tickets) ?? []}
-            onDrop={(e, index) =>
-              changeOrderOfTicketsInDraftBoard(
-                e.dataTransfer.getData("text"),
-                index,
-              )
-            }
+            lists={[
+              { id: "backlog", items: backlogTickets },
+              { id: "draftBoard", items: draftBoard?.tickets ?? [] },
+            ]}
+            onSort={changeOrderOfTickets}
           />
         </div>
       </div>
@@ -235,10 +219,11 @@ export const ProjectBacklog = ({ project }: Props) => {
 
       <TicketListSortable
         listKey="backlog"
-        tickets={backlogTickets}
-        onDrop={(e, index) =>
-          changeOrderOfTicketsInBacklog(e.dataTransfer.getData("text"), index)
-        }
+        lists={[
+          { id: "backlog", items: backlogTickets },
+          { id: "draftBoard", items: draftBoard?.tickets ?? [] },
+        ]}
+        onSort={changeOrderOfTickets}
       />
 
       <Modal

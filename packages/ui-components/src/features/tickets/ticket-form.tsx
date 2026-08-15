@@ -132,6 +132,7 @@ export const TicketForm = ({
               value={formikProps.values.title}
               onChange={formikProps.handleChange}
               onBlur={formikProps.handleBlur}
+              autoFocus
             />
             <FormControl.Feedback type="invalid">
               {formikProps.touched.title && formikProps.errors.title}

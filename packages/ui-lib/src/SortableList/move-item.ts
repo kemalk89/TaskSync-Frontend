@@ -1,9 +1,11 @@
+import { TypeWithId } from "./types";
+
 export function moveItem<T extends TypeWithId>(options: {
   containers: Container<T>[];
   itemId: string | number;
   newPosition: number;
   targetContainerId: string;
-}) {
+}): SortResult<T> | undefined {
   const { itemId, targetContainerId, newPosition } = options;
 
   let sourceContainer: Container<T> | undefined;
@@ -79,8 +81,7 @@ export function moveItem<T extends TypeWithId>(options: {
   let newList: T[] = [];
   const movedToBottomOfList = newPosition === targetList.length;
   if (movedToBottomOfList) {
-    newList = [...targetList];
-    newList.splice(itemPositionInSourceBoard, 1);
+    newList = targetList.filter((item) => item.id !== targetItem.id);
     newList.push(targetItem);
   } else {
     for (let i = 0; i < targetList.length; i++) {
@@ -106,11 +107,19 @@ export function moveItem<T extends TypeWithId>(options: {
   }
 
   return {
-    sourceContainerId: sourceContainer.id,
-    sourceList,
-    targetList: newList,
+    sourceListId: sourceContainer.id,
+    targetListId: targetContainer.id,
+    sourceListItems: sourceList,
+    targetListItems: newList,
+    sortedItemIds: [itemId],
   };
 }
 
 type Container<T> = { id: string; items: T[] };
-type TypeWithId = { id: string | number };
+export type SortResult<T> = {
+  sourceListId: string;
+  targetListId: string;
+  sourceListItems: T[];
+  targetListItems: T[];
+  sortedItemIds: Array<string | number>;
+};

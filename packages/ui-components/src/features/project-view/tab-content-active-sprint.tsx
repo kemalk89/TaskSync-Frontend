@@ -30,7 +30,6 @@ export const TabContentActiveSprint = ({
         response.message === "RESOURCE_NOT_FOUND"
       ) {
         // no issues, the error is normal if no active sprint exists
-        return response;
       }
 
       return response;

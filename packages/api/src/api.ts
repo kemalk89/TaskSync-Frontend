@@ -82,10 +82,12 @@ const post = async <T>(
       data,
     };
   } catch (err) {
-    console.log("> > > Error", err);
+    const logMsg = `ERROR: POST failed! Upstream API: "${url}"`;
+    console.error(logMsg, err);
     return {
       status: "error",
       statusCode: 500,
+      message: "POST to upstream API failed.",
     };
   }
 };
@@ -94,26 +96,36 @@ const get = async <T>(
   url: string,
   headers: Record<string, string> = {},
 ): Promise<ApiResponse<T>> => {
-  const res = await fetch(url, {
-    method: "GET",
-    headers,
-  });
+  try {
+    const res = await fetch(url, {
+      method: "GET",
+      headers,
+    });
 
-  if (!res.ok) {
-    const errorText = await res.text();
+    if (!res.ok) {
+      const errorText = await res.text();
+      return {
+        status: "error",
+        statusCode: res.status,
+        message: errorText ?? `Network error on URL ${url}: ${res.status}.`,
+      };
+    }
+
+    const data = await res.json();
+    return {
+      status: "success",
+      statusCode: res.status,
+      data,
+    };
+  } catch (err) {
+    const logMsg = `ERROR: GET failed! Upstream API: "${url}"`;
+    console.error(logMsg, err);
     return {
       status: "error",
-      statusCode: res.status,
-      message: errorText ?? `Network error on URL ${url}: ${res.status}.`,
+      statusCode: 500,
+      message: "GET to upstream API failed.",
     };
   }
-
-  const data = await res.json();
-  return {
-    status: "success",
-    statusCode: res.status,
-    data,
-  };
 };
 
 const remove = async (url: string, headers: Record<string, string> = {}) => {

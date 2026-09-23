@@ -1,6 +1,7 @@
 import {
   CreateProjectRequest,
   CreateSprintCommand,
+  CreateSubtaskCommand,
   CreateTicketCommand,
   ReorderTicketsCommand,
   UpdateProjectCommand,
@@ -16,6 +17,7 @@ import {
   TicketStatusModel,
   UserResponse,
   SprintResponse,
+  ProjectMemberResponse,
 } from "./response.models";
 import { tryJson } from "./utils";
 import { Validator } from "./validator";
@@ -207,6 +209,27 @@ export const getAPI = () => {
     ): Promise<ApiResponse<TicketResponse>> => {
       return get(`${getBaseUrl()}${getContext()}/ticket/${ticketId}`, headers);
     },
+    fetchSubtasks: async (
+      ticketId: string | number,
+    ): Promise<ApiResponse<TicketResponse[]>> => {
+      return get(
+        `${getBaseUrl()}${getContext()}/ticket/${ticketId}/subtask`,
+        headers,
+      );
+    },
+    saveSubtask: async (
+      parentTicketId: string | number,
+      command: CreateSubtaskCommand,
+    ): Promise<ApiResponse<TicketResponse>> => {
+      const cleaned: CreateSubtaskCommand = {
+        ...command,
+      };
+
+      return post(
+        `${getBaseUrl()}${getContext()}/ticket/${parentTicketId}/subtask`,
+        cleaned,
+      );
+    },
     fetchTicketComments: async (
       ticketId: string,
       { pageNumber, pageSize }: Page,
@@ -319,6 +342,12 @@ export const getAPI = () => {
       );
     },
     get: {
+      fetchTeam: async (
+        projectId: number,
+      ): Promise<ApiResponse<ProjectMemberResponse[]>> => {
+        Validator.notEmpty(projectId, "No projectId defined");
+        return get(`${getBaseUrl()}${getContext()}/project/${projectId}/team`);
+      },
       fetchActiveSprint: async (
         projectId?: number,
       ): Promise<ApiResponse<SprintResponse>> => {

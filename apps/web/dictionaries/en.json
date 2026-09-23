@@ -9,6 +9,24 @@
     "my_profile": "My Profile",
     "settings": "Settings"
   },
+  "ticket": {
+    "subtasks": {
+      "title": "Subtasks",
+      "empty": "No subtasks yet.",
+      "add": "Add subtask",
+      "modalTitle": "Create subtask",
+      "success": "Subtask successfully created",
+      "error": "Subtask could not be created. Error code: ",
+      "form": {
+        "title": "Title",
+        "description": "Description",
+        "descriptionPlaceholder": "Enter details here...",
+        "assignee": "Assignee",
+        "assigneePlaceholder": "Who will take care of this subtask...",
+        "required": "Required field"
+      }
+    }
+  },
   "sprint": {
     "next": "Next Sprint",
     "start": "Start Sprint",

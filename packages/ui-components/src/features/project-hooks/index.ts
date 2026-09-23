@@ -17,6 +17,7 @@ import {
 import { ToastContext, ToastMessage } from "../../toast";
 import { useContext } from "react";
 import {
+  getQueryKeyFetchProjectMembers,
   QUERY_KEY_FETCH_PROJECT_BY_ID,
   QUERY_KEY_PREFIX_FETCH_TICKETS,
 } from "../constants";
@@ -80,6 +81,31 @@ export const useFetchDraftBoard = ({
       return response.data?.value;
     },
   });
+
+export const useFetchProjectTeam = ({ projectId }: { projectId: number }) => {
+  const { newToast } = useContext(ToastContext);
+
+  return useQuery({
+    queryKey: getQueryKeyFetchProjectMembers(projectId),
+    queryFn: async () => {
+      if (!projectId) {
+        return null;
+      }
+
+      const response = await getAPI().get.fetchTeam(projectId);
+      if (response.status === "error") {
+        newToast({
+          msg: "Beim Laden des Projekt-Teams ist ein Fehler ist aufgetreten.",
+          type: "error",
+        });
+
+        return [];
+      }
+
+      return response.data;
+    },
+  });
+};
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Mutations

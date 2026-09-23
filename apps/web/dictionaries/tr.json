@@ -9,6 +9,24 @@
     "my_profile": "Profilim",
     "settings": "Ayarlar"
   },
+  "ticket": {
+    "subtasks": {
+      "title": "Alt Görevler",
+      "empty": "Henüz alt görev yok.",
+      "add": "Alt görev ekle",
+      "modalTitle": "Alt görev oluştur",
+      "success": "Alt görev başarıyla oluşturuldu",
+      "error": "Alt görev oluşturulamadı. Hata kodu: ",
+      "form": {
+        "title": "Başlık",
+        "description": "Açıklama",
+        "descriptionPlaceholder": "Detayları buraya yazabilirsiniz...",
+        "assignee": "Atanan Kişi",
+        "assigneePlaceholder": "Bu alt görevle kim ilgilenecek...",
+        "required": "Zorunlu alan"
+      }
+    }
+  },
   "sprint": {
     "next": "Sonraki Sprint",
     "start": "Sprint Başlat",

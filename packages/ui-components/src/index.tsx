@@ -15,6 +15,8 @@ export { TicketsPage } from "./features/tickets/tickets-page";
 export { NewTicketDialog } from "./features/tickets/new-ticket-dialog";
 export { TicketForm } from "./features/tickets/ticket-form";
 export { TicketViewPage } from "./features/ticket-view/ticket-view-page";
+export { TicketSubtasks } from "./features/ticket-subtasks/ticket-subtasks";
+export type { SubtaskFormValues } from "./features/ticket-subtasks/subtask-form";
 export type { TicketFormValues } from "./features/tickets/ticket-form";
 
 // Users

@@ -15,6 +15,14 @@ export interface CreateTicketCommand {
   labels: { labelId: string; title: string }[];
 }
 
+export interface CreateSubtaskCommand {
+  projectId: number;
+  title: string;
+  description?: string;
+  assignee?: number;
+  type?: string;
+}
+
 export type UpdateTicketCommand = Partial<CreateTicketCommand> & {
   id?: number;
   statusId?: number;

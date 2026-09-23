@@ -9,6 +9,24 @@
     "my_profile": "Mein Profil",
     "settings": "Einstellungen"
   },
+  "ticket": {
+    "subtasks": {
+      "title": "Teilaufgaben",
+      "empty": "Noch keine Teilaufgabe vorhanden.",
+      "add": "Teilaufgabe hinzufügen",
+      "modalTitle": "Teilaufgabe erstellen",
+      "success": "Teilaufgabe erfolgreich angelegt",
+      "error": "Teilaufgabe konnte nicht angelegt werden. Fehlercode: ",
+      "form": {
+        "title": "Titel",
+        "description": "Beschreibung",
+        "descriptionPlaceholder": "Hier können Details eingegeben werden...",
+        "assignee": "Zugewiesene Person",
+        "assigneePlaceholder": "Um diese Teilaufgabe kümmert sich...",
+        "required": "Pflichtfeld"
+      }
+    }
+  },
   "sprint": {
     "next": "Nächster Sprint",
     "start": "Sprint starten",

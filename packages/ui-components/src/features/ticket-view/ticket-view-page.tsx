@@ -2,11 +2,13 @@
 
 import { TicketIcon } from "../tickets/ticket-icons";
 import { TicketComments } from "../ticket-comments/ticket-comments";
+import { TicketSubtasks } from "../ticket-subtasks/ticket-subtasks";
+import { useTranslation } from "../../i18n";
 import { TextEditorReadonly } from "../../texteditor/texteditor-readonly";
 import { EditableLine } from "../../components/editable-content/editable-content";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getAPI } from "@app/api";
-import { QUERY_KEY_FETCH_TICKET_BY_ID } from "../constants";
+import { getQueryKeyFetchTicketById } from "../constants";
 import { UpdateTicketCommand } from "../../../../api/src/request.models";
 import { TextDate } from "../../text-date";
 import { Badge } from "react-bootstrap";
@@ -16,8 +18,9 @@ type Props = {
 };
 
 export const TicketViewPage = ({ ticketId }: Props) => {
+  const { t } = useTranslation();
   const { data: ticketResult, refetch: reloadTicket } = useQuery({
-    queryKey: [QUERY_KEY_FETCH_TICKET_BY_ID],
+    queryKey: getQueryKeyFetchTicketById(ticketId),
     queryFn: () => getAPI().fetchTicket(ticketId),
   });
 
@@ -79,6 +82,12 @@ export const TicketViewPage = ({ ticketId }: Props) => {
           isSuccess={isSuccess}
         />
       </div>
+      {!ticketResult.data.parentId && (
+        <div className="mt-4">
+          <h4>{t("ticket.subtasks.title")}</h4>
+          <TicketSubtasks ticket={ticketResult.data} />
+        </div>
+      )}
       <div className="mt-4">
         <h4>Kommentare</h4>
         <TicketComments ticketId={ticketId as unknown as string} />

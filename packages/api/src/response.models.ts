@@ -31,7 +31,7 @@ export interface SprintResponse {
   tickets: TicketResponse[];
 }
 
-interface ProjectMemberResponse {
+export interface ProjectMemberResponse {
   userId: number;
   role: string;
   user: UserResponse;
@@ -44,6 +44,7 @@ export interface TicketStatusModel {
 
 export interface TicketResponse {
   id: string;
+  parentId?: number | null;
   title: string;
   assignee: any;
   Status?: { id: number; name: string };

@@ -30,6 +30,9 @@ router.post("/login/password", async (req, res) => {
   }
 
   // Synchronous Sign with default (HMAC SHA256)
+  const accessTokenLifetimeInMins =
+    process.env.ACCESS_TOKEN_LIFETIME_IN_MINS ?? 15;
+  const expiresIn = 60 * accessTokenLifetimeInMins;
   const accessToken = jwt.sign(
     {
       iss: process.env.TOKEN_ISSUER,
@@ -39,7 +42,7 @@ router.post("/login/password", async (req, res) => {
     },
     process.env.JWT_SECRET,
     {
-      expiresIn: 60 * 60,
+      expiresIn,
     },
   );
 
@@ -48,6 +51,7 @@ router.post("/login/password", async (req, res) => {
     username: userResult.data.Username,
     email: userResult.data.Email,
     access_token: accessToken,
+    expires_in: expiresIn,
   });
 });
 

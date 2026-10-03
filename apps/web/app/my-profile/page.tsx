@@ -8,7 +8,7 @@ export async function generateMetadata(): Promise<Metadata> {
   if (!session?.user) return {};
 
   return {
-    title: `Profile: ${session.user.name}`,
+    title: `Mein Profil`,
   };
 }
 
@@ -27,10 +27,6 @@ export default async function Page() {
       />
       <h2>{session.user.name}</h2>
       <p>{session.user.email}</p>
-      <div>
-        <h3>Access Token</h3>
-        {session.accessToken}
-      </div>
     </div>
   );
 }

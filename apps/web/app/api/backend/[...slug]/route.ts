@@ -1,6 +1,22 @@
 import { type NextRequest } from "next/server";
-import { auth } from "../../../auth";
 import { envServiceTaskSync } from "../../../environment-variables";
+import { getToken } from "next-auth/jwt";
+
+async function getSessionJwtPayload(request: NextRequest) {
+  const secret = process.env.AUTH_SECRET;
+  if (!secret) {
+    throw new Error(
+      "Cannot decrypt Session JWT because environment variable AUTH_SECRET is not defined",
+    );
+  }
+
+  const payload = await getToken({
+    req: request,
+    secret,
+  });
+
+  return payload;
+}
 
 function buildEndpoint(searchParams: string, slug: string | string[]) {
   const baseUrl = `${envServiceTaskSync as string}/api/`;
@@ -46,8 +62,8 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string[] }> },
 ) {
-  const session = await auth();
-  if (!session?.accessToken) {
+  const sessionJwtPayload = await getSessionJwtPayload(request);
+  if (!sessionJwtPayload?.accessToken) {
     return new Response("Unauthorized", {
       status: 401,
     });
@@ -63,7 +79,7 @@ export async function POST(
     duplex: "half",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${session?.accessToken}`,
+      Authorization: `Bearer ${sessionJwtPayload.accessToken}`,
     },
   } as RequestInit);
 
@@ -74,8 +90,8 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string[] }> },
 ) {
-  const session = await auth();
-  if (!session?.accessToken) {
+  const sessionJwtPayload = await getSessionJwtPayload(request);
+  if (!sessionJwtPayload?.accessToken) {
     return new Response("Unauthorized", {
       status: 401,
     });
@@ -91,7 +107,7 @@ export async function PATCH(
     duplex: "half",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${session?.accessToken}`,
+      Authorization: `Bearer ${sessionJwtPayload.accessToken}`,
     },
   } as RequestInit);
 
@@ -102,8 +118,8 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string[] }> },
 ) {
-  const session = await auth();
-  if (!session?.accessToken) {
+  const sessionJwtPayload = await getSessionJwtPayload(request);
+  if (!sessionJwtPayload?.accessToken) {
     return new Response("Unauthorized", {
       status: 401,
     });
@@ -117,7 +133,7 @@ export async function GET(
   const res = await fetch(endpoint, {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${session?.accessToken}`,
+      Authorization: `Bearer ${sessionJwtPayload.accessToken}`,
     },
   });
 
@@ -128,8 +144,8 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string[] }> },
 ) {
-  const session = await auth();
-  if (!session?.accessToken) {
+  const sessionJwtPayload = await getSessionJwtPayload(request);
+  if (!sessionJwtPayload?.accessToken) {
     return new Response("Unauthorized", {
       status: 401,
     });
@@ -144,7 +160,7 @@ export async function DELETE(
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${session?.accessToken}`,
+      Authorization: `Bearer ${sessionJwtPayload.accessToken}`,
     },
   });
 

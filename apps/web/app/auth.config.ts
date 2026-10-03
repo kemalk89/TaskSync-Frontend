@@ -182,8 +182,14 @@ export const authConfig = {
       }
     },
     session({ session, token }) {
+      if (process.env.NODE_ENV === "development") {
+        console.debug("- - -");
+        console.debug("Access Token:");
+        console.debug(token.accessToken);
+        console.debug("- - -");
+      }
+
       session.error = token.error;
-      session.accessToken = token.accessToken;
       return session;
     },
     async authorized({ auth, request: { nextUrl } }) {

@@ -87,22 +87,11 @@ jobs:
     # - name: Wait for backend to be ready
     #  run: sleep 10
 
-    - name: Create .env file for local-auth
-      run: |
-        echo "DB_HOST=localhost"                            > ./apps/local-auth/.env
-        echo "DB_PORT=5432"                                 >> ./apps/local-auth/.env
-        echo "DB_USER=postgres"                             >> ./apps/local-auth/.env
-        echo "DB_PW=postgres"                               >> ./apps/local-auth/.env
-        echo "DB_NAME=postgres"                             >> ./apps/local-auth/.env
-        echo "TOKEN_ISSUER=http://localhost:3003"           >> ./apps/local-auth/.env
-        echo "JWT_SECRET=0123456789abcdefghijklmnopqrstuv"  >> ./apps/local-auth/.env
-        echo "API_KEY=any-api-key"                          >> ./apps/local-auth/.env
-
     - name: Run Playwright tests
       run: npx playwright test
       env:
         BASE_URL: http://localhost:3000
-        AUTH_USERNAME_PASSWORD_URL: http://localhost:3003/
+        AUTH_USERNAME_PASSWORD_URL: https://localhost:7190/
         AUTH_AUTH0_ISSUER: http://localhost:3002/
         AUTH0_ISSUER_BASE_URL: http://localhost:3002/
         AUTH_AUTH0_TOKEN_ENDPOINT: http://localhost:3002/oauth/token

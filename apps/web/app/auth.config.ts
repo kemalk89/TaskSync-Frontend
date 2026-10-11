@@ -38,7 +38,7 @@ export const authConfig = {
       },
       authorize: async (credentials) => {
         const response = await fetch(
-          envAuthUsernamePasswordUrl + "login/password",
+          envAuthUsernamePasswordUrl + "api/v1/Auth/SignIn",
           {
             method: "POST",
             body: JSON.stringify({
@@ -47,7 +47,7 @@ export const authConfig = {
             }),
             headers: {
               "Content-Type": "application/json",
-              "X-API-Key": envLocalAuthApiKey ?? "",
+              "X-Api-Key": envLocalAuthApiKey ?? "",
             },
           },
         );

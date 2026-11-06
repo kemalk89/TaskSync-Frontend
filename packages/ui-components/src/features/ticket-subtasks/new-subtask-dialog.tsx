@@ -30,7 +30,7 @@ export const NewSubtaskDialog = ({ ticket, onSubtaskCreated }: Props) => {
     }
 
     if (values.assignee) {
-      cmd.assignee = parseInt(values.assignee);
+      cmd.assignee = values.assignee;
     }
 
     const data = await getAPI().saveSubtask(ticket.id, cmd);

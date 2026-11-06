@@ -37,7 +37,7 @@ export const AssignProjectManager = ({ projectId }: Props) => {
   });
 
   const { mutateAsync } = useMutation({
-    mutationFn: (projectManagerId: number) => {
+    mutationFn: (projectManagerId: string) => {
       return getAPI().patch.updateProject(projectId, {
         projectManagerId,
       });
@@ -77,7 +77,7 @@ export const AssignProjectManager = ({ projectId }: Props) => {
           }}
           onSubmit={async (values) => {
             setIsSubmitting(true);
-            await mutateAsync(Number(values.projectManagerId));
+            await mutateAsync(values.projectManagerId!);
             setIsSubmitting(false);
             setDialogOpen(false);
           }}

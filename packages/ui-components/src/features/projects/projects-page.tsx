@@ -30,7 +30,7 @@ export const ProjectsPage = () => {
     const data = await getAPI().saveProject({
       ...values,
       projectManagerId: values.projectManagerId
-        ? Number(values.projectManagerId)
+        ? values.projectManagerId
         : null,
     });
     setDialogOpen(false);

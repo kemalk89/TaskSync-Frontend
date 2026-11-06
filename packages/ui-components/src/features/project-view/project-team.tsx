@@ -41,10 +41,7 @@ export const ProjectTeam = ({ project }: Props) => {
             </tr>
           )}
           {project?.projectMembers
-            .filter(
-              (m) =>
-                m.userId !== (project.projectManager?.id as unknown as number),
-            )
+            .filter((m) => m.userId !== project.projectManager?.id)
             .map((projectMember) => (
               <tr key={projectMember.userId}>
                 <td>

@@ -37,7 +37,7 @@ export const AssignTeamMember = ({ projectId }: Props) => {
   });
 
   const { mutateAsync } = useMutation({
-    mutationFn: (projectManagerId: number) => {
+    mutationFn: (projectManagerId: string) => {
       if (projectId) {
         return getAPI().patch.updateProject(projectId, {
           projectManagerId,
@@ -82,7 +82,7 @@ export const AssignTeamMember = ({ projectId }: Props) => {
           }}
           onSubmit={async (values) => {
             setIsSubmitting(true);
-            await mutateAsync(Number(values.userId));
+            await mutateAsync(values.userId);
             setIsSubmitting(false);
             setDialogOpen(false);
           }}

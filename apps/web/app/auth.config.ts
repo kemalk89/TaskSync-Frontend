@@ -7,7 +7,7 @@ import {
   envAuthUsernamePasswordUrl,
   envClientId,
   envClientSecret,
-  envLocalAuthApiKey,
+  envServiceTaskSync,
   envTokenendpoint,
 } from "./environment-variables";
 import { getAPI } from "@app/api";
@@ -37,29 +37,38 @@ export const authConfig = {
         },
       },
       authorize: async (credentials) => {
-        const response = await fetch(
-          envAuthUsernamePasswordUrl + "api/v1/Auth/SignIn",
-          {
-            method: "POST",
-            body: JSON.stringify({
-              email: credentials.email,
-              password: credentials.password,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-              "X-Api-Key": envLocalAuthApiKey ?? "",
-            },
+        const response = await fetch(envAuthUsernamePasswordUrl + "login", {
+          method: "POST",
+          body: JSON.stringify({
+            email: credentials.email,
+            password: credentials.password,
+          }),
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
+        });
 
-        let user = null;
-        if (response.ok) {
-          user = await response.json();
-        } else {
+        if (!response.ok) {
           throw new Error("Invalid credentials.");
         }
 
-        return user;
+        const tokens = (await response.json()) as {
+          tokenType: string;
+          accessToken: string;
+          expiresIn: number;
+          refreshToken: string;
+        };
+
+        const profile = await fetchUserProfile(tokens.accessToken);
+
+        return {
+          id: profile?.id,
+          name: profile?.username,
+          email: profile?.email,
+          access_token: tokens.accessToken,
+          expires_in: tokens.expiresIn,
+          refresh_token: tokens.refreshToken,
+        };
       },
     }),
     // Implements Refresh Token Rotation following this guide https://authjs.dev/guides/refresh-token-rotation?framework=next-js
@@ -73,34 +82,21 @@ export const authConfig = {
     }),
   ],
   callbacks: {
-    /**
-     * Shape of token:
-     * { name: "users name", email: "users-email", picture: "https://...", sub: "users-id" }
-     *
-     * Shape of account:
-     * {
-     *    access_token: "...",                          // only when provider is Auth0
-     *    refresh_token: "...",                         // only when provider is Auth0
-     *    id_token: "...",                              // only when provider is Auth0
-     *    scope: "openid profile email offline_access", // only when provider is Auth0
-     *    expires_in: 60,                               // only when provider is Auth0
-     *    token_type: "bearer",                         // only when provider is Auth0
-     *    expires_at: 1771057488,                       // only when provider is Auth0
-     *    type: 'oidc or credentials',
-     *    provider: "auth0 or credentials or ...",
-     *    providerAccountId: "..."
-     * }
-     */
     async jwt({ token, account, profile, user }) {
       if (account?.provider === "credentials") {
         // First-time login with credentials
-        const lng = await initUsersSelectedLanguage(account.access_token!);
+        const credentialsUser = user as unknown as CredentialsUser;
+        const lng = await initUsersSelectedLanguage(
+          credentialsUser.access_token,
+        );
         await storeLanguageInCookie(lng);
 
         return {
           ...token,
           authProvider: "credentials",
-          accessToken: (user as Record<string, unknown>).access_token as string,
+          accessToken: credentialsUser.access_token,
+          expiresAt: Math.floor(Date.now() / 1000 + credentialsUser.expires_in),
+          refreshToken: credentialsUser.refresh_token,
         };
       } else if (account?.provider === "auth0") {
         // First-time login with Auth0
@@ -157,26 +153,30 @@ export const authConfig = {
       // Starting from here, we are handling subsequent logins
       /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      /**
-       * Shape of token in case authProvider = credentials:
-       * { email, sub, iat, exp, jti, authProvider, accessToken }
-       *
-       * Shape of token in case authProvider = auth0:
-       * { email, sub, iat, exp, jti, authProvider, name, picture, accessToken, expiresAt, refreshToken }
-       */
       if (token.authProvider === "auth0") {
-        if (token.expiresAt && Date.now() < token.expiresAt * 1000) {
-          // the `access_token` is still valid
-          return token;
+        if (isAccessTokenExpired(token)) {
+          // Subsequent logins, but the `access_token` has expired, try to refresh it
+          console.debug("access_token has expired. Try to refresh it.");
+          if (!token.refreshToken) {
+            throw new TypeError("Missing refresh_token");
+          }
+
+          return await refreshTokensByProviderAuth0(token);
         }
 
-        // Subsequent logins, but the `access_token` has expired, try to refresh it
-        console.debug("access_token has expired. Try to refresh it.");
-        if (!token.refreshToken) {
-          throw new TypeError("Missing refresh_token");
+        return token;
+      } else if (token.authProvider === "credentials") {
+        if (isAccessTokenExpired(token)) {
+          // Subsequent logins, but the `access_token` has expired, try to refresh it
+          console.debug("access_token has expired. Try to refresh it.");
+          if (!token.refreshToken) {
+            throw new TypeError("Missing refresh_token");
+          }
+
+          return await refreshTokensByProviderCredentials(token);
         }
 
-        return await refreshAccessToken(token);
+        return token;
       } else {
         return token;
       }
@@ -227,7 +227,10 @@ export const authConfig = {
   },
 } satisfies NextAuthConfig;
 
-async function refreshAccessToken(token: JWT) {
+/**
+ * Refresh tokens by provider "auth0".
+ */
+async function refreshTokensByProviderAuth0(token: JWT) {
   try {
     const tokenEndpoint = envTokenendpoint;
     const clientId = envClientId;
@@ -272,6 +275,72 @@ async function refreshAccessToken(token: JWT) {
     // If we fail to refresh the token, return an error so we can handle it on the page
     token.error = "RefreshTokenError";
     return token;
+  }
+}
+
+/**
+ * Refresh tokens by provider "credentials".
+ */
+async function refreshTokensByProviderCredentials(token: JWT) {
+  try {
+    const response = await fetch(envAuthUsernamePasswordUrl + "refresh", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        refreshToken: token.refreshToken,
+      }),
+    });
+
+    const tokensOrError = await response.json();
+
+    if (!response.ok) throw tokensOrError;
+
+    const newTokens = tokensOrError as {
+      accessToken: string;
+      expiresIn: number;
+      refreshToken: string;
+    };
+
+    return {
+      ...token,
+      accessToken: newTokens.accessToken,
+      expiresAt: Math.floor(Date.now() / 1000 + newTokens.expiresIn),
+      refreshToken: newTokens.refreshToken,
+    };
+  } catch (error) {
+    console.error("Error refreshing access_token", error);
+    token.error = "RefreshTokenError";
+    return token;
+  }
+}
+
+async function fetchUserProfile(
+  accessToken: string,
+): Promise<{ id: string; username?: string; email?: string } | null> {
+  try {
+    const response = await fetch(
+      `${envServiceTaskSync}/api/user/current-user`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const result = (await response.json()) as {
+      value?: { id: string; username?: string; email?: string };
+    };
+
+    return result.value ?? null;
+  } catch (error) {
+    console.error("Could not fetch user profile", error);
+    return null;
   }
 }
 
@@ -338,4 +407,18 @@ async function getCurrentUsersSelectedLanguage(
   }
 
   return null;
+}
+
+function isAccessTokenExpired(token: JWT) {
+  const isValid = token.expiresAt && Date.now() < token.expiresAt * 1000;
+  return !isValid;
+}
+
+interface CredentialsUser {
+  id: string;
+  name?: string;
+  email?: string;
+  access_token: string;
+  expires_in: number;
+  refresh_token: string;
 }

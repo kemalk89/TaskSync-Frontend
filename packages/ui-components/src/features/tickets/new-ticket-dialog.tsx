@@ -31,7 +31,7 @@ export const NewTicketDialog = ({ buttonProps = {} }: Props) => {
     };
 
     if (values.assignee) {
-      cmd.assignee = parseInt(values.assignee);
+      cmd.assignee = values.assignee;
     }
 
     const data = await getAPI().saveTicket(cmd);

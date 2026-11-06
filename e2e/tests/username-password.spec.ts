@@ -1,9 +1,9 @@
 import { test, expect } from "@playwright/test";
 import { randomUUID } from "crypto";
 
-test("Register and login with local-auth", async ({ page }) => {
-  const username = "e2e-user-" + randomUUID();
-  const password = "e2e-user-pw";
+test("Register and login with username and password", async ({ page }) => {
+  const username = `e2e-user-${randomUUID()}@tasksync.test`;
+  const password = "E2e-User-Pw!1";
 
   await page.goto("http://localhost:3000");
   await page.getByRole("button", { name: "Test User" }).click();

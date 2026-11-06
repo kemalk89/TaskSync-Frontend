@@ -1,7 +1,7 @@
 export interface CreateProjectRequest {
   title: string;
   description?: string;
-  projectManagerId?: number | null;
+  projectManagerId?: string | null;
 }
 
 export type UpdateProjectCommand = Partial<CreateProjectRequest>;
@@ -10,7 +10,7 @@ export interface CreateTicketCommand {
   projectId: number;
   title: string;
   description?: string;
-  assignee?: number;
+  assignee?: string;
   type: string;
   labels: { labelId: string; title: string }[];
 }
@@ -19,7 +19,7 @@ export interface CreateSubtaskCommand {
   projectId: number;
   title: string;
   description?: string;
-  assignee?: number;
+  assignee?: string;
   type?: string;
 }
 

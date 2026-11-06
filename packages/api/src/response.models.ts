@@ -32,7 +32,7 @@ export interface SprintResponse {
 }
 
 export interface ProjectMemberResponse {
-  userId: number;
+  userId: string;
   role: string;
   user: UserResponse;
 }

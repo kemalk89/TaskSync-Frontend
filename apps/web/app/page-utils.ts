@@ -1,5 +1,5 @@
 import { Api, ApiResponse, getAPI } from "@app/api";
-import { auth } from "./auth";
+import { getSessionJwtPayload } from "./shared/getSessionJwtPayload";
 
 /**
  * App Router Pages can call this function to fetch data on server side.
@@ -13,7 +13,7 @@ export async function fetchDataById<T>(
   statusCode?: number;
   data?: T;
 }> {
-  const session = await auth();
+  const session = await getSessionJwtPayload();
   if (!session) {
     return { status: "unauthorized" };
   }

@@ -1,22 +1,6 @@
 import { type NextRequest } from "next/server";
 import { envServiceTaskSync } from "../../../environment-variables";
-import { getToken } from "next-auth/jwt";
-
-async function getSessionJwtPayload(request: NextRequest) {
-  const secret = process.env.AUTH_SECRET;
-  if (!secret) {
-    throw new Error(
-      "Cannot decrypt Session JWT because environment variable AUTH_SECRET is not defined",
-    );
-  }
-
-  const payload = await getToken({
-    req: request,
-    secret,
-  });
-
-  return payload;
-}
+import { getSessionJwtPayload } from "../../../shared/getSessionJwtPayload";
 
 function buildEndpoint(searchParams: string, slug: string | string[]) {
   const baseUrl = `${envServiceTaskSync as string}/api/`;
@@ -62,7 +46,7 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string[] }> },
 ) {
-  const sessionJwtPayload = await getSessionJwtPayload(request);
+  const sessionJwtPayload = await getSessionJwtPayload();
   if (!sessionJwtPayload?.accessToken) {
     return new Response("Unauthorized", {
       status: 401,
@@ -90,7 +74,7 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string[] }> },
 ) {
-  const sessionJwtPayload = await getSessionJwtPayload(request);
+  const sessionJwtPayload = await getSessionJwtPayload();
   if (!sessionJwtPayload?.accessToken) {
     return new Response("Unauthorized", {
       status: 401,
@@ -118,7 +102,7 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string[] }> },
 ) {
-  const sessionJwtPayload = await getSessionJwtPayload(request);
+  const sessionJwtPayload = await getSessionJwtPayload();
   if (!sessionJwtPayload?.accessToken) {
     return new Response("Unauthorized", {
       status: 401,
@@ -144,7 +128,7 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string[] }> },
 ) {
-  const sessionJwtPayload = await getSessionJwtPayload(request);
+  const sessionJwtPayload = await getSessionJwtPayload();
   if (!sessionJwtPayload?.accessToken) {
     return new Response("Unauthorized", {
       status: 401,

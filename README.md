@@ -62,3 +62,11 @@ npm run test:e2e
 # with UI
 npm run test:e2e -- --ui
 ```
+
+# Troubleshooting
+
+### In development, how to fix EADDRINUSE for port 3000 or 3002?
+```sh
+lsof -t -i :3000 # outputs something like 12345
+kill -9 <OUTPUT_OF_PREV_STEP>
+```

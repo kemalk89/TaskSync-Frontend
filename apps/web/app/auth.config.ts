@@ -182,13 +182,7 @@ export const authConfig = {
       }
     },
     session({ session, token }) {
-      if (process.env.NODE_ENV === "development") {
-        console.debug("- - -");
-        console.debug("Access Token:");
-        console.debug(token.accessToken);
-        console.debug("- - -");
-      }
-
+      // for debugging purpose: console.debug(token.accessToken);
       session.error = token.error;
       return session;
     },

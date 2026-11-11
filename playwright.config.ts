@@ -73,6 +73,8 @@ export default defineConfig({
       command: "npm run dev",
       port: 3000,
       reuseExistingServer: !process.env.CI,
+      // Give 1 second to shut down turborepo tasks gracefully (Shutting down Turborepo tasks)
+      gracefulShutdown: { signal: "SIGTERM", timeout: 1000 },
     },
   ],
 });

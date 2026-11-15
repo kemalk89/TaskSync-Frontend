@@ -34,4 +34,11 @@ test("Register and login with username and password", async ({ page }) => {
   await page.getByRole("textbox", { name: "Password" }).fill(password);
   await page.getByRole("button", { name: "Login", exact: true }).click();
   await expect(page.getByRole("heading", { name: "Login" })).not.toBeVisible();
+
+  // Visit projects page where at least one project should exist
+  await page.getByRole("link", { name: "Projects" }).click();
+  await expect(
+    page.getByRole("button", { name: "Neues Projekt anlegen" }),
+  ).toBeVisible();
+  await expect(page.getByRole("row").nth(1)).toBeVisible();
 });

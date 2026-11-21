@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { createNewProject } from "./commands/commands";
 import { randomUUID } from "crypto";
 
 test("Register and login with username and password", async ({ page }) => {
@@ -41,4 +42,9 @@ test("Register and login with username and password", async ({ page }) => {
     page.getByRole("button", { name: "Neues Projekt anlegen" }),
   ).toBeVisible();
   await expect(page.getByRole("row").nth(1)).toBeVisible();
+
+  // Now create a new project
+  const title = "E2E Tests: " + new Date().getTime();
+  await createNewProject(page, title);
+  await expect(page.getByText(title)).toBeVisible();
 });

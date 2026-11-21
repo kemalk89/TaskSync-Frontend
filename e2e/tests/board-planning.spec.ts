@@ -1,17 +1,12 @@
 import { test, expect, Locator, Page } from "@playwright/test";
+import { createNewProject } from "./commands/commands";
 
 test("create new project and plan a board", async ({ page, request }) => {
   await page.goto("http://localhost:3000/projects");
   await page.getByRole("link", { name: "Projects" }).click();
 
   await test.step("Create a test project", async () => {
-    await page.getByRole("button", { name: "Neues Projekt anlegen" }).click();
-
-    await page
-      .getByRole("textbox", { name: "Titel *" })
-      .fill("E2E Test Projekt");
-
-    await page.getByRole("button", { name: "Speichern" }).click();
+    await createNewProject(page, "E2E Test Projekt");
   });
 
   await test.step("Goto test project and select tab Backlog", async () => {
